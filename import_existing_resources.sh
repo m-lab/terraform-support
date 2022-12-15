@@ -6,9 +6,9 @@ PROJECT=${1:? Please provide a project name}
 
 # A bash associative array. Pretend you didn't see this.
 declare -A resource_id_templates=(
-	["google_compute_address"]="projects/{{project}}/regions/{{region}}/addresses/{{name}}"
-	["google_compute_disk"]="projects/{{project}}/zones/{{zone}}/disks/{{name}}"
-	["google_compute_instance"]="projects/{{project}}/zones/{{zone}}/instances/{{name}}"
+  ["google_compute_address"]="projects/{{project}}/regions/{{region}}/addresses/{{name}}"
+  ["google_compute_disk"]="projects/{{project}}/zones/{{zone}}/disks/{{name}}"
+  ["google_compute_instance"]="projects/{{project}}/zones/{{zone}}/instances/{{name}}"
 )
 
 pushd $PROJECT
@@ -27,11 +27,11 @@ for change in $(terraform show -json plan.tfplan | jq -r '.resource_changes[] | 
   template=${resource_id_templates[$resource_type]}
 
   resource_id=$(
-	echo $template | \
-	sed -e "s/{{project}}/${PROJECT}/" \
-	    -e "s/{{region}}/${region}/" \
-		-e "s/{{name}}/${name}/" \
-		-e "s/{{zone}}/${zone}/"
+    echo $template | \
+    sed -e "s/{{project}}/${PROJECT}/" \
+        -e "s/{{region}}/${region}/" \
+        -e "s/{{name}}/${name}/" \
+        -e "s/{{zone}}/${zone}/"
   )
 
   # Import the resource if it doesn't exist in the current state. The following
