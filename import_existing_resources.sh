@@ -1,6 +1,17 @@
 #!/bin/bash
 #
 # Imports existing infrastructure into the terraform state.
+#
+# Terraform will refuse to manage infrastructure that already exists for which it does
+# not have state on. Each existing resource you want terraform to manage must be
+# "imported" into terraform's state. This is a convenience script to automate
+# bulk import of existing infrastruture. Once all infrastructure is under
+# terraform control, this script will no longer be useful. The process looks
+# something like:
+#
+# * Write terraform configs for existing infrastructure.
+# * Run this script to import these resource into terraform's state.
+# * Run `terraform apply` to apply any changes.
 
 PROJECT=${1:? Please provide a project name}
 
