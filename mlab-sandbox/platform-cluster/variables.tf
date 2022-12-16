@@ -57,3 +57,25 @@ variable "tags" {
   description = "The tags to add to the VM"
   type        = list(string)
 }
+
+variable "control_plane_region" {
+  default     = "us-west2"
+  description = "GCP region for control plane resources"
+  type        = string
+}
+
+variable "control_plane_zones" {
+  default     = ["a", "b", "c"]
+  description = "Zones for redundant control plane nodes"
+  type        = list(string)
+}
+
+variable "k8s_subnetworks" {
+  default = {
+    "us-west2" = "10.0.0.0/16"
+    "us_west1" = "10.2.0.0/16"
+    "us-east1" = "10.4.0.0/16"
+  }
+  description = "Subnetworks for platform cluster nodes"
+  type        = map(any)
+}
