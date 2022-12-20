@@ -22,6 +22,7 @@ declare -A resource_id_templates=(
   ["google_compute_firewall"]="projects/{{project}}/global/firewalls/{{name}}"
   ["google_compute_forwarding_rule"]="projects/{{project}}/regions/{{region}}/forwardingRules/{{name}}"
   ["google_compute_instance"]="projects/{{project}}/zones/{{zone}}/instances/{{name}}"
+  ["google_compute_instance_group"]="projects/{{project}}/zones/{{zone}}/instanceGroups/{{name}}"
   ["google_compute_network"]="projects/{{project}}/global/networks/{{name}}"
   ["google_compute_region_backend_service"]="projects/{{project}}/regions/{{region}}/backendServices/{{name}}"
   ["google_compute_health_check"]="projects/{{project}}/global/healthChecks/{{name}}"

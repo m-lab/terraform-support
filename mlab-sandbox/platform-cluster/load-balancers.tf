@@ -9,8 +9,9 @@ resource "google_compute_address" "platform_cluster_lb" {
 
 resource "google_compute_region_health_check" "platform_cluster" {
   https_health_check {
-    port         = "6443"
-    request_path = "/healthz"
+    port               = "6443"
+    port_specification = "USE_FIXED_PORT"
+    request_path       = "/healthz"
   }
 
   name   = "platform-cluster"
@@ -18,13 +19,17 @@ resource "google_compute_region_health_check" "platform_cluster" {
 }
 
 resource "google_compute_region_backend_service" "platform_cluster" {
-  health_checks = [google_compute_region_health_check.platform_cluster.id]
-  name          = "platform-cluster"
-  protocol      = "TCP"
-  region        = var.control_plane_region
-  backend = [
-    [for ig in google_compute_instance_group.platform_cluster : {ig.id}]
-  ]
+  dynamic "backend" {
+    for_each = google_compute_instance_group.platform_cluster
+    content {
+      group = backend.value.id
+    }
+  }
+  health_checks         = [google_compute_region_health_check.platform_cluster.id]
+  load_balancing_scheme = "EXTERNAL"
+  name                  = "platform-cluster"
+  protocol              = "TCP"
+  region                = var.control_plane_region
 }
 
 resource "google_compute_forwarding_rule" "platform_cluster" {
@@ -41,6 +46,7 @@ resource "google_compute_instance_group" "platform_cluster" {
       zone = "${var.control_plane_region}-${z}"
     }
   }
+  name = "master-platform-cluster-${each.value.zone}"
   zone = each.value.zone
   # TODO (kinkade): once control plane nodes are managed by terraform, change
   # this static resource ID to a terraform resource reference.
@@ -57,7 +63,7 @@ resource "google_compute_address" "token_server_lb" {
   address_type = "INTERNAL"
   name         = "token-server-lb"
   region       = var.control_plane_region
-  subnetwork   = google_compute_subnetwork.kubernetes_us_west2.id
+  subnetwork   = google_compute_subnetwork.kubernetes["us-west2"].id
 }
 
 resource "google_compute_health_check" "token_server" {
@@ -70,6 +76,12 @@ resource "google_compute_health_check" "token_server" {
 }
 
 resource "google_compute_region_backend_service" "token_server" {
+  dynamic "backend" {
+    for_each = google_compute_instance_group.platform_cluster
+    content {
+      group = backend.value.id
+    }
+  }
   health_checks         = [google_compute_health_check.token_server.id]
   load_balancing_scheme = "INTERNAL"
   name                  = "token-server"
@@ -85,7 +97,7 @@ resource "google_compute_forwarding_rule" "token_server" {
   network               = google_compute_network.mlab_platform_network.id
   ports                 = ["8800"]
   region                = var.control_plane_region
-  subnetwork            = google_compute_subnetwork.kubernetes_us_west2.id
+  subnetwork            = google_compute_subnetwork.kubernetes["us-west2"].id
 }
 
 #
@@ -96,7 +108,7 @@ resource "google_compute_address" "bmc_store_password_lb" {
   address_type = "INTERNAL"
   name         = "bmc-store-password-lb"
   region       = var.control_plane_region
-  subnetwork   = google_compute_subnetwork.kubernetes_us_west2.id
+  subnetwork   = google_compute_subnetwork.kubernetes["us-west2"].id
 }
 
 resource "google_compute_health_check" "bmc_store_password" {
@@ -109,6 +121,12 @@ resource "google_compute_health_check" "bmc_store_password" {
 }
 
 resource "google_compute_region_backend_service" "bmc_store_password" {
+  dynamic "backend" {
+    for_each = google_compute_instance_group.platform_cluster
+    content {
+      group = backend.value.id
+    }
+  }
   health_checks         = [google_compute_health_check.bmc_store_password.id]
   load_balancing_scheme = "INTERNAL"
   name                  = "bmc-store-password"
@@ -124,5 +142,5 @@ resource "google_compute_forwarding_rule" "bmc_store_password" {
   network               = google_compute_network.mlab_platform_network.id
   ports                 = ["8801"]
   region                = var.control_plane_region
-  subnetwork            = google_compute_subnetwork.kubernetes_us_west2.id
+  subnetwork            = google_compute_subnetwork.kubernetes["us-west2"].id
 }

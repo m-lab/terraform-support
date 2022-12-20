@@ -70,12 +70,12 @@ variable "control_plane_zones" {
   type        = list(string)
 }
 
-variable "k8s_subnetworks" {
+variable "subnetworks" {
   default = {
     "us-west2" = "10.0.0.0/16"
-    "us_west1" = "10.2.0.0/16"
+    "us-west1" = "10.2.0.0/16"
     "us-east1" = "10.4.0.0/16"
   }
   description = "Subnetworks for platform cluster nodes"
-  type        = map(any)
+  type        = map(string)
 }
