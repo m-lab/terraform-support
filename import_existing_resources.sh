@@ -26,6 +26,7 @@ declare -A resource_id_templates=(
   ["google_compute_network"]="projects/{{project}}/global/networks/{{name}}"
   ["google_compute_region_backend_service"]="projects/{{project}}/regions/{{region}}/backendServices/{{name}}"
   ["google_compute_health_check"]="projects/{{project}}/global/healthChecks/{{name}}"
+  ["google_compute_region_health_check"]="projects/{{project}}/regions/{{region}}/healthChecks/{{name}}"
   ["google_compute_subnetwork"]="projects/{{project}}/regions/{{region}}/subnetworks/{{name}}"
   ["google_storage_bucket"]="{{project}}/{{name}}"
 )
