@@ -41,7 +41,7 @@ resource "google_compute_forwarding_rule" "platform_cluster" {
 }
 
 resource "google_compute_instance_group" "platform_cluster" {
-  for_each = toset(var.api_instances.zones)
+  for_each = var.api_instances.zones
   name     = "master-platform-cluster-${each.value}"
   zone     = each.value
   # TODO (kinkade): once control plane nodes are managed by terraform, change

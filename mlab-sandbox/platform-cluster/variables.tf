@@ -63,7 +63,7 @@ variable "api_instances" {
       scopes       = list(string)
       subnetwork   = string
     })
-    zones = list(string)
+    zones = set(string)
   })
 }
 

@@ -52,7 +52,7 @@ resource "google_compute_disk" "disks" {
 # Control plane ("API") platform instances
 #
 resource "google_compute_instance" "api_instances" {
-  for_each = toset(var.api_instances.zones)
+  for_each = var.api_instances.zones
   boot_disk {
     source = google_compute_disk.api_disks["${each.value}"].id
   }
@@ -81,14 +81,14 @@ resource "google_compute_instance" "api_instances" {
 }
 
 resource "google_compute_address" "api_addresses" {
-  for_each     = toset(var.api_instances.zones)
+  for_each     = var.api_instances.zones
   address_type = "EXTERNAL"
   name         = "master-platform-cluster-${each.value}"
   region       = var.api_instances.attributes.region
 }
 
 resource "google_compute_disk" "api_disks" {
-  for_each = toset(var.api_instances.zones)
+  for_each = var.api_instances.zones
   image    = var.api_instances.attributes.disk_image
   name     = "master-platform-cluster-${each.value}"
   size     = var.api_instances.attributes.disk_size_gb
