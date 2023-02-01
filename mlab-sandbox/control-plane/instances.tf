@@ -74,7 +74,7 @@ resource "google_compute_instance" "prometheus" {
   attached_disk {
     source = google_compute_disk.prometheus_data_disk.id
     # Device name will be /dev/disk/by-id/google-<name>
-    device_name = var.prometheus_instance.disk_dev_name_data
+    device_name = "mlab-data"
   }
 
   boot_disk {
@@ -87,7 +87,7 @@ resource "google_compute_instance" "prometheus" {
     k8s_labels = "run=prometheus-server"
   }
 
-  name = "prometheus-platform-cluster"
+  name = "kinkade-test-prometheus-platform-cluster"
 
   network_interface {
     access_config {

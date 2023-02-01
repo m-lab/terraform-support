@@ -6,29 +6,27 @@ variable "project" {
 
 variable "prometheus_instance" {
   default = {
-    disk_image         = "platform-cluster-api-instance-latest"
-    disk_size_gb_boot  = 100
-    disk_size_gb_data  = 200
-    disk_dev_name_data = "prometheus-data"
-    disk_type          = "pd-ssd"
-    machine_type       = "n2-standard-2"
-    tags               = ["prometheus-platform-cluster"]
-    region             = "us-south1"
-    scopes             = ["cloud-platform"]
-    zone               = "us-south1-a"
+    disk_image        = "platform-cluster-internal-instance-latest"
+    disk_size_gb_boot = 100
+    disk_size_gb_data = 200
+    disk_type         = "pd-ssd"
+    machine_type      = "n2-standard-2"
+    tags              = ["prometheus-platform-cluster"]
+    region            = "us-south1"
+    scopes            = ["cloud-platform"]
+    zone              = "us-south1-a"
   }
   description = "Prometheus platform cluster instance"
   type = object({
-    disk_image         = string
-    disk_size_gb_boot  = number
-    disk_size_gb_data  = number
-    disk_dev_name_data = string
-    disk_type          = string
-    machine_type       = string
-    tags               = list(string)
-    region             = string
-    scopes             = list(string)
-    zone               = string
+    disk_image        = string
+    disk_size_gb_boot = number
+    disk_size_gb_data = number
+    disk_type         = string
+    machine_type      = string
+    tags              = list(string)
+    region            = string
+    scopes            = list(string)
+    zone              = string
   })
 }
 
@@ -51,7 +49,6 @@ variable "api_instances" {
       lb_dns           = "kinkade-test-lb.mlab-sandbox.measurementlab.net"
       service_cidr     = "172.25.0.0/16"
       token_server_dns = "kinkade-test-token-server-platform-cluster.mlab-sandbox.measurementlab.net"
-
     }
     zones = {
       "us-south1-a" = {
