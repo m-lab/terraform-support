@@ -10,7 +10,7 @@ variable "instances" {
       disk_image   = "platform-cluster-instance-latest"
       disk_size_gb = 100
       disk_type    = "pd-ssd"
-      machine_type = "n2-highcpu-4"
+      machine_type = "n1-highcpu-4"
       tags         = ["ndt-cloud"]
       scopes       = ["cloud-platform"]
       subnetwork   = "kubernetes"
@@ -39,31 +39,80 @@ variable "instances" {
 
 variable "api_instances" {
   default = {
-    attributes = {
-      disk_image   = "platform-cluster-api-instance-latest"
-      disk_size_gb = "100"
-      disk_type    = "pd-ssd"
-      machine_type = "n2-standard-2"
-      tags         = ["platform-cluster"]
-      region       = "us-west2"
-      scopes       = ["cloud-platform"]
-      subnetwork   = "kubernetes"
+    machine_attributes = {
+      disk_image        = "platform-cluster-api-instance-latest"
+      disk_size_gb_boot = 100
+      disk_size_gb_data = 10
+      # This will show up as /dev/disk/by-id/google-<name>
+      disk_dev_name_data = "cluster-data"
+      disk_type          = "pd-ssd"
+      machine_type       = "n1-standard-2"
+      tags               = ["platform-cluster"]
+      region             = "us-west2"
+      scopes             = ["cloud-platform"]
     }
-    zones = ["us-west2-a", "us-west2-b", "us-west2-c"]
+    cluster_attributes = {
+      cluster_cidr     = "192.168.0.0/16"
+      lb_dns           = "api-platform-cluster.mlab-sandbox.measurementlab.net"
+      service_cidr     = "172.25.0.0/16"
+      token_server_dns = "token-server-platform-cluster.mlab-sandbox.measurementlab.net"
+    }
+    zones = {
+      "us-west2-a" = {
+        "create_role" = "init",
+        "reboot_day"  = "Tue"
+      },
+      "us-west2-b" = {
+        "create_role" = "join",
+        "reboot_day"  = "Wed"
+      },
+      "us-west2-c" = {
+        "create_role" = "join",
+        "reboot_day"  = "Thu"
+      }
+    }
   }
   description = "Platform control plane (API) instances"
   type = object({
-    attributes = object({
-      disk_image   = string
-      disk_size_gb = number
-      disk_type    = string
-      machine_type = string
-      tags         = list(string)
-      region       = string
-      scopes       = list(string)
-      subnetwork   = string
+    machine_attributes = object({
+      disk_image         = string
+      disk_size_gb_boot  = number
+      disk_size_gb_data  = number
+      disk_dev_name_data = string
+      disk_type          = string
+      machine_type       = string
+      tags               = list(string)
+      region             = string
+      scopes             = list(string)
     })
-    zones = set(string)
+    cluster_attributes = map(string)
+    zones              = map(map(string))
+  })
+}
+
+variable "prometheus_instance" {
+  default = {
+    disk_image        = "platform-cluster-internal-instance-latest"
+    disk_size_gb_boot = 100
+    disk_size_gb_data = 200
+    disk_type         = "pd-ssd"
+    machine_type      = "n2-standard-2"
+    tags              = ["prometheus-platform-cluster"]
+    region            = "us-west2"
+    scopes            = ["cloud-platform"]
+    zone              = "us-west2-a"
+  }
+  description = "Prometheus platform cluster instance"
+  type = object({
+    disk_image        = string
+    disk_size_gb_boot = number
+    disk_size_gb_data = number
+    disk_type         = string
+    machine_type      = string
+    tags              = list(string)
+    region            = string
+    scopes            = list(string)
+    zone              = string
   })
 }
 
@@ -73,13 +122,6 @@ variable "networking" {
       vpc_name   = "mlab-platform-network"
       stack_type = "IPV4_IPV6"
     }
-    # TODO (kinkade): why is there an "epoxy" subnet in a region that already
-    # has a "kubernetes" subnet? Is this to isolate epoxy from other things?
-    # This is sort of problematic from the perspective of looping over the
-    # subnetworks, since keys must be unique, and we cannot currently use the
-    # subnetwork name, since that too is duplicated. We should either put epoxy
-    # into its own, different region, and avoid putting platform nodes there,
-    # or stop using the name "kubernetes" for all subnets platform subnetworks.
     subnetworks = {
       "us-west2" = {
         ip_cidr_range = "10.0.0.0/16"
@@ -90,11 +132,6 @@ variable "networking" {
         ip_cidr_range = "10.2.0.0/16"
         name          = "kubernetes"
         region        = "us-west1"
-      },
-      "us-west2-epoxy" = {
-        name          = "epoxy"
-        ip_cidr_range = "10.3.0.0/16"
-        region        = "us-west2"
       },
       "us-east1" = {
         name          = "kubernetes"
