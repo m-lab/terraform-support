@@ -52,8 +52,7 @@ resource "google_compute_firewall" "allow_epoxy_ports" {
   target_tags   = ["allow-epoxy-ports"]
 }
 
-# Allow access to anything in the network from instances/services in the
-# internal control plane subnet.
+# Allow all instances in the VPC network to communicate freely with one another.
 resource "google_compute_firewall" "platform_cluster_internal" {
   allow {
     protocol = "all"
@@ -61,7 +60,7 @@ resource "google_compute_firewall" "platform_cluster_internal" {
 
   name          = "platform-cluster-internal"
   network       = google_compute_network.platform_cluster.name
-  source_ranges = [google_compute_subnetwork.platform_cluster["${var.api_instances.machine_attributes.region}"].ip_cidr_range]
+  source_ranges = [var.networking.attributes.subnetwork_cidr]
 }
 
 # Allow external access to any port for IPv4 traffic platform VMs.
