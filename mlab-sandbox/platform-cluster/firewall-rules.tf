@@ -15,40 +15,28 @@ resource "google_compute_firewall" "platform_cluster_external" {
   }
 
   name          = "platform-cluster-external"
-  network       = google_compute_network.mlab_platform_network.name
+  network       = google_compute_network.platform_cluster.name
   source_ranges = ["0.0.0.0/0"]
 }
 
-# Allow GCP health checks.
+# Allow GCP health checks to control plane machines, which should all have the
+# network tag "platform-cluster".
+#
+# 6443: k8s api-server
+# 8800: token-server for ePoxy extension allocate_k8s_token
+# 8801: bmc-store-password for eponymous ePoxy extension
 #
 # https://cloud.google.com/load-balancing/docs/health-checks#firewall_rules
 resource "google_compute_firewall" "platform_cluster_health_checks" {
   allow {
-    ports    = ["6443"]
+    ports    = ["6443", "8800", "8801"]
     protocol = "tcp"
   }
 
   name          = "platform-cluster-health-checks"
-  network       = google_compute_network.mlab_platform_network.name
+  network       = google_compute_network.platform_cluster.name
   source_ranges = ["35.191.0.0/16", "130.211.0.0/22"]
   target_tags   = ["platform-cluster"]
-}
-
-# Allow ePoxy to communicate with services running on control plane nodes:
-#
-#   TCP 8800: "allocate_k8s_token" extension
-#   TCP 8801: "bmc_store_password" extension
-#
-# https://github.com/m-lab/epoxy-extensions
-resource "google_compute_firewall" "platform_cluster_epoxy_extensions" {
-  allow {
-    ports    = ["8800", "8801"]
-    protocol = "tcp"
-  }
-
-  name          = "platform-cluster-epoxy-extensions"
-  network       = google_compute_network.mlab_platform_network.name
-  source_ranges = [google_compute_subnetwork.epoxy.ip_cidr_range]
 }
 
 # Allow external access to the ePoxy boot server.
@@ -59,21 +47,21 @@ resource "google_compute_firewall" "allow_epoxy_ports" {
   }
 
   name          = "allow-epoxy-ports"
-  network       = google_compute_network.mlab_platform_network.name
+  network       = google_compute_network.platform_cluster.name
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["allow-epoxy-ports"]
 }
 
 # Allow access to anything in the network from instances/services in the
-# internal k8s subnet.
+# internal control plane subnet.
 resource "google_compute_firewall" "platform_cluster_internal" {
   allow {
     protocol = "all"
   }
 
   name          = "platform-cluster-internal"
-  network       = google_compute_network.mlab_platform_network.name
-  source_ranges = [google_compute_subnetwork.kubernetes["us-west2"].ip_cidr_range]
+  network       = google_compute_network.platform_cluster.name
+  source_ranges = [google_compute_subnetwork.platform_cluster["${var.api_instances.machine_attributes.region}"].ip_cidr_range]
 }
 
 # Allow external access to any port for IPv4 traffic platform VMs.
@@ -83,7 +71,7 @@ resource "google_compute_firewall" "platform_cluster_ndt_cloud" {
   }
 
   name          = "platform-cluster-ndt-cloud"
-  network       = google_compute_network.mlab_platform_network.name
+  network       = google_compute_network.platform_cluster.name
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["ndt-cloud"]
 }
@@ -95,7 +83,7 @@ resource "google_compute_firewall" "platform_cluster_ndt_cloud_ipv6" {
   }
 
   name          = "platform-cluster-ndt-cloud-ipv6"
-  network       = google_compute_network.mlab_platform_network.name
+  network       = google_compute_network.platform_cluster.name
   source_ranges = ["::/0"]
   target_tags   = ["ndt-cloud"]
 }
@@ -108,7 +96,7 @@ resource "google_compute_firewall" "platform_cluster_prometheus_external" {
   }
 
   name          = "platform-cluster-prometheus-external"
-  network       = google_compute_network.mlab_platform_network.name
+  network       = google_compute_network.platform_cluster.name
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["prometheus-platform-cluster"]
 }

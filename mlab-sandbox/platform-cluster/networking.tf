@@ -1,21 +1,14 @@
-resource "google_compute_network" "mlab_platform_network" {
+resource "google_compute_network" "platform_cluster" {
   auto_create_subnetworks = false
-  name                    = "mlab-platform-network"
+  name                    = var.networking.attributes.vpc_name
 }
 
-resource "google_compute_subnetwork" "kubernetes" {
-  for_each         = var.subnetworks
-  ip_cidr_range    = each.value
+resource "google_compute_subnetwork" "platform_cluster" {
+  for_each         = var.networking.subnetworks
+  ip_cidr_range    = each.value.ip_cidr_range
   ipv6_access_type = "EXTERNAL"
-  name             = "kubernetes"
-  network          = google_compute_network.mlab_platform_network.id
-  region           = each.key
-  stack_type       = "IPV4_IPV6"
-}
-
-resource "google_compute_subnetwork" "epoxy" {
-  ip_cidr_range = "10.3.0.0/16"
-  name          = "epoxy"
-  network       = google_compute_network.mlab_platform_network.id
-  region        = "us-west2"
+  name             = each.value.name
+  network          = google_compute_network.platform_cluster.id
+  region           = each.value.region
+  stack_type       = var.networking.attributes.stack_type
 }
