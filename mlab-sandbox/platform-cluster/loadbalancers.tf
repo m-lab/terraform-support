@@ -101,6 +101,7 @@ resource "google_compute_region_backend_service" "token_server" {
 }
 
 resource "google_compute_forwarding_rule" "token_server" {
+  allow_global_access   = true
   backend_service       = google_compute_region_backend_service.token_server.id
   ip_address            = google_compute_address.token_server_lb.id
   load_balancing_scheme = "INTERNAL"

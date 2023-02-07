@@ -119,8 +119,9 @@ variable "prometheus_instance" {
 variable "networking" {
   default = {
     attributes = {
-      vpc_name   = "mlab-platform-network"
-      stack_type = "IPV4_IPV6"
+      stack_type      = "IPV4_IPV6"
+      subnetwork_cidr = "10.0.0.0/8"
+      vpc_name        = "mlab-platform-network"
     }
     subnetworks = {
       "us-west2" = {
