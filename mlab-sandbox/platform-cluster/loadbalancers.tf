@@ -1,5 +1,55 @@
 #
-# Control plane load balancer, and related resources
+# Managed instance group load balancers for regular platfrom VMs
+#
+resource "google_compute_address" "platform_cluster_mig_addresses" {
+  for_each = var.instances.names
+
+  address_type = "EXTERNAL"
+  name         = "platform-cluster-${each.key}"
+  region       = each.value
+}
+
+resource "google_compute_region_health_check" "platform_cluster_mig_health_checks" {
+  for_each = var.instances.names
+
+  https_health_check {
+    port = 443
+  }
+
+  name   = "platform-cluster-${each.key}"
+  region = each.value
+}
+
+resource "google_compute_region_backend_service" "platform_cluster_mig_backends" {
+  for_each = var.instances.names
+
+  backend {
+    group = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].instance_group
+  }
+
+  name                  = "platform-cluster-${each.key}"
+  health_checks         = [google_compute_region_health_check.platform_cluster_mig_health_checks[each.key].id]
+  load_balancing_scheme = "EXTERNAL"
+  protocol              = "UNSPECIFIED"
+  region                = each.value
+  session_affinity      = "CLIENT_IP"
+}
+
+resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules" {
+  for_each = var.instances.names
+
+  all_ports             = true
+  backend_service       = google_compute_region_backend_service.platform_cluster_mig_backends[each.key].id
+  ip_address            = google_compute_address.platform_cluster_mig_addresses[each.key].id
+  ip_protocol           = "L3_DEFAULT"
+  load_balancing_scheme = "EXTERNAL"
+  name                  = "platform-cluster-${each.key}"
+  region                = each.value
+}
+
+
+#
+# API load balancer
 #
 resource "google_compute_address" "platform_cluster_lb" {
   address_type = "EXTERNAL"
@@ -40,31 +90,6 @@ resource "google_compute_forwarding_rule" "platform_cluster" {
   region          = var.api_instances.machine_attributes.region
 }
 
-resource "google_compute_instance_group" "platform_cluster" {
-  for_each = var.api_instances.zones
-  name     = "api-platform-cluster-${each.key}"
-  network  = google_compute_network.platform_cluster.id
-  zone     = each.key
-
-  # Instances will add themselves to this group when the cluster is initilized.
-  # Not doing this here rather than on the machine itself is due to an
-  # undesirable behavior of GCP forwarding rules. Backend machines of a load
-  # balancer cannot communicate normally with the load balancer itself, and
-  # requests to the load balancer IP are reflected back to the backend machine
-  # making the request, whether its health check is passing or not. This means
-  # that when a machine is trying to join the cluster and needs to communicate
-  # with the existing cluster to get configuration data, it is actually tring to
-  # communicate with itself, but it is not yet created so gets a connection
-  # refused error.
-  #instances = [
-  #  google_compute_instance.api_instances[each.key].id
-  #]
-
-  # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_group
-  lifecycle {
-    create_before_destroy = true
-  }
-}
 
 #
 # Internal load balancer for ePoxy extension "allocate_k8s_token". The
