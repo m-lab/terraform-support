@@ -110,16 +110,16 @@ resource "google_compute_instance_group" "platform_cluster" {
   network  = google_compute_network.platform_cluster.id
   zone     = each.key
 
-  # Instances will add themselves to this group when the cluster is initilized.
+  # Instances will add themselves to this group when the cluster is initialized.
   # Not doing this here rather than on the machine itself is due to an
-  # undesirable behavior of GCP forwarding rules. Backend machines of a load
-  # balancer cannot communicate normally with the load balancer itself, and
-  # requests to the load balancer IP are reflected back to the backend machine
-  # making the request, whether its health check is passing or not. This means
-  # that when a machine is trying to join the cluster and needs to communicate
-  # with the existing cluster to get configuration data, it is actually tring to
-  # communicate with itself, but it is not yet created so gets a connection
-  # refused error.
+  # undesirable behavior of GCP load balancers (at least external TCP ones).
+  # Backend machines of a load balancer cannot communicate normally with the
+  # load balancer itself, and requests to the load balancer IP are reflected
+  # back to the backend machine making the request, whether its health check is
+  # passing or not. This means that when a machine is trying to join the cluster
+  # and needs to communicate with the existing cluster to get configuration
+  # data, it is actually tring to communicate with itself, but it is not yet
+  # created so gets a connection refused error.
   #instances = [
   #  google_compute_instance.api_instances[each.key].id
   #]
