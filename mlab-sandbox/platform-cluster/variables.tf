@@ -13,13 +13,11 @@ variable "instances" {
       machine_type = "n1-highcpu-4"
       tags         = ["ndt-cloud"]
       scopes       = ["cloud-platform"]
-      subnetwork   = "kubernetes"
     },
     names = {
-      mlab1-chs0t = "us-east1-c"
-      mlab2-chs0t = "us-east1-c"
-      mlab1-lax0t = "us-west2-c"
-      mlab1-pdx0t = "us-west1-c"
+      mlab1-chs0t = "us-east1"
+      mlab1-lax0t = "us-west2"
+      mlab1-pdx0t = "us-west1"
     }
   }
   description = "Platform instances"
@@ -31,7 +29,6 @@ variable "instances" {
       machine_type = string
       tags         = list(string)
       scopes       = list(string)
-      subnetwork   = string
     })
     names = map(string)
   })
@@ -119,8 +116,9 @@ variable "prometheus_instance" {
 variable "networking" {
   default = {
     attributes = {
-      vpc_name   = "mlab-platform-network"
-      stack_type = "IPV4_IPV6"
+      stack_type      = "IPV4_IPV6"
+      subnetwork_cidr = "10.0.0.0/8"
+      vpc_name        = "mlab-platform-network"
     }
     subnetworks = {
       "us-west2" = {
