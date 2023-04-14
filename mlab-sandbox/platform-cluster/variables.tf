@@ -37,7 +37,7 @@ variable "instances" {
 variable "api_instances" {
   default = {
     machine_attributes = {
-      disk_image        = "platform-cluster-api-instance-latest"
+      disk_image        = "platform-cluster-api-instance-2023-04-14t22-38-04"
       disk_size_gb_boot = 100
       disk_size_gb_data = 10
       # This will show up as /dev/disk/by-id/google-<name>
