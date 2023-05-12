@@ -2,26 +2,26 @@
 # Managed instance group load balancers for regular platfrom VMs
 #
 resource "google_compute_address" "platform_cluster_mig_addresses" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
   address_type = "EXTERNAL"
   name         = "platform-cluster-${each.key}"
-  region       = each.value
+  region       = each.value["region"]
 }
 
 resource "google_compute_region_health_check" "platform_cluster_mig_health_checks" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
   https_health_check {
     port = 443
   }
 
   name   = "platform-cluster-${each.key}"
-  region = each.value
+  region = each.value["region"]
 }
 
 resource "google_compute_region_backend_service" "platform_cluster_mig_backends" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
   backend {
     group = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].instance_group
@@ -31,12 +31,12 @@ resource "google_compute_region_backend_service" "platform_cluster_mig_backends"
   health_checks         = [google_compute_region_health_check.platform_cluster_mig_health_checks[each.key].id]
   load_balancing_scheme = "EXTERNAL"
   protocol              = "UNSPECIFIED"
-  region                = each.value
+  region                = each.value["region"]
   session_affinity      = "CLIENT_IP"
 }
 
 resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
   all_ports             = true
   backend_service       = google_compute_region_backend_service.platform_cluster_mig_backends[each.key].id
@@ -44,7 +44,7 @@ resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules
   ip_protocol           = "L3_DEFAULT"
   load_balancing_scheme = "EXTERNAL"
   name                  = "platform-cluster-${each.key}"
-  region                = each.value
+  region                = each.value["region"]
 }
 
 
