@@ -7,17 +7,29 @@ variable "project" {
 variable "instances" {
   default = {
     attributes = {
-      disk_image   = "platform-cluster-instance-latest"
+      disk_image   = "platform-cluster-instance-2023-05-12t17-52-24"
       disk_size_gb = 100
       disk_type    = "pd-ssd"
       machine_type = "n1-highcpu-4"
+      network_tier = "PREMIUM"
       tags         = ["ndt-cloud"]
       scopes       = ["cloud-platform"]
     },
-    names = {
-      mlab1-chs0t = "us-east1"
-      mlab1-lax0t = "us-west2"
-      mlab1-pdx0t = "us-west1"
+    migs = {
+      mlab1-chs0t = {
+        region = "us-east1"
+      },
+      mlab1-lax0t = {
+        region = "us-west2"
+      },
+      mlab1-pdx0t = {
+        region = "us-west1"
+      }
+    },
+    vms = {
+      mlab2-chs0t = {
+        zone = "us-east1-c"
+      }
     }
   }
   description = "Platform instances"
@@ -27,17 +39,19 @@ variable "instances" {
       disk_size_gb = number
       disk_type    = string
       machine_type = string
+      network_tier = string
       tags         = list(string)
       scopes       = list(string)
     })
-    names = map(string)
+    migs = map(map(string))
+    vms  = map(map(string))
   })
 }
 
 variable "api_instances" {
   default = {
     machine_attributes = {
-      disk_image        = "platform-cluster-api-instance-latest"
+      disk_image        = "platform-cluster-api-instance-2023-05-12t17-52-24"
       disk_size_gb_boot = 100
       disk_size_gb_data = 10
       # This will show up as /dev/disk/by-id/google-<name>
@@ -49,10 +63,10 @@ variable "api_instances" {
       scopes             = ["cloud-platform"]
     }
     cluster_attributes = {
-      cluster_cidr     = "192.168.0.0/16"
-      lb_dns           = "api-platform-cluster.mlab-sandbox.measurementlab.net"
-      service_cidr     = "172.25.0.0/16"
-      token_server_dns = "token-server-platform-cluster.mlab-sandbox.measurementlab.net"
+      cluster_cidr           = "192.168.0.0/16"
+      api_load_balancer      = "api-platform-cluster.mlab-sandbox.measurementlab.net"
+      service_cidr           = "172.25.0.0/16"
+      epoxy_extension_server = "epoxy-extension-server.mlab-sandbox.measurementlab.net"
     }
     zones = {
       "us-west2-a" = {
@@ -89,7 +103,7 @@ variable "api_instances" {
 
 variable "prometheus_instance" {
   default = {
-    disk_image        = "platform-cluster-internal-instance-latest"
+    disk_image        = "platform-cluster-internal-instance-2023-05-12t17-52-24"
     disk_size_gb_boot = 100
     disk_size_gb_data = 200
     disk_type         = "pd-ssd"

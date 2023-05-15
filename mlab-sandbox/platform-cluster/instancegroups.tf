@@ -2,9 +2,9 @@
 # Managed instance groups for regular platform VMs
 #
 resource "google_compute_instance_template" "platform_cluster_mig_templates" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
-  description = "Used to create platform cluster virtual machines"
+  description = "Platform cluster MIG machine"
 
   disk {
     auto_delete  = true
@@ -36,19 +36,22 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
 
   network_interface {
     access_config {
-      network_tier = "PREMIUM"
+      # If the MIG specifies a network_tier, use it, else use a default.
+      network_tier = lookup(each.value, "network_tier", var.instances.attributes.network_tier)
     }
 
     ipv6_access_config {
+      # From what I gather STANDARD network tier is not available for IPv6.
+      # https://cloud.google.com/network-tiers/docs/overview#resources
       network_tier = "PREMIUM"
     }
 
     network    = google_compute_network.platform_cluster.id
-    subnetwork = google_compute_subnetwork.platform_cluster[each.value].id
+    subnetwork = google_compute_subnetwork.platform_cluster[each.value["region"]].id
     stack_type = var.networking.attributes.stack_type
   }
 
-  region = each.value
+  region = each.value["region"]
 
   scheduling {
     automatic_restart   = true
@@ -63,11 +66,11 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
 }
 
 resource "google_compute_region_instance_group_manager" "platform_cluster_mig_managers" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
   base_instance_name = "${each.key}-${var.project}-measurement-lab-org"
   name               = "platform-cluster-${each.key}"
-  region             = each.value
+  region             = each.value["region"]
 
   update_policy {
     minimal_action = "REFRESH"
@@ -81,7 +84,7 @@ resource "google_compute_region_instance_group_manager" "platform_cluster_mig_ma
 }
 
 resource "google_compute_region_autoscaler" "platform_cluster_mig_autoscalers" {
-  for_each = var.instances.names
+  for_each = var.instances.migs
 
   autoscaling_policy {
     cooldown_period = 60
@@ -96,7 +99,7 @@ resource "google_compute_region_autoscaler" "platform_cluster_mig_autoscalers" {
 
 
   name   = "platform-cluster-${each.key}"
-  region = each.value
+  region = each.value["region"]
   target = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].id
 }
 
@@ -118,7 +121,7 @@ resource "google_compute_instance_group" "platform_cluster" {
   # back to the backend machine making the request, whether its health check is
   # passing or not. This means that when a machine is trying to join the cluster
   # and needs to communicate with the existing cluster to get configuration
-  # data, it is actually tring to communicate with itself, but it is not yet
+  # data, it is actually trying to communicate with itself, but it is not yet
   # created so gets a connection refused error.
   #instances = [
   #  google_compute_instance.api_instances[each.key].id
