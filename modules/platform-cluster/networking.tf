@@ -4,7 +4,8 @@ resource "google_compute_network" "platform_cluster" {
 }
 
 resource "google_compute_subnetwork" "platform_cluster" {
-  for_each         = var.networking.subnetworks
+  for_each = var.networking.subnetworks
+
   ip_cidr_range    = each.value.ip_cidr_range
   ipv6_access_type = "EXTERNAL"
   name             = each.value.name

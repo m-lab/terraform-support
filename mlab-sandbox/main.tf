@@ -12,7 +12,11 @@ provider "google" {
 }
 
 module "platform-cluster" {
-  project = "mlab-sandbox"
-  source  = "./platform-cluster"
-}
+  source = "../modules/platform-cluster"
 
+  project             = var.project
+  instances           = var.instances
+  api_instances       = var.api_instances
+  prometheus_instance = var.prometheus_instance
+  networking          = var.networking
+}

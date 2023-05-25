@@ -109,9 +109,10 @@ resource "google_compute_region_autoscaler" "platform_cluster_mig_autoscalers" {
 #
 resource "google_compute_instance_group" "platform_cluster" {
   for_each = var.api_instances.zones
-  name     = "api-platform-cluster-${each.key}"
-  network  = google_compute_network.platform_cluster.id
-  zone     = each.key
+
+  name    = "api-platform-cluster-${each.key}"
+  network = google_compute_network.platform_cluster.id
+  zone    = each.key
 
   # Instances will add themselves to this group when the cluster is initialized.
   # Not doing this here rather than on the machine itself is due to an

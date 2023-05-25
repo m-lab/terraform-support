@@ -37,7 +37,6 @@ resource "google_compute_instance" "api_instances" {
     subnetwork = google_compute_subnetwork.platform_cluster[var.api_instances.machine_attributes.region].id
   }
 
-
   service_account {
     scopes = var.api_instances.machine_attributes.scopes
   }
