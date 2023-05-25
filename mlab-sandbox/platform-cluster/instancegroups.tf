@@ -69,12 +69,13 @@ resource "google_compute_region_instance_group_manager" "platform_cluster_mig_ma
   for_each = var.instances.migs
 
   base_instance_name = "${each.key}-${var.project}-measurement-lab-org"
-  name               = "platform-cluster-${each.key}"
+  name               = "${each.key}-${var.project}-measurement-lab-org"
   region             = each.value["region"]
 
   update_policy {
-    minimal_action = "REFRESH"
-    type           = "PROACTIVE"
+    max_surge_fixed = length(var.instances.migs)
+    minimal_action  = "REPLACE"
+    type            = "PROACTIVE"
   }
 
   version {
@@ -97,8 +98,7 @@ resource "google_compute_region_autoscaler" "platform_cluster_mig_autoscalers" {
     max_replicas = 9
   }
 
-
-  name   = "platform-cluster-${each.key}"
+  name   = "${each.key}-${var.project}-measurement-lab-org"
   region = each.value["region"]
   target = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].id
 }
