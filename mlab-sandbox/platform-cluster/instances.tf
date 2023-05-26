@@ -138,7 +138,7 @@ resource "google_compute_instance" "platform_instances" {
 resource "google_compute_address" "platform_addresses" {
   for_each     = var.instances.vms
   address_type = "EXTERNAL"
-  name         = "platform-cluster-${each.key}"
+  name         = "${each.key}-${var.project}-measurement-lab-org"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
   region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
@@ -147,7 +147,7 @@ resource "google_compute_address" "platform_addresses" {
 resource "google_compute_disk" "platform_boot_disks" {
   for_each = var.instances.vms
   image    = var.instances.attributes.disk_image
-  name     = "platform-cluster-boot-${each.key}"
+  name     = "${each.key}-${var.project}-measurement-lab-org"
   size     = var.instances.attributes.disk_size_gb
   type     = var.instances.attributes.disk_type
   zone     = each.value["zone"]
@@ -212,7 +212,7 @@ resource "google_compute_disk" "prometheus_boot_disk" {
 }
 
 resource "google_compute_disk" "prometheus_data_disk" {
-  name = "prometheus-platform-cluster-data"
+  name = "prometheus-platform-cluster-${var.prometheus_instance.zone}"
   size = var.prometheus_instance.disk_size_gb_data
   type = var.prometheus_instance.disk_type
   zone = var.prometheus_instance.zone
