@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     # Terraform does not allow variable interpolation in backend blocks.
-    bucket = "terraform-support-mlab-sandbox"
+    bucket = "terraform-support-mlab-staging"
     prefix = "state"
   }
 }
