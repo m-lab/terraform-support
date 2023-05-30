@@ -29,7 +29,7 @@ resource "google_compute_firewall" "platform_cluster_external" {
 # https://cloud.google.com/load-balancing/docs/health-checks#firewall_rules
 resource "google_compute_firewall" "platform_cluster_health_checks" {
   allow {
-    ports    = ["6443", "8800", "8801"]
+    ports    = ["6443", "8800"]
     protocol = "tcp"
   }
 
