@@ -95,8 +95,8 @@ networking = {
       region        = "us-west1"
     },
     "us-east1" = {
-      name          = "kubernetes"
       ip_cidr_range = "10.4.0.0/16"
+      name          = "kubernetes"
       region        = "us-east1"
     }
   }
