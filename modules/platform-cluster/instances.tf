@@ -188,6 +188,7 @@ resource "google_compute_instance" "prometheus" {
     subnetwork = google_compute_subnetwork.platform_cluster[var.prometheus_instance.region].id
   }
 
+
   service_account {
     scopes = var.prometheus_instance.scopes
   }
@@ -214,5 +215,9 @@ resource "google_compute_disk" "prometheus_data_disk" {
   name = "prometheus-platform-cluster-${var.prometheus_instance.zone}"
   size = var.prometheus_instance.disk_size_gb_data
   type = var.prometheus_instance.disk_type
-  zone = var.prometheus_instance.zone
+  # This is only here to prevent the data disk in mlab-staging from needing to
+  # be replaced. For some reason the Prom data disk in staging has this set,
+  # even though the referenced snapshot doesn't even exist.
+  snapshot = var.project == "mlab-staging" ? "projects/mlab-staging/global/snapshots/prom-staging-snapshot" : null
+  zone     = var.prometheus_instance.zone
 }
