@@ -215,9 +215,12 @@ resource "google_compute_disk" "prometheus_data_disk" {
   name = "prometheus-platform-cluster-${var.prometheus_instance.zone}"
   size = var.prometheus_instance.disk_size_gb_data
   type = var.prometheus_instance.disk_type
-  # This is only here to prevent the data disk in mlab-staging from needing to
-  # be replaced. For some reason the Prom data disk in staging has this set,
-  # even though the referenced snapshot doesn't even exist.
-  snapshot = var.project == "mlab-staging" ? "projects/mlab-staging/global/snapshots/prom-staging-snapshot" : null
+  # For some reason the staging and production disk have this set, even though
+  # the referenced snapshots don't even exist. This is added here just to
+  # prevent Terraform from deleting and recreating the production disk, causing
+  # all metrics to be lost. Sadly, the snapshots in staging and production have
+  # slightly different names, making it hard to preserve both programatically in
+  # Terraform. We'll preserve the production disk.
+  snapshot = "projects/${var.project}/global/snapshots/prom-snapshot-oti"
   zone     = var.prometheus_instance.zone
 }

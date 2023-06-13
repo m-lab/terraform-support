@@ -90,7 +90,6 @@ resource "google_compute_forwarding_rule" "platform_cluster" {
   region          = var.api_instances.machine_attributes.region
 }
 
-
 #
 # Internal load balancer for the ePoxy extension server. The
 # extension server service runs on each of the control plane nodes.
