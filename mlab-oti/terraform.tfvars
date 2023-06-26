@@ -48,6 +48,12 @@ instances = {
     mlab1-dfw09 = {
       zone = "us-south1-c"
     },
+    mlab2-dfw09 = {
+      zone = "us-south1-b"
+    },
+    mlab3-dfw09 = {
+      zone = "us-south1-a"
+    },
     mlab1-fra07 = {
       zone = "europe-west3-c"
     },
