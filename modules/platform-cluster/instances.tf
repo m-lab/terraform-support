@@ -221,6 +221,6 @@ resource "google_compute_disk" "prometheus_data_disk" {
   # all metrics to be lost. Sadly, the snapshots in staging and production have
   # slightly different names, making it hard to preserve both programatically in
   # Terraform. We'll preserve the production disk.
-  snapshot = "projects/${var.project}/global/snapshots/prom-snapshot-oti"
+  snapshot = var.project == "mlab-oti" ? "projects/${var.project}/global/snapshots/prom-snapshot-oti" : null
   zone     = var.prometheus_instance.zone
 }
