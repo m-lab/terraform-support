@@ -94,8 +94,8 @@ resource "google_compute_region_autoscaler" "platform_cluster_mig_autoscalers" {
       target = 0.6
     }
 
-    min_replicas = 3
-    max_replicas = 9
+    min_replicas = var.instances.attributes.mig_min_replicas
+    max_replicas = var.instances.attributes.mig_max_replicas
   }
 
   name   = "${each.key}-${var.project}-measurement-lab-org"

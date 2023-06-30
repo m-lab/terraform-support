@@ -4,13 +4,15 @@ default_zone   = "us-west2-a"
 
 instances = {
   attributes = {
-    disk_image   = "platform-cluster-instance-2023-06-22t18-13-01"
-    disk_size_gb = 100
-    disk_type    = "pd-ssd"
-    machine_type = "n1-highcpu-4"
-    network_tier = "PREMIUM"
-    tags         = ["ndt-cloud"]
-    scopes       = ["cloud-platform"]
+    disk_image       = "platform-cluster-instance-2023-06-29t23-16-02"
+    disk_size_gb     = 100
+    disk_type        = "pd-ssd"
+    machine_type     = "n2-highcpu-4"
+    mig_min_replicas = 1
+    mig_max_replicas = 5
+    network_tier     = "PREMIUM"
+    tags             = ["ndt-cloud"]
+    scopes           = ["cloud-platform"]
   },
   migs = {
     mlab1-chs0t = {
@@ -32,13 +34,13 @@ instances = {
 
 api_instances = {
   machine_attributes = {
-    disk_image        = "platform-cluster-api-instance-2023-06-22t18-13-01"
+    disk_image        = "platform-cluster-api-instance-2023-06-29t23-16-02"
     disk_size_gb_boot = 100
     disk_size_gb_data = 10
     # This will show up as /dev/disk/by-id/google-<name>
     disk_dev_name_data = "cluster-data"
     disk_type          = "pd-ssd"
-    machine_type       = "n1-standard-2"
+    machine_type       = "n2-standard-2"
     tags               = ["platform-cluster"]
     region             = "us-west2"
     scopes             = ["cloud-platform"]
@@ -66,7 +68,7 @@ api_instances = {
 }
 
 prometheus_instance = {
-  disk_image        = "platform-cluster-internal-instance-2023-06-22t18-13-01"
+  disk_image        = "platform-cluster-internal-instance-2023-06-29t23-16-02"
   disk_size_gb_boot = 100
   disk_size_gb_data = 200
   disk_type         = "pd-ssd"
