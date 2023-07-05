@@ -4,13 +4,15 @@ default_zone   = "us-east1-b"
 
 instances = {
   attributes = {
-    disk_image   = "platform-cluster-instance-v2-4-1"
-    disk_size_gb = 100
-    disk_type    = "pd-ssd"
-    machine_type = "n2-highcpu-4"
-    network_tier = "PREMIUM"
-    tags         = ["ndt-cloud"]
-    scopes       = ["cloud-platform"]
+    disk_image       = "platform-cluster-instance-v2-4-1"
+    disk_size_gb     = 100
+    disk_type        = "pd-ssd"
+    machine_type     = "n2-highcpu-4"
+    mig_min_replicas = 3
+    mig_max_replicas = 15
+    network_tier     = "PREMIUM"
+    tags             = ["ndt-cloud"]
+    scopes           = ["cloud-platform"]
   }
   migs = {}
   vms = {

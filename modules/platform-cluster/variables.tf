@@ -17,13 +17,15 @@ variable "instances" {
   description = "Platform instances"
   type = object({
     attributes = object({
-      disk_image   = string
-      disk_size_gb = number
-      disk_type    = string
-      machine_type = string
-      network_tier = string
-      tags         = list(string)
-      scopes       = list(string)
+      disk_image       = string
+      disk_size_gb     = number
+      disk_type        = string
+      machine_type     = string
+      mig_min_replicas = number
+      mig_max_replicas = number
+      network_tier     = string
+      tags             = list(string)
+      scopes           = list(string)
     })
     migs = map(map(string))
     vms  = map(map(string))
