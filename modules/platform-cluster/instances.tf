@@ -126,6 +126,14 @@ resource "google_compute_instance" "platform_instances" {
     subnetwork = google_compute_subnetwork.platform_cluster[regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]].id
   }
 
+  # Removes the empheral IPv6 address created by the Terraform deployment and
+  # replaces it with a static address. Today, GCP supports static, regional,
+  # external IPv6 addresses, but the Google Terraform provider does not.
+  # TODO(kinkade): remove this once the Google provider catches up to GCP.
+  provisioner "local-exec" {
+    command = "../assign_static_ipv6.sh ${var.project} ${each.key}"
+  }
+
   service_account {
     scopes = var.instances.attributes.scopes
   }
