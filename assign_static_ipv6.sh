@@ -38,6 +38,10 @@ for m in $@; do
 	  --project $PROJECT
   fi
 
+  # This step effectively removes the ephemeral IPv6 address of the machine by
+  # specifying IPV4_ONLY. After which we add the existing static IPv6 address.
+  # This way of doing things comes directly from the Google documentation:
+  # https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#IP_assign
   gcloud compute instances network-interfaces update $machine \
     --network-interface=nic0 \
 	--stack-type=IPV4_ONLY \
