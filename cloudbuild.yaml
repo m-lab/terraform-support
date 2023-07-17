@@ -7,4 +7,4 @@ steps:
     apk update
     apk add bash
     export PROJECT=$PROJECT_ID
-    bash scripts/tf_apply.sh $PROJECT
+    bash scripts/tf_apply.sh $$PROJECT
