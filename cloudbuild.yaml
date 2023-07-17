@@ -1,0 +1,10 @@
+steps:
+- name: hashicorp/terraform:1.5.3
+  entrypoint: /bin/sh
+  args:
+  - -c
+  - |-
+    apk update
+    apk add bash
+    export PROJECT=$PROJECT_ID
+    bash scripts/tf_apply.sh $PROJECT

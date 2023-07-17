@@ -12,6 +12,8 @@
 # * Write terraform configs for existing infrastructure.
 # * Run this script to import these resource into terraform's state.
 # * Run `terraform apply` to apply any changes.
+#
+# This script must be run from the repository root.
 
 PROJECT=${1:? Please provide a project name}
 

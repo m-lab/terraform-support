@@ -16,6 +16,8 @@ resource "google_compute_instance" "api_instances" {
     source = google_compute_disk.api_boot_disks[each.key].id
   }
 
+  hostname = "api-platform-cluster-${each.key}.${var.project}.measurementlab.net"
+
   machine_type = var.api_instances.machine_attributes.machine_type
 
   metadata = {
@@ -131,7 +133,7 @@ resource "google_compute_instance" "platform_instances" {
   # external IPv6 addresses, but the Google Terraform provider does not.
   # TODO(kinkade): remove this once the Google provider catches up to GCP.
   provisioner "local-exec" {
-    command = "../assign_static_ipv6.sh ${var.project} ${each.key}"
+    command = "../scripts/assign_static_ipv6.sh ${var.project} ${each.key}"
   }
 
   service_account {

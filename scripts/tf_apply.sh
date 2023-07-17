@@ -1,16 +1,27 @@
 #!/bin/bash
 #
-# A script which will update google_compute_instances one at a time with some
-# delay between, then apply all other changes. This is to avoid Terraform from
-# more or less deleting and recreating all instances at once when a change is
-# applied which affects all virtual machines.
+# This script updates google_compute_instances one at a time, then applies all
+# other changes. This is to avoid Terraform from more or less deleting and
+# recreating all instances at once when a change is applied which affects all
+# virtual machines e.g., a boot disk changes. This script should be run from the
+# repository root.
+
+set -euxo pipefail
 
 PROJECT=${1:? Please provide a project name}
 
-# update_instances() unconditionally iterates through instances and attempt to
+# update_instances() unconditionally iterates through instances and attempts to
 # update them one at a time. If no change is needed it is a no-op.
 function update_instances() {
+  local c
+  local health_path
+  local idx
+  local ipv4
+  local is_delete
+  local resource
+  local status=""
   local target=$1
+  local targets
 
   # Create and write out the plan.
   terraform plan -out instances.tfplan \
@@ -25,10 +36,12 @@ function update_instances() {
     fi
     idx=$(echo $c | jq -r '.index')
     is_delete=$(echo $c | jq -r '.change.actions | any(index("delete"))')
+    ipv4=$(echo $c | jq -r '.change.after.network_interface[0].access_config[0].nat_ip')
 
     # Target all of the resources associated with the instance so that Terraform
     # can order all operations properly.
     if [[ $target == "api" ]]; then
+      health_path="6443/readyz"
       targets=" \
         -target module.platform-cluster.google_compute_instance.api_instances[\"${idx}\"] \
         -target module.platform-cluster.google_compute_disk.api_boot_disks[\"${idx}\"] \
@@ -37,6 +50,7 @@ function update_instances() {
         -target module.platform-cluster.google_compute_disk.api_extennal_addresses[\"${idx}\"] \
       "
     else
+      health_path="443"
       targets=" \
         -target module.platform-cluster.google_compute_instance.platform_instances[\"${idx}\"] \
         -target module.platform-cluster.google_compute_disk.platform_boot_disks[\"${idx}\"] \
@@ -46,31 +60,35 @@ function update_instances() {
 
     terraform apply -auto-approve -compact-warnings $targets
 
-    # The instance is created, but it still has to boot and join the cluster.
-    # Give it a little time to do this. In my tests it takes roughly 2m for the
-    # machine to join the cluster and become ready, and about another minute
-    # before all pods are in a ready state. However, if the the instance isn't
-    # being deleted and recreated but just updated in place, then continue
-    # immediately.
-    if [[ $is_delete == "true" ]]; then
-      sleep 180
-    fi
+    # Wait until the machine is up and required services are running. For an API
+    # server, this means that the /readyz endpoint returns 200. For platform
+    # VMs, this means that ndt-server is up and running on port 443.
+    until [[ $status == "200" ]]; do
+      sleep 5
+      status=$(
+        curl --insecure --output /dev/null --silent --write-out "%{http_code}" \
+          "https://${ipv4}:${health_path}" \
+          || true
+      )
+    done
+
+    # Reset status for next iteration.
+    status=""
+
   done
 
   rm instances.tfplan
 }
 
 function main() {
-  pushd ../$PROJECT
+  cd $PROJECT
 
   for target in api platform; do
     update_instances $target
   done
 
   # Now apply everything else.
-  terraform apply -auto-approve
-
-  popd
+  terraform apply -auto-approve -compact-warnings
 }
 
 main
