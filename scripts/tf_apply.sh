@@ -83,6 +83,10 @@ function update_instances() {
 function main() {
   cd $PROJECT
 
+  # The environment is clean on every build in Cloud Build, so we need to run
+  # this to download the required providers.
+  terraform init
+
   for target in api platform; do
     update_instances $target
   done
