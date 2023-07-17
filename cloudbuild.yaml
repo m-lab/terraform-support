@@ -5,6 +5,6 @@ steps:
   - -c
   - |-
     apk update
-    apk add bash
+    apk add bash curl jq
     export PROJECT=$PROJECT_ID
     bash scripts/tf_apply.sh $$PROJECT
