@@ -29,7 +29,7 @@ function update_instances() {
     > /dev/null
 
   for change in $(terraform show -json instances.tfplan | jq -r '.resource_changes[] | @base64'); do
-    c=$(echo $change | base64 --decode)
+    c=$(echo $change | base64 -d)
     resource=$(echo $c | jq -r '.type')
     if [[ $resource != "google_compute_instance" ]]; then
       continue
