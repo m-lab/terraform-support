@@ -1,23 +1,23 @@
 #!/bin/bash
 #
-# This script updates google_compute_instances one at a time, then applies all
-# other changes. This is to avoid Terraform from more or less deleting and
-# recreating all instances at once when a change is applied which affects all
-# virtual machines e.g., a boot disk changes. This script should be run from the
-# repository root.
+# This script updates google_compute_instances one at a time, but only if they
+# are being deleted then recreated, then applies all other changes. This is to
+# avoid Terraform from more or less deleting and recreating all instances at
+# once when a change is applied which affects all virtual machines e.g., a boot
+# disk changes. This script should be run from the repository root.
 
 set -euxo pipefail
 
 PROJECT=${1:? Please provide a project name}
 
 # update_instances() unconditionally iterates through instances and attempts to
-# update them one at a time. If no change is needed it is a no-op.
+# update them one at a time if the action is to recreate the instance.
 function update_instances() {
   local c
   local health_path
   local idx
   local ipv4
-  local is_delete
+  local is_recreate
   local resource
   local status=""
   local target=$1
@@ -31,11 +31,26 @@ function update_instances() {
   for change in $(terraform show -json instances.tfplan | jq -r '.resource_changes[] | @base64'); do
     c=$(echo $change | base64 -d)
     resource=$(echo $c | jq -r '.type')
+
+    # We only care about google_compute_instance resources.
     if [[ $resource != "google_compute_instance" ]]; then
       continue
     fi
+
+    # For API instances, unconditionally create or update them first, since
+    # everything else depends on them. For regular platform VMs if the action
+    # does not involve recreating an existing resource, but just creating a
+    # non-existent resource, then move on, since our only concern is avoiding
+    # mass deletion and recreation of existing google_compute_instance
+    # resources, and related things like boot disks.
+    if [[ $target != "api" ]]; then
+      is_recreate=$(echo $c | jq -r 'any(.action_reason == "replace_because_cannot_update"; . == true )')
+      if [[ $is_recreate != "true" ]]; then
+        continue
+      fi
+    fi
+
     idx=$(echo $c | jq -r '.index')
-    is_delete=$(echo $c | jq -r '.change.actions | any(index("delete"))')
     ipv4=$(echo $c | jq -r '.change.after.network_interface[0].access_config[0].nat_ip')
 
     # Target all of the resources associated with the instance so that Terraform
