@@ -1,0 +1,13 @@
+steps:
+- name: gcr.io/$PROJECT_ID/gcloud-jsonnet-cbif:1.1
+  entrypoint: /bin/bash
+  args:
+  - -c
+  - |-
+    apt update
+    apt install --yes unzip
+    curl --remote-name https://releases.hashicorp.com/terraform/1.5.3/terraform_1.5.3_linux_amd64.zip
+    unzip terraform_1.5.3_linux_amd64.zip
+    mv terraform /usr/local/bin/
+    export PROJECT=$PROJECT_ID
+    bash scripts/tf_apply.sh $$PROJECT

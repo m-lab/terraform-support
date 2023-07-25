@@ -16,6 +16,8 @@ resource "google_compute_instance" "api_instances" {
     source = google_compute_disk.api_boot_disks[each.key].id
   }
 
+  hostname = "api-platform-cluster-${each.key}.${var.project}.measurementlab.net"
+
   machine_type = var.api_instances.machine_attributes.machine_type
 
   metadata = {
@@ -71,10 +73,13 @@ resource "google_compute_disk" "api_boot_disks" {
 
 resource "google_compute_disk" "api_data_disks" {
   for_each = var.api_instances.zones
-  name     = "api-platform-cluster-data-${each.key}"
-  size     = var.api_instances.machine_attributes.disk_size_gb_data
-  type     = var.api_instances.machine_attributes.disk_type
-  zone     = each.key
+  lifecycle {
+    prevent_destroy = true
+  }
+  name = "api-platform-cluster-data-${each.key}"
+  size = var.api_instances.machine_attributes.disk_size_gb_data
+  type = var.api_instances.machine_attributes.disk_type
+  zone = each.key
 }
 
 #
@@ -131,7 +136,7 @@ resource "google_compute_instance" "platform_instances" {
   # external IPv6 addresses, but the Google Terraform provider does not.
   # TODO(kinkade): remove this once the Google provider catches up to GCP.
   provisioner "local-exec" {
-    command = "../assign_static_ipv6.sh ${var.project} ${each.key}"
+    command = "../scripts/assign_static_ipv6.sh ${var.project} ${each.key}"
   }
 
   service_account {
@@ -145,7 +150,10 @@ resource "google_compute_instance" "platform_instances" {
 resource "google_compute_address" "platform_addresses" {
   for_each     = var.instances.vms
   address_type = "EXTERNAL"
-  name         = "${each.key}-${var.project}-measurement-lab-org"
+  lifecycle {
+    prevent_destroy = true
+  }
+  name = "${each.key}-${var.project}-measurement-lab-org"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
   region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
@@ -220,6 +228,9 @@ resource "google_compute_disk" "prometheus_boot_disk" {
 }
 
 resource "google_compute_disk" "prometheus_data_disk" {
+  lifecycle {
+    prevent_destroy = true
+  }
   name = "prometheus-platform-cluster-${var.prometheus_instance.zone}"
   size = var.prometheus_instance.disk_size_gb_data
   type = var.prometheus_instance.disk_type
