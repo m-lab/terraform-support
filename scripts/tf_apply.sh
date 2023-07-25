@@ -2,9 +2,16 @@
 #
 # This script updates google_compute_instances one at a time, but only if they
 # are being deleted then recreated, then applies all other changes. This is to
-# avoid Terraform from more or less deleting and recreating all instances at
-# once when a change is applied which affects all virtual machines e.g., a boot
-# disk changes. This script should be run from the repository root.
+# avoid Terraform (TF) from more or less deleting and recreating all instances
+# at once when a change is applied which affects all virtual machines e.g., a
+# boot disk changes. This script should be run from the repository root.
+#
+# This script achieves a serial deployment of VM changes by utilizing the
+# -target flag of TF, which causes TF to only consider the resources pointed at
+# by -target flag(s). This usage of -target is highly discouraged by TF, and
+# when running with this flag TF will emit warnings to this effect. However, we
+# have not found another way to achieve a rolling update of resources,
+# particularly of VMs.
 
 set -euxo pipefail
 
@@ -62,7 +69,7 @@ function update_instances() {
         -target module.platform-cluster.google_compute_disk.api_boot_disks[\"${idx}\"] \
         -target module.platform-cluster.google_compute_disk.api_data_disks[\"${idx}\"] \
         -target module.platform-cluster.google_compute_disk.api_internal_addresses[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.api_extennal_addresses[\"${idx}\"] \
+        -target module.platform-cluster.google_compute_disk.api_external_addresses[\"${idx}\"] \
       "
     else
       health_path="443"
