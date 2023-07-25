@@ -17,7 +17,7 @@ resource "google_secret_manager_secret" "platform-cluster-cert-key" {
 # actually create the secret.
 resource "google_secret_manager_secret_iam_binding" "platform-cluster-cert-key-admin" {
   secret_id = google_secret_manager_secret.platform-cluster-cert-key.secret_id
-  role      = "roles/secretmanager.secretManagerAdmin"
+  role      = "roles/secretmanager.admin"
   members = [
     "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
   ]
