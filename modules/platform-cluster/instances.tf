@@ -13,6 +13,14 @@ resource "google_compute_instance" "api_instances" {
   }
 
   boot_disk {
+    # GCP's default behavior is to automatically deleted a boot disk when the VM
+    # is deleted. Normally TF handles this as expeced by recreating the boot
+    # disk as needed when recreating a VM. However, TF does not handle this
+    # properly when applying using the -target flag (see scripts/tf_apply.sh),
+    # which we use when recreating VMs to avoid downtime. Adding
+    # auto_delete=false prevents GCP from deleting the boot disk automatically,
+    # even if wasn't otherwise going to need replacing, and causes TF to work as
+    # intended, even with the -target flag.
     auto_delete = false
     source      = google_compute_disk.api_boot_disks[each.key].id
   }
