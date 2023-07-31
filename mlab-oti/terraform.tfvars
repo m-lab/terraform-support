@@ -4,7 +4,7 @@ default_zone   = "us-east1-b"
 
 instances = {
   attributes = {
-    disk_image       = "platform-cluster-instance-v2-4-1"
+    disk_image       = "platform-cluster-instance-v2-4-4"
     disk_size_gb     = 100
     disk_type        = "pd-ssd"
     machine_type     = "n2-highcpu-4"
@@ -77,6 +77,12 @@ instances = {
     mlab1-hel01 = {
       zone = "europe-north1-c"
     },
+    mlab2-hel01 = {
+      zone = "europe-north1-b"
+    },
+    mlab3-hel01 = {
+      zone = "europe-north1-a"
+    },
     mlab1-hkg04 = {
       zone = "asia-east2-c"
     },
@@ -98,6 +104,12 @@ instances = {
     },
     mlab1-icn01 = {
       zone = "asia-northeast3-c"
+    },
+    mlab2-icn01 = {
+      zone = "asia-northeast3-b"
+    },
+    mlab3-icn01 = {
+      zone = "asia-northeast3-a"
     },
     mlab1-kix01 = {
       zone = "asia-northeast2-c"
@@ -147,11 +159,17 @@ instances = {
     mlab1-tpe02 = {
       zone = "asia-east1-c"
     },
+    mlab2-tpe02 = {
+      zone = "asia-east1-b"
+    },
     mlab1-waw01 = {
       zone = "europe-central2-c"
     },
     mlab2-waw01 = {
       zone = "europe-central2-b"
+    },
+    mlab3-waw01 = {
+      zone = "europe-central2-a"
     },
     mlab1-yul07 = {
       zone = "northamerica-northeast1-c"
@@ -165,13 +183,19 @@ instances = {
     },
     mlab1-zrh01 = {
       zone = "europe-west6-c"
+    },
+    mlab2-zrh01 = {
+      zone = "europe-west6-b"
+    },
+    mlab3-zrh01 = {
+      zone = "europe-west6-a"
     }
   }
 }
 
 api_instances = {
   machine_attributes = {
-    disk_image        = "platform-cluster-api-instance-v2-4-1"
+    disk_image        = "platform-cluster-api-instance-v2-4-4"
     disk_size_gb_boot = 100
     disk_size_gb_data = 10
     # This will show up as /dev/disk/by-id/google-<name>
@@ -205,7 +229,7 @@ api_instances = {
 }
 
 prometheus_instance = {
-  disk_image        = "platform-cluster-internal-instance-v2-4-1"
+  disk_image        = "platform-cluster-internal-instance-v2-4-4"
   disk_size_gb_boot = 100
   disk_size_gb_data = 3500
   disk_type         = "pd-ssd"
