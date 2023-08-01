@@ -33,7 +33,7 @@ instances = {
 
 api_instances = {
   machine_attributes = {
-    disk_image        = "platform-cluster-api-instance-2023-07-27t22-18-21"
+    disk_image        = "platform-cluster-api-instance-2023-08-01t17-40-45"
     disk_size_gb_boot = 100
     disk_size_gb_data = 10
     # This will show up as /dev/disk/by-id/google-<name>

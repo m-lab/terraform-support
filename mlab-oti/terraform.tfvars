@@ -59,6 +59,9 @@ instances = {
     mlab3-dfw09 = {
       zone = "us-south1-a"
     },
+    mlab1-doh01 = {
+      zone = "me-central1-c"
+    },
     mlab1-fra07 = {
       zone = "europe-west3-c"
     },
@@ -161,6 +164,9 @@ instances = {
     },
     mlab2-tpe02 = {
       zone = "asia-east1-b"
+    },
+    mlab1-trn03 = {
+      zone = "europe-west12-c"
     },
     mlab1-waw01 = {
       zone = "europe-central2-c"
