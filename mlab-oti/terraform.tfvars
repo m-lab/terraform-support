@@ -37,6 +37,9 @@ instances = {
     mlab2-cgk01 = {
       zone = "asia-southeast2-b"
     },
+    mlab3-cgk01 = {
+      zone = "asia-southeast2-a"
+    },
     mlab1-chs01 = {
       zone = "us-east1-c"
     },
