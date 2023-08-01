@@ -361,6 +361,16 @@ networking = {
       name          = "kubernetes"
       region        = "europe-west9"
     },
+    "europe-west12" = {
+      ip_cidr_range = "10.37.0.0/16"
+      name          = "kubernetes"
+      region        = "europe-west12"
+    },
+    "me-central1" = {
+      ip_cidr_range = "10.36.0.0/16"
+      name          = "kubernetes"
+      region        = "me-central1"
+    },
     "me-west1" = {
       ip_cidr_range = "10.35.0.0/16"
       name          = "kubernetes"
