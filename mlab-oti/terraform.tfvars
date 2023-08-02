@@ -62,9 +62,6 @@ instances = {
     mlab3-dfw09 = {
       zone = "us-south1-a"
     },
-    mlab1-doh01 = {
-      zone = "me-central1-c"
-    },
     mlab1-fra07 = {
       zone = "europe-west3-c"
     },
@@ -365,11 +362,6 @@ networking = {
       ip_cidr_range = "10.37.0.0/16"
       name          = "kubernetes"
       region        = "europe-west12"
-    },
-    "me-central1" = {
-      ip_cidr_range = "10.36.0.0/16"
-      name          = "kubernetes"
-      region        = "me-central1"
     },
     "me-west1" = {
       ip_cidr_range = "10.35.0.0/16"
