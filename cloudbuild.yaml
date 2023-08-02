@@ -1,9 +1,9 @@
-# Timeout after 5h. Today, there are around 50 virtual machines in the
-# production cluster. It seems to take between 2.5m and 3m for a machine to be
-# recreated and for ndt-server or the API to be available. If we update the
-# machines serially, this is around 2.5 hours. Set the timeout to double that
-# just for room to grow.
-timeout: 18000s
+# Timeout after 10h. Today, there are around 50 virtual machines in the
+# production cluster. On average it takes a single VM around 6.5m to be
+# deleted, recreated, and for ndt-server or the API to be available. If we
+# update the machines serially, this means a total build time of around 5.5
+# hours. Set the timeout to around double that just for room to grow.
+timeout: 36000s
 
 steps:
 - name: gcr.io/$PROJECT_ID/gcloud-jsonnet-cbif:1.1
