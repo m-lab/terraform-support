@@ -73,8 +73,12 @@ resource "google_compute_region_instance_group_manager" "platform_cluster_mig_ma
   region             = each.value["region"]
 
   update_policy {
-    minimal_action = "REPLACE"
-    type           = "PROACTIVE"
+    // This value should be high enough to always be equal to or greater than
+    // the number of zones available in a region.  There is currently only one
+    // GCP regions with more than 3 zones (us-central1, which has 4).
+    max_surge_fixed = 4
+    minimal_action  = "REFRESH"
+    type            = "PROACTIVE"
   }
 
   version {
