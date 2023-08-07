@@ -103,6 +103,11 @@ networking = {
       ip_cidr_range = "10.3.0.0/16"
       name          = "kubernetes"
       region        = "us-west2"
+    },
+    "us-south1" = {
+      ip_cidr_range = "10.4.0.0/16"
+      name          = "kubernetes"
+      region        = "us-south1"
     }
   }
 }
