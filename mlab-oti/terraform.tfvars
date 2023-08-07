@@ -14,7 +14,11 @@ instances = {
     tags             = ["ndt-cloud"]
     scopes           = ["cloud-platform"]
   }
-  migs = {}
+  migs = {
+    mlab3-dfw09 = {
+      zone = "us-south1-a"
+    }
+  }
   vms = {
     mlab1-ams10 = {
       zone = "europe-west4-c"
@@ -58,9 +62,6 @@ instances = {
     },
     mlab2-dfw09 = {
       zone = "us-south1-b"
-    },
-    mlab3-dfw09 = {
-      zone = "us-south1-a"
     },
     mlab1-fra07 = {
       zone = "europe-west3-c"
