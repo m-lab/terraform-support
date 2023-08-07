@@ -73,9 +73,8 @@ resource "google_compute_region_instance_group_manager" "platform_cluster_mig_ma
   region             = each.value["region"]
 
   update_policy {
-    max_surge_fixed = length(var.instances.migs)
-    minimal_action  = "REPLACE"
-    type            = "PROACTIVE"
+    minimal_action = "REPLACE"
+    type           = "PROACTIVE"
   }
 
   version {
