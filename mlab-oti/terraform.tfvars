@@ -16,7 +16,7 @@ instances = {
   }
   migs = {
     mlab3-dfw09 = {
-      zone = "us-south1-a"
+      region = "us-south1"
     }
   }
   vms = {
