@@ -439,6 +439,3 @@ networking = {
     }
   }
 }
-
-// We don't define any SSH keys for production machines.
-ssh_keys = []
