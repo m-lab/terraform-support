@@ -82,10 +82,17 @@ resource "google_compute_disk" "api_boot_disks" {
 
 resource "google_compute_disk" "api_data_disks" {
   for_each = var.api_instances.zones
-  name     = "api-platform-cluster-data-${each.key}"
-  size     = var.api_instances.machine_attributes.disk_size_gb_data
-  type     = var.api_instances.machine_attributes.disk_type
-  zone     = each.key
+
+  // There is no reason that the data disks for the API load balancer should
+  // ever be deleted under normal circumstances, as they contain all the cluster
+  // state.
+  lifecycle {
+    prevent_destroy = true
+  }
+  name = "api-platform-cluster-data-${each.key}"
+  size = var.api_instances.machine_attributes.disk_size_gb_data
+  type = var.api_instances.machine_attributes.disk_type
+  zone = each.key
 }
 
 #
