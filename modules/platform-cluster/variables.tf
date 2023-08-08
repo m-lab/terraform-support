@@ -73,3 +73,8 @@ variable "networking" {
     subnetworks = map(map(string))
   })
 }
+
+variable "ssh_keys" {
+  description = "SSH public keys to add to project metadata"
+  type        = list(map(string))
+}
