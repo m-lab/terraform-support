@@ -73,3 +73,14 @@ variable "networking" {
     subnetworks = map(map(string))
   })
 }
+
+variable "ssh_keys" {
+  description = "SSH public keys to add to project metadata"
+  type        = list(map(string))
+  default = [
+    {
+      user   = "nkinkade"
+      pubkey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKVpmoO1NBwHATHqVF/2ig1y3u2GL00ulR+HIB2yoRnadxB8BdhGIAYaA+DQfVooZmxk+tGY4VExbaZMWvexCsfFKcSSfRCadBrPb64ycEqL4WUBCl2B1ys84BNYI8Fyg6RgRDFAzhCmG0Ho+rPPtW95cpqEzsZoINocQRhrjWvjzfrL71kUYzIlJDuGQbZPZjfOow/6H1UbkwJcF4vw4l9XngNrPCI1yLkdDT09x8O2baAbJ0GR0Dhlb3qWq9sE10tUMTx9MqtDRZeD4TxB0U4UEUH8Kfyrbgquq2oVklWhPIzo2XF3HptxaPjFWYkGKk530Lwk9qngAoQUK2qQmH nkinkade@npk-x260"
+    }
+  ]
+}

@@ -5,11 +5,8 @@ resource "google_compute_address" "platform_cluster_mig_addresses" {
   for_each = var.instances.migs
 
   address_type = "EXTERNAL"
-  lifecycle {
-    prevent_destroy = true
-  }
-  name   = "${each.key}-${var.project}-measurement-lab-org"
-  region = each.value["region"]
+  name         = "${each.key}-${var.project}-measurement-lab-org"
+  region       = each.value["region"]
 }
 
 resource "google_compute_region_health_check" "platform_cluster_mig_health_checks" {
@@ -56,9 +53,13 @@ resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules
 #
 resource "google_compute_address" "platform_cluster_lb" {
   address_type = "EXTERNAL"
+
+  // There is no reason that this static address for the API load balancer
+  // should ever be deleted under normal circumstances.
   lifecycle {
     prevent_destroy = true
   }
+
   name   = "platform-cluster-lb"
   region = var.api_instances.machine_attributes.region
 }

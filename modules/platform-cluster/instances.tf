@@ -82,6 +82,10 @@ resource "google_compute_disk" "api_boot_disks" {
 
 resource "google_compute_disk" "api_data_disks" {
   for_each = var.api_instances.zones
+
+  // There is no reason that the data disks for the API load balancer should
+  // ever be deleted under normal circumstances, as they contain all the cluster
+  // state.
   lifecycle {
     prevent_destroy = true
   }
@@ -160,10 +164,7 @@ resource "google_compute_instance" "platform_instances" {
 resource "google_compute_address" "platform_addresses" {
   for_each     = var.instances.vms
   address_type = "EXTERNAL"
-  lifecycle {
-    prevent_destroy = true
-  }
-  name = "${each.key}-${var.project}-measurement-lab-org"
+  name         = "${each.key}-${var.project}-measurement-lab-org"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
   region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
@@ -239,9 +240,6 @@ resource "google_compute_disk" "prometheus_boot_disk" {
 }
 
 resource "google_compute_disk" "prometheus_data_disk" {
-  lifecycle {
-    prevent_destroy = true
-  }
   name = "prometheus-platform-cluster-${var.prometheus_instance.zone}"
   size = var.prometheus_instance.disk_size_gb_data
   type = var.prometheus_instance.disk_type

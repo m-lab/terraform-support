@@ -22,4 +22,5 @@ module "platform-cluster" {
   api_instances       = var.api_instances
   prometheus_instance = var.prometheus_instance
   networking          = var.networking
+  ssh_keys            = var.ssh_keys
 }
