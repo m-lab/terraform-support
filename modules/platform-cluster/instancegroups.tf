@@ -77,7 +77,7 @@ resource "google_compute_region_instance_group_manager" "platform_cluster_mig_ma
     // the number of zones available in a region.  There is currently only one
     // GCP regions with more than 3 zones (us-central1, which has 4).
     max_surge_fixed       = 4
-    max_unavailable_fixed = 1
+    max_unavailable_fixed = 0
     minimal_action        = "REPLACE"
     type                  = "PROACTIVE"
   }
