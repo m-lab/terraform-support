@@ -1,7 +1,7 @@
-# home of the gardener.
-resource "google_container_node_pool" "gardener" {
+# Nodepool for the gardener and autoloader.
+resource "google_container_node_pool" "processor" {
 
-  name           = "gardener"
+  name           = "processor"
   cluster        = google_container_cluster.data_pipeline.id
   project        = "mlab-sandbox"
   location       = "us-central1"
@@ -10,6 +10,7 @@ resource "google_container_node_pool" "gardener" {
   node_config {
     labels = {
       gardener-node = "true"
+      processor-node = "true"
     }
     machine_type = "n2-standard-4"
     oauth_scopes    = [
@@ -131,9 +132,9 @@ resource "google_container_node_pool" "prometheus" {
   }
 }
 
-resource "google_container_node_pool" "stats_pipeline" {
+resource "google_container_node_pool" "statistics" {
 
-  name     = "stats-pipeline"
+  name     = "statistics"
   cluster  = google_container_cluster.data_pipeline.id
   project  = "mlab-sandbox"
   location = "us-central1"

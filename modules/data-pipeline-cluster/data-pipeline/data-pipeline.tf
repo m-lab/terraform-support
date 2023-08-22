@@ -1,6 +1,6 @@
 resource "google_compute_network" "data_pipeline" {
   auto_create_subnetworks = false
-  description             = "Communication between backend processing services, e.g. etl, gardener, stats or viz pipelines."
+  description             = "Communication between backend processing services, e.g. etl, gardener, autoloader, or stats pipelines."
   name                    = "data-pipeline"
   project                 = "mlab-sandbox"
   routing_mode            = "REGIONAL"
@@ -15,16 +15,11 @@ resource "google_compute_subnetwork" "data_pipeline_us_central1" {
 }
 
 resource "google_container_cluster" "data_pipeline" {
-  addons_config {
-    network_policy_config {
-      disabled = true
-    }
-  }
 
+  name    = "data-pipeline"
   project   = "mlab-sandbox"
   location  = "us-central1"
 
-  name    = "data-pipeline"
   network = google_compute_network.data_pipeline.id
   subnetwork = google_compute_subnetwork.data_pipeline_us_central1.id
 
@@ -34,5 +29,4 @@ resource "google_container_cluster" "data_pipeline" {
   resource_labels = {
     data-pipeline = "true"
   }
-
 }
