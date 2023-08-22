@@ -132,6 +132,13 @@ resource "google_container_node_pool" "prometheus" {
   }
 }
 
+resource "google_service_account" "stats_pipeline" {
+  account_id   = "stats-pipeline"
+  description  = "Account for stats-pipeline. R/W access to GCS and BQ"
+  display_name = "stats-pipeline"
+  project      = "mlab-sandbox"
+}
+
 resource "google_container_node_pool" "statistics" {
 
   name     = "statistics"
@@ -149,7 +156,7 @@ resource "google_container_node_pool" "statistics" {
       disable-legacy-endpoints = "true"
     }
     oauth_scopes    = ["https://www.googleapis.com/auth/cloud-platform"]
-    service_account = "stats-pipeline@mlab-sandbox.iam.gserviceaccount.com"
+    service_account = google_service_account.stats_pipeline.email
   }
 
   autoscaling {
