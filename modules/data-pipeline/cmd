@@ -1,2 +1,0 @@
-gcloud beta resource-config bulk-export --resource-types=ContainerCluster,ContainerNodePool --project=mlab-sandbox --resource-format=terraform
-
