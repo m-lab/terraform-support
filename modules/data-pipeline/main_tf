@@ -1,0 +1,100 @@
+# google_client_config and kubernetes provider must be explicitly specified like the following.
+data "google_client_config" "default" {}
+
+provider "kubernetes" {
+  host                   = "https://${module.gke.endpoint}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
+}
+
+module "gke" {
+  source                     = "terraform-google-modules/kubernetes-engine/google"
+  project_id                 = "mlab-sandbox"
+  name                       = "soltesz-test-pipeline"
+  region                     = "us-central1"
+  zones                      = ["us-central1-a", "us-central1-b", "us-central1-c"]
+  network                    = "default"
+  subnetwork                 = "default" # us-central1-01"
+  ip_range_pods              = "us-central1-01-gke-01-pods"
+  ip_range_services          = "us-central1-01-gke-01-services"
+  http_load_balancing        = false
+  network_policy             = false
+  horizontal_pod_autoscaling = true
+  filestore_csi_driver       = false
+  create_service_account     = false
+  grant_registry_access      = true
+
+  logging_enabled_components    = ["SYSTEM_COMPONENTS"]
+  monitoring_enabled_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
+
+  # default-pool Ok 1.21.12-gke.2200 1 (0 - 1 per zone) n1-standard-4
+  # downloader-pool Ok 1.21.12-gke.2200 3 (1 per zone) n1-standard-2
+  # parser-pool Ok 1.21.12-gke.2200 8 (2 - 3 per zone) n1-standard-16
+  # prometheus-pool Ok 1.21.12-gke.2200 3 (1 per zone) n1-standard-4
+  # stats-pipeline-pool Ok 1.21.12-gke.2200 3 (1 per zone) n2-standard-8
+  node_pools = [
+    {
+      name                      = "default-pool"
+      machine_type              = "n1-standard-4"
+      node_locations            = "us-central1-b"
+      node_count                = 1
+      min_count                 = 0
+      max_count                 = 3
+      #local_ssd_count           = 0
+      #spot                      = false
+      #disk_size_gb              = 100
+      disk_type                 = "pd-standard"
+      image_type                = "COS_CONTAINERD"
+      #enable_gcfs               = false
+      #enable_gvnic              = false
+      auto_repair               = true
+      auto_upgrade              = true
+      #service_account           = "project-service-account@<PROJECT ID>.iam.gserviceaccount.com"
+      preemptible               = false
+      #initial_node_count        = 80
+    },
+  ]
+
+  node_pools_oauth_scopes = {
+    all = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+  }
+
+  node_pools_labels = {
+    all = {}
+
+    default-pool = {
+      default-pool = true
+    }
+  }
+
+  node_pools_metadata = {
+    all = {}
+
+    default-pool = {
+      node-pool-metadata-custom-value = "my-node-pool"
+    }
+  }
+
+  node_pools_taints = {
+    all = []
+
+    default-pool = [
+      {
+        key    = "default-pool"
+        value  = true
+        effect = "PREFER_NO_SCHEDULE"
+      },
+    ]
+  }
+
+  node_pools_tags = {
+    all = []
+
+    default-pool = [
+      "default-pool",
+    ]
+  }
+}
