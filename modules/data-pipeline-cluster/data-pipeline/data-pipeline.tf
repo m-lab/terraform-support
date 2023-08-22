@@ -11,14 +11,10 @@ resource "google_container_cluster" "data_pipeline" {
     enabled             = false
   }
 
-  # Auto assign.
-  # cluster_ipv4_cidr = "10.80.0.0/16"
-
   database_encryption {
     state = "DECRYPTED"
   }
 
-  # default_max_pods_per_node = 110
   enable_shielded_nodes     = false
   location                  = "us-central1"
 
@@ -61,7 +57,11 @@ resource "google_container_cluster" "data_pipeline" {
       disable-legacy-endpoints = "true"
     }
 
-    oauth_scopes    = ["https://www.googleapis.com/auth/devstorage.read_write", "https://www.googleapis.com/auth/logging.write", "https://www.googleapis.com/auth/monitoring"]
+    oauth_scopes    = [
+        "https://www.googleapis.com/auth/devstorage.read_write",
+        "https://www.googleapis.com/auth/logging.write",
+        "https://www.googleapis.com/auth/monitoring"
+    ]
     service_account = "default"
 
     shielded_instance_config {
