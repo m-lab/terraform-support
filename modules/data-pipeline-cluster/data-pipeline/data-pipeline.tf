@@ -1,87 +1,38 @@
+resource "google_compute_network" "data_pipeline" {
+  auto_create_subnetworks = false
+  description             = "Communication between backend processing services, e.g. etl, gardener, stats or viz pipelines."
+  name                    = "data-pipeline"
+  project                 = "mlab-sandbox"
+  routing_mode            = "REGIONAL"
+}
+
+resource "google_compute_subnetwork" "data_pipeline_us_central1" {
+  ip_cidr_range              = "10.80.0.0/16"
+  name                       = "pipeline"
+  network                    = google_compute_network.data_pipeline.id
+  region                     = "us-central1"
+  project                    = "mlab-sandbox"
+}
+
 resource "google_container_cluster" "data_pipeline" {
   addons_config {
     network_policy_config {
       disabled = true
     }
   }
-  # must be greater than zero.
-  initial_node_count = 1
 
-  cluster_autoscaling {
-    enabled             = false
-  }
-
-  database_encryption {
-    state = "DECRYPTED"
-  }
-
-  enable_shielded_nodes     = false
-  location                  = "us-central1"
-
-  logging_config {
-    enable_components = ["SYSTEM_COMPONENTS", "WORKLOADS"]
-  }
-
-  master_auth {
-    client_certificate_config {
-      issue_client_certificate = false
-    }
-  }
-
-  monitoring_config {
-    enable_components = ["SYSTEM_COMPONENTS"]
-  }
+  project   = "mlab-sandbox"
+  location  = "us-central1"
 
   name    = "data-pipeline"
-  network = "projects/mlab-sandbox/global/networks/data-processing"
+  network = google_compute_network.data_pipeline.id
+  subnetwork = google_compute_subnetwork.data_pipeline_us_central1.id
 
-  network_policy {
-    enabled  = false
-    provider = "PROVIDER_UNSPECIFIED"
-  }
-
-  networking_mode = "ROUTES"
-
-  node_config {
-    disk_size_gb = 100
-    disk_type    = "pd-standard"
-    image_type   = "COS_CONTAINERD"
-
-    labels = {
-      downloader-node = "true"
-    }
-
-    machine_type = "n1-standard-4"
-
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
-
-    oauth_scopes    = [
-        "https://www.googleapis.com/auth/devstorage.read_write",
-        "https://www.googleapis.com/auth/logging.write",
-        "https://www.googleapis.com/auth/monitoring"
-    ]
-    service_account = "default"
-
-    shielded_instance_config {
-      enable_integrity_monitoring = true
-    }
-  }
-
-  node_locations = ["us-central1-a", "us-central1-b", "us-central1-c"]
-  node_version   = "1.25.12-gke.500"
-  min_master_version = "1.25.12-gke.500"
-
-  project = "mlab-sandbox"
-
-  release_channel {
-    channel = "STABLE"
-  }
+  remove_default_node_pool = true
+  initial_node_count       = 1
 
   resource_labels = {
     data-pipeline = "true"
   }
 
-  subnetwork = "projects/mlab-sandbox/regions/us-central1/subnetworks/dp-gardener"
 }
