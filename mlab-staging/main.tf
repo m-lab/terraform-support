@@ -18,6 +18,7 @@ module "platform-cluster" {
   project             = var.project
   default_region      = var.default_region
   default_zone        = var.default_zone
+  default_location    = var.default_location
   instances           = var.instances
   api_instances       = var.api_instances
   prometheus_instance = var.prometheus_instance

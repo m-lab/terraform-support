@@ -1,6 +1,7 @@
 project        = "mlab-staging"
 default_region = "us-central1"
 default_zone   = "us-central1-a"
+default_location = "us-central1"
 
 instances = {
   attributes = {
