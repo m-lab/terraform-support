@@ -13,6 +13,11 @@ variable "default_zone" {
   type        = string
 }
 
+variable "default_location" {
+  description = "Default GCP location"
+  type        = string
+}
+
 variable "instances" {
   description = "Platform instances"
   type = object({
