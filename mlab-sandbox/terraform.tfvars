@@ -1,6 +1,7 @@
 project        = "mlab-sandbox"
 default_region = "us-west2"
 default_zone   = "us-west2-a"
+default_location = "us-central1"
 
 instances = {
   attributes = {
