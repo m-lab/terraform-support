@@ -30,6 +30,5 @@ module "data-pipeline" {
   source = "../modules/data-pipeline"
 
   project = var.project
-  default_region = var.default_location
   default_location = var.default_location
 }
