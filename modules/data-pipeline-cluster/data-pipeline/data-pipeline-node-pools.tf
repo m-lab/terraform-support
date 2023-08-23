@@ -1,10 +1,9 @@
 # Nodepool for the gardener and autoloader.
 resource "google_container_node_pool" "processor" {
 
-  name           = "processor"
-  cluster        = google_container_cluster.data_pipeline.id
-  project        = "mlab-sandbox"
-  location       = "us-central1"
+  name     = "processor"
+  cluster  = google_container_cluster.data_pipeline.id
+  location = var.default_location
 
   initial_node_count = 1
   node_config {
@@ -38,10 +37,9 @@ resource "google_container_node_pool" "processor" {
 }
 resource "google_container_node_pool" "parser" {
 
-  name           = "parser"
-  cluster        = google_container_cluster.data_pipeline.id
-  project        = "mlab-sandbox"
-  location       = "us-central1"
+  name     = "parser"
+  cluster  = google_container_cluster.data_pipeline.id
+  location = var.default_location
 
   initial_node_count = 3
   node_config {
@@ -69,10 +67,9 @@ resource "google_container_node_pool" "parser" {
 
 resource "google_container_node_pool" "downloader" {
 
-  name           = "downloader"
-  cluster        = google_container_cluster.data_pipeline.id
-  project        = "mlab-sandbox"
-  location       = "us-central1"
+  name     = "downloader"
+  cluster  = google_container_cluster.data_pipeline.id
+  location = var.default_location
 
   initial_node_count = 1
   node_config {
@@ -102,8 +99,7 @@ resource "google_container_node_pool" "prometheus" {
 
   name     = "prometheus"
   cluster  = google_container_cluster.data_pipeline.id
-  project  = "mlab-sandbox"
-  location = "us-central1"
+  location = var.default_location
 
   initial_node_count = 1
   node_config {
@@ -136,15 +132,13 @@ resource "google_service_account" "stats_pipeline" {
   account_id   = "stats-pipeline"
   description  = "Account for stats-pipeline. R/W access to GCS and BQ"
   display_name = "stats-pipeline"
-  project      = "mlab-sandbox"
 }
 
 resource "google_container_node_pool" "statistics" {
 
   name     = "statistics"
   cluster  = google_container_cluster.data_pipeline.id
-  project  = "mlab-sandbox"
-  location = "us-central1"
+  location = var.default_location
 
   initial_node_count = 1
   node_config {
