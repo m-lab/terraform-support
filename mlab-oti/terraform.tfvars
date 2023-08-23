@@ -1,6 +1,7 @@
 project        = "mlab-oti"
 default_region = "us-east1"
 default_zone   = "us-east1-b"
+default_location = "us-central1"
 
 instances = {
   attributes = {
