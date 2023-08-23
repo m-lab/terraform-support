@@ -5,7 +5,7 @@ resource "google_compute_network" "data_pipeline" {
   routing_mode            = "REGIONAL"
 }
 
-resource "google_compute_subnetwork" "data_pipeline_us_central1" {
+resource "google_compute_subnetwork" "data_pipeline" {
   ip_cidr_range              = "10.80.0.0/16"
   name                       = "pipeline"
   network                    = google_compute_network.data_pipeline.id
@@ -17,7 +17,7 @@ resource "google_container_cluster" "data_pipeline" {
   location  = var.default_location
 
   network = google_compute_network.data_pipeline.id
-  subnetwork = google_compute_subnetwork.data_pipeline_us_central1.id
+  subnetwork = google_compute_subnetwork.data_pipeline.id
 
   remove_default_node_pool = true
   initial_node_count       = 1
