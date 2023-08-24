@@ -32,3 +32,7 @@ module "data-pipeline" {
   project = var.project
   default_location = var.default_location
 }
+
+module "iam-custom-roles" {
+  source = "../modules/iam-custom-roles"
+}
