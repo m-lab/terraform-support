@@ -56,7 +56,7 @@ resource "google_container_node_pool" "parser" {
   }
 
   autoscaling {
-    max_node_count = 2
+    max_node_count = 3
     min_node_count = 0
   }
   upgrade_settings {
@@ -120,7 +120,7 @@ resource "google_container_node_pool" "prometheus" {
 
   autoscaling {
     max_node_count = 2
-    min_node_count = 1
+    min_node_count = 0
   }
   upgrade_settings {
     max_surge       = 1
