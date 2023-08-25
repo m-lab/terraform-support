@@ -25,3 +25,10 @@ module "platform-cluster" {
   networking          = var.networking
   ssh_keys            = var.ssh_keys
 }
+
+module "data-pipeline" {
+  source = "../modules/data-pipeline"
+
+  project = var.project
+  default_location = var.default_location
+}
