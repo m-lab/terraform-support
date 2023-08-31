@@ -1,23 +1,3 @@
-variable "project" {
-  description = "GCP project"
-  type        = string
-}
-
-variable "default_region" {
-  description = "Default GCP region"
-  type        = string
-}
-
-variable "default_zone" {
-  description = "Default GCP zone"
-  type        = string
-}
-
-variable "default_location" {
-  description = "Default GCP location"
-  type        = string
-}
-
 variable "instances" {
   description = "Platform instances"
   type = object({

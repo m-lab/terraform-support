@@ -5,7 +5,7 @@ resource "google_compute_address" "platform_cluster_mig_addresses" {
   for_each = var.instances.migs
 
   address_type = "EXTERNAL"
-  name         = "${each.key}-${var.project}-measurement-lab-org"
+  name         = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   region       = each.value["region"]
 }
 
@@ -16,7 +16,7 @@ resource "google_compute_region_health_check" "platform_cluster_mig_health_check
     port = 443
   }
 
-  name   = "${each.key}-${var.project}-measurement-lab-org"
+  name   = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   region = each.value["region"]
 }
 
@@ -27,7 +27,7 @@ resource "google_compute_region_backend_service" "platform_cluster_mig_backends"
     group = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].instance_group
   }
 
-  name                  = "${each.key}-${var.project}-measurement-lab-org"
+  name                  = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   health_checks         = [google_compute_region_health_check.platform_cluster_mig_health_checks[each.key].id]
   load_balancing_scheme = "EXTERNAL"
   protocol              = "UNSPECIFIED"
@@ -43,7 +43,7 @@ resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules
   ip_address            = google_compute_address.platform_cluster_mig_addresses[each.key].id
   ip_protocol           = "L3_DEFAULT"
   load_balancing_scheme = "EXTERNAL"
-  name                  = "${each.key}-${var.project}-measurement-lab-org"
+  name                  = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   region                = each.value["region"]
 }
 

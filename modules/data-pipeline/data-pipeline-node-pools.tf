@@ -3,7 +3,7 @@ resource "google_container_node_pool" "processor" {
 
   name     = "processor"
   cluster  = google_container_cluster.data_pipeline.id
-  location = var.default_location
+  location  = data.google_client_config.current.region
 
   initial_node_count = 1
   node_config {
@@ -39,7 +39,7 @@ resource "google_container_node_pool" "parser" {
 
   name     = "parser"
   cluster  = google_container_cluster.data_pipeline.id
-  location = var.default_location
+  location  = data.google_client_config.current.region
 
   initial_node_count = 3
   node_config {
@@ -69,7 +69,7 @@ resource "google_container_node_pool" "downloader" {
 
   name     = "downloader"
   cluster  = google_container_cluster.data_pipeline.id
-  location = var.default_location
+  location  = data.google_client_config.current.region
 
   initial_node_count = 1
   node_config {
@@ -99,7 +99,7 @@ resource "google_container_node_pool" "prometheus" {
 
   name     = "prometheus"
   cluster  = google_container_cluster.data_pipeline.id
-  location = var.default_location
+  location  = data.google_client_config.current.region
 
   initial_node_count = 1
   node_config {
@@ -138,7 +138,7 @@ resource "google_container_node_pool" "statistics" {
 
   name     = "statistics"
   cluster  = google_container_cluster.data_pipeline.id
-  location = var.default_location
+  location  = data.google_client_config.current.region
 
   initial_node_count = 1
   node_config {
@@ -162,3 +162,4 @@ resource "google_container_node_pool" "statistics" {
     max_unavailable = 0
   }
 }
+

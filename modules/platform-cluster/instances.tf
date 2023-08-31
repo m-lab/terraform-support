@@ -25,7 +25,7 @@ resource "google_compute_instance" "api_instances" {
     source      = google_compute_disk.api_boot_disks[each.key].id
   }
 
-  hostname = "api-platform-cluster-${each.key}.${var.project}.measurementlab.net"
+  hostname = "api-platform-cluster-${each.key}.${data.google_client_config.current.project}.measurementlab.net"
 
   machine_type = var.api_instances.machine_attributes.machine_type
 
@@ -109,22 +109,22 @@ resource "google_compute_instance" "platform_instances" {
   }
 
   description  = "Platform VMs that are not part of a MIG"
-  hostname     = "${each.key}.${var.project}.measurement-lab.org"
+  hostname     = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
   machine_type = var.instances.attributes.machine_type
 
   metadata = {
     k8s_labels = join(",", [
       "mlab/machine=${split("-", each.key)[0]}",
       "mlab/metro=${substr(each.key, 6, 3)}",
-      "mlab/project=${var.project}",
+      "mlab/project=${data.google_client_config.current.project}",
       "mlab/run=ndt",
       "mlab/site=${split("-", each.key)[1]}",
       "mlab/type=virtual"
     ])
-    k8s_node = "${each.key}.${var.project}.measurement-lab.org"
+    k8s_node = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
   }
 
-  name = "${each.key}-${var.project}-measurement-lab-org"
+  name = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
 
   network_interface {
     access_config {
@@ -150,7 +150,7 @@ resource "google_compute_instance" "platform_instances" {
   # external IPv6 addresses, but the Google Terraform provider does not.
   # TODO(kinkade): remove this once the Google provider catches up to GCP.
   provisioner "local-exec" {
-    command = "../scripts/assign_static_ipv6.sh ${var.project} ${each.key}"
+    command = "../scripts/assign_static_ipv6.sh ${data.google_client_config.current.project} ${each.key}"
   }
 
   service_account {
@@ -164,7 +164,7 @@ resource "google_compute_instance" "platform_instances" {
 resource "google_compute_address" "platform_addresses" {
   for_each     = var.instances.vms
   address_type = "EXTERNAL"
-  name         = "${each.key}-${var.project}-measurement-lab-org"
+  name         = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
   region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
@@ -173,7 +173,7 @@ resource "google_compute_address" "platform_addresses" {
 resource "google_compute_disk" "platform_boot_disks" {
   for_each = var.instances.vms
   image    = var.instances.attributes.disk_image
-  name     = "${each.key}-${var.project}-measurement-lab-org"
+  name     = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   size     = var.instances.attributes.disk_size_gb
   type     = var.instances.attributes.disk_type
   zone     = each.value["zone"]
@@ -249,6 +249,6 @@ resource "google_compute_disk" "prometheus_data_disk" {
   # all metrics to be lost. Sadly, the snapshots in staging and production have
   # slightly different names, making it hard to preserve both programatically in
   # Terraform. We'll preserve the production disk.
-  snapshot = var.project == "mlab-oti" ? "projects/${var.project}/global/snapshots/prom-snapshot-oti" : null
+  snapshot = data.google_client_config.current.project == "mlab-oti" ? "projects/${data.google_client_config.current.project}/global/snapshots/prom-snapshot-oti" : null
   zone     = var.prometheus_instance.zone
 }
