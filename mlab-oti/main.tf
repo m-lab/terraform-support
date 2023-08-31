@@ -7,28 +7,19 @@ terraform {
 }
 
 provider "google" {
-  project = var.project
-  region  = var.default_region
-  zone    = var.default_zone
+  project = "mlab-oti"
 }
 
-module "platform-cluster" {
-  source = "../modules/platform-cluster"
-
-  project             = var.project
-  default_region      = var.default_region
-  default_zone        = var.default_zone
-  default_location    = var.default_location
-  instances           = var.instances
-  api_instances       = var.api_instances
-  prometheus_instance = var.prometheus_instance
-  networking          = var.networking
-  ssh_keys            = var.ssh_keys
+provider "google" {
+  alias   = "platform-cluster"
+  project = "mlab-oti"
+  region  = "us-east1"
+  zone    = "us-east1-b"
 }
 
-module "data-pipeline" {
-  source = "../modules/data-pipeline"
-
-  project = var.project
-  default_location = var.default_location
+provider "google" {
+  alias   = "data-pipeline"
+  project = "mlab-oti"
+  region  = "us-central1"
+  zone    = "us-central1-a"
 }

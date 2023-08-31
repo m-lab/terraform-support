@@ -24,12 +24,12 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
     k8s_labels = join(",", [
       "mlab/machine=${split("-", each.key)[0]}",
       "mlab/metro=${substr(each.key, 6, 3)}",
-      "mlab/project=${var.project}",
+      "mlab/project=${data.google_client_config.current.project}",
       "mlab/run=ndt",
       "mlab/site=${split("-", each.key)[1]}",
       "mlab/type=virtual"
     ])
-    k8s_node = "${each.key}.${var.project}.measurement-lab.org"
+    k8s_node = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
   }
 
   name_prefix = "platform-cluster-mig-template-"
@@ -68,8 +68,8 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
 resource "google_compute_region_instance_group_manager" "platform_cluster_mig_managers" {
   for_each = var.instances.migs
 
-  base_instance_name = "${each.key}-${var.project}-measurement-lab-org"
-  name               = "${each.key}-${var.project}-measurement-lab-org"
+  base_instance_name = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
+  name               = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   region             = each.value["region"]
 
   update_policy {
@@ -102,7 +102,7 @@ resource "google_compute_region_autoscaler" "platform_cluster_mig_autoscalers" {
     max_replicas = var.instances.attributes.mig_max_replicas
   }
 
-  name   = "${each.key}-${var.project}-measurement-lab-org"
+  name   = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   region = each.value["region"]
   target = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].id
 }

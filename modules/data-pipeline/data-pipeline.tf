@@ -9,13 +9,13 @@ resource "google_compute_subnetwork" "data_pipeline" {
   ip_cidr_range              = "10.80.0.0/16"
   name                       = "pipeline"
   network                    = google_compute_network.data_pipeline.id
-  region                     = var.default_location
+  region                     = data.google_client_config.current.region
 }
 
 resource "google_container_cluster" "data_pipeline" {
 
   name      = "data-pipeline"
-  location  = var.default_location
+  location  = data.google_client_config.current.region
 
   network = google_compute_network.data_pipeline.id
   subnetwork = google_compute_subnetwork.data_pipeline.id
