@@ -29,7 +29,7 @@ resource "google_container_cluster" "data_pipeline" {
 }
 
 resource "google_compute_address" "data_pipeline" {
-  name		= "ingress-nginx"
+  name		= "data-pipeline-ingress-nginx"
   address_type 	= "EXTERNAL"
   description	= "External IP address for ingress-nginx"
 }
