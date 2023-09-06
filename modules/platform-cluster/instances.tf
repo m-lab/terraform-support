@@ -117,7 +117,7 @@ resource "google_compute_instance" "platform_instances" {
       "mlab/machine=${split("-", each.key)[0]}",
       "mlab/metro=${substr(each.key, 6, 3)}",
       "mlab/project=${data.google_client_config.current.project}",
-      "mlab/run=ndt",
+      "mlab/run=${lookup(each.value, "daemonset", var.instances.attributes.daemonset)}",
       "mlab/site=${split("-", each.key)[1]}",
       "mlab/type=virtual"
     ])

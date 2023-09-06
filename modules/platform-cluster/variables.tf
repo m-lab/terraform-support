@@ -2,6 +2,7 @@ variable "instances" {
   description = "Platform instances"
   type = object({
     attributes = object({
+      daemonset        = string
       disk_image       = string
       disk_size_gb     = number
       disk_type        = string

@@ -7,6 +7,7 @@ module "platform-cluster" {
 
   instances = {
     attributes = {
+      daemonset        = "ndt"
       disk_image       = "platform-cluster-instance-2023-08-29t22-05-18"
       disk_size_gb     = 100
       disk_type        = "pd-ssd"
@@ -22,7 +23,8 @@ module "platform-cluster" {
         region = "us-east1"
       },
       mlab1-lax0t = {
-        region = "us-west2"
+        daemonset = "ndt-canary"
+        region    = "us-west2"
       },
       mlab1-pdx0t = {
         region = "us-west1"

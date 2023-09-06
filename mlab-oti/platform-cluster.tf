@@ -7,6 +7,7 @@ module "platform-cluster" {
 
   instances = {
     attributes = {
+      daemonset        = "ndt"
       disk_image       = "platform-cluster-instance-v2-4-5"
       disk_size_gb     = 100
       disk_type        = "pd-ssd"
@@ -17,7 +18,12 @@ module "platform-cluster" {
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     }
-    migs = {}
+    migs = {
+      mlab3-dfw09 = {
+        daemonset = "ndt-canary"
+        region    = "us-south1"
+      }
+    }
     vms = {
       mlab1-ams10 = {
         zone = "europe-west4-c"
@@ -61,9 +67,6 @@ module "platform-cluster" {
       },
       mlab2-dfw09 = {
         zone = "us-south1-b"
-      },
-      mlab3-dfw09 = {
-        zone = "us-south1-a"
       },
       mlab1-fra07 = {
         zone = "europe-west3-c"
