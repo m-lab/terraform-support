@@ -110,7 +110,7 @@ resource "google_compute_instance" "platform_instances" {
 
   description  = "Platform VMs that are not part of a MIG"
   hostname     = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
-  machine_type = var.instances.attributes.machine_type
+  machine_type = lookup(each.value, "machine_type", var.instances.attributes.machine_type)
 
   metadata = {
     k8s_labels = join(",", [

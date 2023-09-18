@@ -60,7 +60,8 @@ module "platform-cluster" {
         zone = "us-east5-c"
       },
       mlab1-del03 = {
-        zone = "asia-south2-c"
+        machine_type = "n2-highcpu-8"
+        zone         = "asia-south2-c"
       },
       mlab1-dfw09 = {
         zone = "us-south1-c"
