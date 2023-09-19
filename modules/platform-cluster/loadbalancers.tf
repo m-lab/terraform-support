@@ -9,6 +9,17 @@ resource "google_compute_address" "platform_cluster_mig_addresses" {
   region       = each.value["region"]
 }
 
+resource "google_compute_address" "platform_cluster_mig_addresses_v6" {
+  for_each = var.instances.migs
+
+  address_type       = "EXTERNAL"
+  ipv6_endpoint_type = "NETLB"
+  ip_version         = "IPV6"
+  name               = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org-v6"
+  region             = each.value["region"]
+  subnetwork         = google_compute_subnetwork.platform_cluster[each.value["region"]].id
+}
+
 resource "google_compute_region_health_check" "platform_cluster_mig_health_checks" {
   for_each = var.instances.migs
 
@@ -45,6 +56,20 @@ resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules
   load_balancing_scheme = "EXTERNAL"
   name                  = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
   region                = each.value["region"]
+}
+
+resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules_v6" {
+  for_each = var.instances.migs
+
+  all_ports             = true
+  backend_service       = google_compute_region_backend_service.platform_cluster_mig_backends[each.key].id
+  ip_address            = google_compute_address.platform_cluster_mig_addresses_v6[each.key].id
+  ip_protocol           = "L3_DEFAULT"
+  ip_version            = "IPV6"
+  load_balancing_scheme = "EXTERNAL"
+  name                  = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org-v6"
+  region                = each.value["region"]
+  subnetwork            = google_compute_subnetwork.platform_cluster[each.value["region"]].id
 }
 
 

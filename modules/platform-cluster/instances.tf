@@ -110,7 +110,7 @@ resource "google_compute_instance" "platform_instances" {
 
   description  = "Platform VMs that are not part of a MIG"
   hostname     = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
-  machine_type = var.instances.attributes.machine_type
+  machine_type = lookup(each.value, "machine_type", var.instances.attributes.machine_type)
 
   metadata = {
     k8s_labels = join(",", [
@@ -134,6 +134,7 @@ resource "google_compute_instance" "platform_instances" {
     }
 
     ipv6_access_config {
+      external_ipv6 = google_compute_address.platform_addresses_v6["${each.key}"].address
       # From what I gather STANDARD network tier is not available for IPv6.
       # https://cloud.google.com/network-tiers/docs/overview#resources
       network_tier = "PREMIUM"
@@ -143,14 +144,6 @@ resource "google_compute_instance" "platform_instances" {
     stack_type = var.networking.attributes.stack_type
     # Ugly: extract the region from the zone.
     subnetwork = google_compute_subnetwork.platform_cluster[regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]].id
-  }
-
-  # Removes the empheral IPv6 address created by the Terraform deployment and
-  # replaces it with a static address. Today, GCP supports static, regional,
-  # external IPv6 addresses, but the Google Terraform provider does not.
-  # TODO(kinkade): remove this once the Google provider catches up to GCP.
-  provisioner "local-exec" {
-    command = "../scripts/assign_static_ipv6.sh ${data.google_client_config.current.project} ${each.key}"
   }
 
   service_account {
@@ -165,6 +158,17 @@ resource "google_compute_address" "platform_addresses" {
   for_each     = var.instances.vms
   address_type = "EXTERNAL"
   name         = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
+  # This regex is ugly, but I can't find a better way to extract the region from
+  # the zone.
+  region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
+}
+
+resource "google_compute_address" "platform_addresses_v6" {
+  for_each           = var.instances.vms
+  address_type       = "EXTERNAL"
+  ipv6_endpoint_type = "VM"
+  ip_version         = "IPV6"
+  name               = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org-v6"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
   region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
