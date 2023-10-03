@@ -18,12 +18,7 @@ module "platform-cluster" {
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     }
-    migs = {
-      mlab3-dfw09 = {
-        daemonset = "ndt-canary"
-        region    = "us-south1"
-      }
-    }
+    migs = {}
     vms = {
       mlab1-ams10 = {
         zone = "europe-west4-c"
