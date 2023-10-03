@@ -43,7 +43,7 @@ resource "google_compute_instance" "api_instances" {
       network_tier = "PREMIUM"
     }
     network    = google_compute_network.platform_cluster.id
-    network_ip = google_compute_address.api_internal_addresses[each.key].id
+    network_ip = google_compute_address.api_internal_addresses[each.key].address
     stack_type = var.networking.attributes.stack_type
     subnetwork = google_compute_subnetwork.platform_cluster[var.api_instances.machine_attributes.region].id
   }
