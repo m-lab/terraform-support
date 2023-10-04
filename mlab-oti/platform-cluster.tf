@@ -24,6 +24,7 @@ module "platform-cluster" {
         zone = "europe-west4-c"
       },
       mlab1-ber01 = {
+        # We cannot currently get any N2 quota in this region.
         machine_type = "e2-highcpu-4"
         zone         = "europe-west10-c"
       },
@@ -72,10 +73,12 @@ module "platform-cluster" {
         zone = "us-south1-a"
       },
       mlab1-dmm01 = {
+        # We cannot currently get any N2 quota in this region.
         machine_type = "e2-highcpu-4"
         zone         = "me-central2-c"
       },
       mlab1-doh01 = {
+        # We cannot currently get any N2 quota in this region.
         machine_type = "e2-highcpu-4"
         zone         = "me-central1-c"
       },
