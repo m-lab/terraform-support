@@ -23,6 +23,10 @@ module "platform-cluster" {
       mlab1-ams10 = {
         zone = "europe-west4-c"
       },
+      mlab1-ber01 = {
+        machine_type = "e2-highcpu-4"
+        zone         = "europe-west10-c"
+      },
       mlab1-bom03 = {
         zone = "asia-south1-c"
       },
@@ -66,6 +70,14 @@ module "platform-cluster" {
       },
       mlab3-dfw09 = {
         zone = "us-south1-a"
+      },
+      mlab1-dmm01 = {
+        machine_type = "e2-highcpu-4"
+        zone         = "me-central2-c"
+      },
+      mlab1-doh01 = {
+        machine_type = "e2-highcpu-4"
+        zone         = "me-central1-c"
       },
       mlab1-fra07 = {
         zone = "europe-west3-c"
@@ -363,10 +375,25 @@ module "platform-cluster" {
         name          = "kubernetes"
         region        = "europe-west9"
       },
+      "europe-west10" = {
+        ip_cidr_range = "10.38.0.0/16"
+        name          = "kubernetes"
+        region        = "europe-west10"
+      },
       "europe-west12" = {
         ip_cidr_range = "10.37.0.0/16"
         name          = "kubernetes"
         region        = "europe-west12"
+      },
+      "me-central1" = {
+        ip_cidr_range = "10.39.0.0/16"
+        name          = "kubernetes"
+        region        = "me-central1"
+      },
+      "me-central2" = {
+        ip_cidr_range = "10.40.0.0/16"
+        name          = "kubernetes"
+        region        = "me-central2"
       },
       "me-west1" = {
         ip_cidr_range = "10.35.0.0/16"
