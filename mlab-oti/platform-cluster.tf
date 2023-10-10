@@ -72,11 +72,6 @@ module "platform-cluster" {
       mlab3-dfw09 = {
         zone = "us-south1-a"
       },
-      mlab1-dmm01 = {
-        # We cannot currently get any N2 quota in this region.
-        machine_type = "e2-highcpu-4"
-        zone         = "me-central2-c"
-      },
       mlab1-doh01 = {
         # We cannot currently get any N2 quota in this region.
         machine_type = "e2-highcpu-4"
@@ -392,11 +387,6 @@ module "platform-cluster" {
         ip_cidr_range = "10.39.0.0/16"
         name          = "kubernetes"
         region        = "me-central1"
-      },
-      "me-central2" = {
-        ip_cidr_range = "10.40.0.0/16"
-        name          = "kubernetes"
-        region        = "me-central2"
       },
       "me-west1" = {
         ip_cidr_range = "10.35.0.0/16"
