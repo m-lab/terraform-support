@@ -141,6 +141,7 @@ resource "google_compute_instance" "platform_instances" {
     }
 
     network    = google_compute_network.platform_cluster.id
+    network_ip = google_compute_address.platform_addresses_internal[each.key].address
     stack_type = var.networking.attributes.stack_type
     # Ugly: extract the region from the zone.
     subnetwork = google_compute_subnetwork.platform_cluster[regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]].id
@@ -158,6 +159,15 @@ resource "google_compute_address" "platform_addresses" {
   for_each     = var.instances.vms
   address_type = "EXTERNAL"
   name         = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
+  # This regex is ugly, but I can't find a better way to extract the region from
+  # the zone.
+  region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
+}
+
+resource "google_compute_address" "platform_addresses_internal" {
+  for_each     = var.instances.vms
+  address_type = "INTERNAL"
+  name         = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org-internal"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
   region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
