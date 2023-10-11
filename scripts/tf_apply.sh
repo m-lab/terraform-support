@@ -80,7 +80,7 @@ function update_instances() {
       "
     fi
 
-    terraform apply -auto-approve -compact-warnings $targets
+    terraform apply -auto-approve -compact-warnings -no-color $targets
 
     # Wait until the machine is up and required services are running. For an API
     # server, this means that the /readyz endpoint returns 200. For platform
@@ -114,7 +114,7 @@ function main() {
   done
 
   # Now apply everything else.
-  terraform apply -auto-approve -compact-warnings
+  terraform apply -auto-approve -compact-warnings -no-color
 }
 
 main
