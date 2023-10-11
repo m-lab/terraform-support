@@ -171,7 +171,8 @@ resource "google_compute_address" "platform_addresses_v6" {
   name               = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org-v6"
   # This regex is ugly, but I can't find a better way to extract the region from
   # the zone.
-  region = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
+  region     = regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]
+  subnetwork = google_compute_subnetwork.platform_cluster[regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]].id
 }
 
 resource "google_compute_disk" "platform_boot_disks" {
