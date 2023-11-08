@@ -37,6 +37,15 @@ module "platform-cluster" {
       mlab3-bom03 = {
         zone = "asia-south1-a"
       },
+      mlab1-bom05 = {
+        zone = "asia-south1-c"
+      },
+      mlab2-bom05 = {
+        zone = "asia-south1-b"
+      },
+      mlab3-bom05 = {
+        zone = "asia-south1-a"
+      },
       mlab1-bru06 = {
         zone = "europe-west1-c"
       },
@@ -70,6 +79,15 @@ module "platform-cluster" {
         zone = "us-south1-b"
       },
       mlab3-dfw09 = {
+        zone = "us-south1-a"
+      },
+      mlab1-dfw10 = {
+        zone = "us-south1-c"
+      },
+      mlab2-dfw10 = {
+        zone = "us-south1-b"
+      },
+      mlab3-dfw10 = {
         zone = "us-south1-a"
       },
       mlab1-doh01 = {
