@@ -90,6 +90,15 @@ module "platform-cluster" {
       mlab3-dfw10 = {
         zone = "us-south1-a"
       },
+      mlab1-dfw11 = {
+        zone = "us-south1-c"
+      },
+      mlab2-dfw11 = {
+        zone = "us-south1-b"
+      },
+      mlab3-dfw11 = {
+        zone = "us-south1-a"
+      },
       mlab1-doh01 = {
         # We cannot currently get any N2 quota in this region.
         machine_type = "e2-highcpu-4"
