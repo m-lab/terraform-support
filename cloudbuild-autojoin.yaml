@@ -6,7 +6,7 @@
 timeout: 36000s
 
 steps:
-- name: gcr.io/mlab-oti/gcloud-jsonnet-cbif:1.1
+- name: gcr.io/mlab-sandbox/gcloud-jsonnet-cbif:1.1
   entrypoint: /bin/bash
   args:
   - -c
