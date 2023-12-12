@@ -8,12 +8,9 @@ module "data-pipeline" {
   node_pools = {
     "downloader" = {
       initial_node_count = 1
-      labels = {
-        downloader-node = "true"
-      }
-      machine_type   = "n1-standard-4"
-      max_node_count = 1
-      max_surge      = 1
+      machine_type       = "n1-standard-4"
+      max_node_count     = 1
+      max_surge          = 1
       oauth_scopes = [
         "https://www.googleapis.com/auth/devstorage.read_write",
         "https://www.googleapis.com/auth/logging.write",
@@ -22,12 +19,9 @@ module "data-pipeline" {
     },
     "parser" = {
       initial_node_count = 3
-      labels = {
-        parser-node = "true"
-      }
-      machine_type   = "n2-standard-16"
-      max_node_count = 3
-      max_surge      = 1
+      machine_type       = "n2-standard-16"
+      max_node_count     = 3
+      max_surge          = 1
       oauth_scopes = [
         "https://www.googleapis.com/auth/cloud-platform",
         "https://www.googleapis.com/auth/compute",
@@ -36,13 +30,9 @@ module "data-pipeline" {
     },
     "processor" = {
       initial_node_count = 1
-      labels = {
-        gardener-node  = "true"
-        processor-node = "true"
-      }
-      machine_type   = "n2-standard-4"
-      max_node_count = 2
-      max_surge      = 1
+      machine_type       = "n2-standard-4"
+      max_node_count     = 2
+      max_surge          = 1
       oauth_scopes = [
         "https://www.googleapis.com/auth/bigquery",
         "https://www.googleapis.com/auth/compute",
@@ -56,12 +46,9 @@ module "data-pipeline" {
     },
     "prometheus" = {
       initial_node_count = 1
-      labels = {
-        prometheus-node = "true"
-      }
-      machine_type   = "n2-standard-4"
-      max_node_count = 2
-      max_surge      = 1
+      machine_type       = "n2-standard-4"
+      max_node_count     = 2
+      max_surge          = 1
       oauth_scopes = [
         "https://www.googleapis.com/auth/devstorage.read_only",
         "https://www.googleapis.com/auth/logging.write",
@@ -73,12 +60,9 @@ module "data-pipeline" {
     },
     "statistics" = {
       initial_node_count = 1
-      labels = {
-        stats-pipeline-node = "true"
-      }
-      machine_type   = "n2-highcpu-16"
-      max_node_count = 2
-      max_surge      = 1
+      machine_type       = "n2-highcpu-16"
+      max_node_count     = 2
+      max_surge          = 1
       oauth_scopes = [
         "https://www.googleapis.com/auth/cloud-platform"
       ]

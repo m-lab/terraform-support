@@ -26,7 +26,10 @@ resource "google_container_node_pool" "node_pools" {
   name               = each.key
 
   node_config {
-    labels       = each.value["labels"]
+    labels = {
+      "${each.key}-node" = "true"
+    }
+
     machine_type = each.value["machine_type"]
     oauth_scopes = each.value["oauth_scopes"]
     # This is a bit ugly, but TF does not support passing resources as input

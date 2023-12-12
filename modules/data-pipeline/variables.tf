@@ -3,7 +3,6 @@ variable "node_pools" {
   type = map(
     object({
       initial_node_count = number
-      labels             = map(string)
       machine_type       = string
       max_node_count     = number
       max_surge          = number
