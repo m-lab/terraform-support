@@ -77,6 +77,8 @@ function update_instances() {
         -target module.platform-cluster.google_compute_instance.platform_instances[\"${idx}\"] \
         -target module.platform-cluster.google_compute_disk.platform_boot_disks[\"${idx}\"] \
         -target module.platform-cluster.google_compute_disk.platform_addresses[\"${idx}\"] \
+        -target module.platform-cluster.google_compute_disk.platform_addresses_internal[\"${idx}\"] \
+        -target module.platform-cluster.google_compute_disk.platform_addresses_v6[\"${idx}\"] \
       "
     fi
 
