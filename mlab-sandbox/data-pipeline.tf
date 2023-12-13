@@ -19,7 +19,7 @@ module "data-pipeline" {
     },
     "parser" = {
       initial_node_count = 3
-      machine_type       = "n2-standard-4"
+      machine_type       = "n2-standard-16"
       max_node_count     = 3
       max_surge          = 1
       oauth_scopes = [
@@ -60,7 +60,7 @@ module "data-pipeline" {
     },
     "statistics" = {
       initial_node_count = 1
-      machine_type       = "n2-highcpu-4"
+      machine_type       = "n2-highcpu-16"
       max_node_count     = 2
       max_surge          = 1
       oauth_scopes = [
