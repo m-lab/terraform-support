@@ -1,0 +1,23 @@
+# Timeout after 10h. Today, there are around 50 virtual machines in the
+# production cluster. On average it takes a single VM around 6.5m to be
+# deleted, recreated, and for ndt-server or the API to be available. If we
+# update the machines serially, this means a total build time of around 5.5
+# hours. Set the timeout to around double that just for room to grow.
+timeout: 36000s
+
+steps:
+- name: gcr.io/mlab-oti/gcloud-jsonnet-cbif:1.1
+  entrypoint: /bin/bash
+  args:
+  - -c
+  - |-
+    apt update
+    apt install --yes unzip
+    curl --remote-name https://releases.hashicorp.com/terraform/1.5.3/terraform_1.5.3_linux_amd64.zip
+    unzip terraform_1.5.3_linux_amd64.zip
+    mv terraform /usr/local/bin/
+    export PROJECT=$PROJECT_ID
+    bash scripts/tf_apply.sh $$PROJECT
+options:
+  logging: CLOUD_LOGGING_ONLY
+
