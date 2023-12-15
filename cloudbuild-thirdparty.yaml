@@ -18,6 +18,3 @@ steps:
     mv terraform /usr/local/bin/
     export PROJECT=$PROJECT_ID
     bash scripts/tf_apply.sh $$PROJECT
-options:
-  logging: CLOUD_LOGGING_ONLY
-
