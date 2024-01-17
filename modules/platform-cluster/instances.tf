@@ -159,9 +159,9 @@ resource "google_compute_instance" "platform_instances" {
   #
   # TODO(kinkade): investigate bug, upgrade TF and remove this as soon it is no
   # longer needed.
-  provisioner "local-exec" {
-    command = "../scripts/assign_static_ipv6.sh ${data.google_client_config.current.project} ${each.key}"
-  }
+  #provisioner "local-exec" {
+  #  command = "../scripts/assign_static_ipv6.sh ${data.google_client_config.current.project} ${each.key}"
+  #}
 
   service_account {
     scopes = var.instances.attributes.scopes
