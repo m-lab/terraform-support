@@ -135,6 +135,7 @@ resource "google_compute_instance" "platform_instances" {
 
     ipv6_access_config {
       external_ipv6 = google_compute_address.platform_addresses_v6["${each.key}"].address
+      external_ipv6_prefix_length = 96
       # From what I gather STANDARD network tier is not available for IPv6.
       # https://cloud.google.com/network-tiers/docs/overview#resources
       network_tier = "PREMIUM"
@@ -146,22 +147,6 @@ resource "google_compute_instance" "platform_instances" {
     # Ugly: extract the region from the zone.
     subnetwork = google_compute_subnetwork.platform_cluster[regex("^([a-z]+-[a-z0-9]+)-[a-z]$", each.value["zone"])[0]].id
   }
-
-  # There is either some bug in our configs or in the Terraform Google provider
-  # in which when a VM gets recreated it does not get assigned the proper
-  # static IPv6 address, but instead an ephemeral IPv6 address. The following
-  # script was written to address static IPv6 addresses at a point when GCP
-  # supported static regional IPv6 addresses for a VM, but the Google TF provider
-  # did not yet support it. I am reviving this local-exec script to address
-  # this bug until we can figure out the source. I _suspect_ this is a bug in
-  # the TF Google provider, and that this will no longer be necessary once we
-  # upgrade TF to the latest provider.
-  #
-  # TODO(kinkade): investigate bug, upgrade TF and remove this as soon it is no
-  # longer needed.
-  #provisioner "local-exec" {
-  #  command = "../scripts/assign_static_ipv6.sh ${data.google_client_config.current.project} ${each.key}"
-  #}
 
   service_account {
     scopes = var.instances.attributes.scopes
