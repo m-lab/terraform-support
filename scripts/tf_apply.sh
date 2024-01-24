@@ -21,6 +21,7 @@ PROJECT=${1:? Please provide a project name}
 # update them one at a time if the action is to recreate the instance.
 function update_instances() {
   local c
+  local changes
   local health_path
   local idx
   local ipv4
@@ -35,7 +36,12 @@ function update_instances() {
     -target "module.platform-cluster.google_compute_instance.${target}_instances" \
     > /dev/null
 
-  for change in $(terraform show -json instances.tfplan | jq -r '.resource_changes[] | @base64'); do
+  # Perform the command substitution for `terraform show` in a variable
+  # assignment in which case the exit code of the entire operation is subject
+  # to the shopts set at the top of the file, meaning that if any command in
+  # the pipe chain fails the script will exit.
+  changes=$(terraform show -json instances.tfplan | jq -r '.resource_changes[] | @base64')
+  for change in $changes; do
     c=$(echo $change | base64 -d)
     resource=$(echo $c | jq -r '.type')
 
@@ -116,7 +122,15 @@ function main() {
   done
 
   # Now apply everything else.
+  #
+  # TODO(kinkade: there is room for improvement here. If the calls to
+  # update_instances() above fail for some reason and changes to VMs do not get
+  # applied one at a time, then the possibility exists that the following
+  # command could unconditionally apply all changes at once. The virtual
+  # machines should all recover, but it may cause unwanted downtime. Find a way
+  # to not need this script, or to improve it to be a bit safer.
   terraform apply -auto-approve -compact-warnings -no-color
 }
 
 main
+
