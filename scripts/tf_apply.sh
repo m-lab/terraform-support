@@ -123,12 +123,14 @@ function main() {
 
   # Now apply everything else.
   #
-  # TODO(kinkade: there is room for improvement here. If the calls to
+  # TODO(kinkade): there is room for improvement here. If the calls to
   # update_instances() above fail for some reason and changes to VMs do not get
   # applied one at a time, then the possibility exists that the following
   # command could unconditionally apply all changes at once. The virtual
   # machines should all recover, but it may cause unwanted downtime. Find a way
   # to not need this script, or to improve it to be a bit safer.
+  #
+  # https://github.com/m-lab/terraform-support/issues/61
   terraform apply -auto-approve -compact-warnings -no-color
 }
 
