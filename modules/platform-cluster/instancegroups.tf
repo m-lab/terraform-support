@@ -18,7 +18,7 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
     create_before_destroy = true
   }
 
-  machine_type = var.instances.attributes.machine_type
+  machine_type = lookup(each.value, "machine_type", var.instances.attributes.machine_type)
 
   metadata = {
     k8s_labels = join(",", [
