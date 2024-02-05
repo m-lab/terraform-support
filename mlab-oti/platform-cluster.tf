@@ -18,7 +18,31 @@ module "platform-cluster" {
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     }
-    migs = {}
+    migs = {
+      mlab1-del05 = {
+        region = "asia-south2-c"
+      },
+      mlab1-hnd07 = {
+        region = "asia-northeast1-b"
+      },
+      mlab1-iad08 = {
+        region = "us-east4-c"
+      },
+      mlab1-jnb02 = {
+        # This region is new and we don't currently have any N2 quota in it.
+        machine_type = "e2-highcpu-4"
+        region       = "africa-south1-c"
+      },
+      mlab1-lhr10 = {
+        region = "europe-west2-c"
+      },
+      mlab1-scl06 = {
+        region = "southamerica-west1-c"
+      },
+      mlab1-syd08 = {
+        region = "australia-southeast1-c"
+      }
+    }
     vms = {
       mlab1-ams10 = {
         zone = "europe-west4-c"
@@ -68,10 +92,6 @@ module "platform-cluster" {
       mlab1-cmh01 = {
         zone = "us-east5-c"
       },
-      mlab1-del03 = {
-        machine_type = "n2-highcpu-8"
-        zone         = "asia-south2-c"
-      },
       mlab1-dfw09 = {
         zone = "us-south1-c"
       },
@@ -116,15 +136,6 @@ module "platform-cluster" {
       mlab1-hnd06 = {
         zone = "asia-northeast1-c"
       },
-      mlab2-hnd06 = {
-        zone = "asia-northeast1-b"
-      },
-      mlab3-hnd06 = {
-        zone = "asia-northeast1-a"
-      },
-      mlab1-iad07 = {
-        zone = "us-east4-c"
-      },
       mlab2-iad07 = {
         network_tier = "STANDARD"
         zone         = "us-east4-b"
@@ -147,9 +158,6 @@ module "platform-cluster" {
       mlab1-lax07 = {
         zone = "us-west2-c"
       },
-      mlab1-lhr09 = {
-        zone = "europe-west2-c"
-      },
       mlab1-mad07 = {
         zone = "europe-southwest1-c"
       },
@@ -168,17 +176,11 @@ module "platform-cluster" {
       mlab1-pdx01 = {
         zone = "us-west1-c"
       },
-      mlab1-scl05 = {
-        zone = "southamerica-west1-c"
-      },
       mlab1-sin02 = {
         zone = "asia-southeast1-c"
       },
       mlab1-slc01 = {
         zone = "us-west3-c"
-      },
-      mlab1-syd07 = {
-        zone = "australia-southeast1-c"
       },
       mlab1-tlv01 = {
         zone = "me-west1-c"
