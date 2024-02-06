@@ -12,7 +12,7 @@ module "platform-cluster" {
       disk_size_gb     = 100
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
-      mig_min_replicas = 3
+      mig_min_replicas = 1
       mig_max_replicas = 15
       network_tier     = "PREMIUM"
       tags             = ["ndt-cloud"]
