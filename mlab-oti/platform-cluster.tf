@@ -278,7 +278,17 @@ module "platform-cluster" {
       subnetwork_cidr = "10.0.0.0/8"
       vpc_name        = "mlab-platform-network"
     }
+    # This is not ideal, but when a new region is added, in order to find the
+    # next CIDR range not in use for the subnetwork, you can do something like
+    # the following:
+    #
+    # grep ip_cidr_range mlab-oti/platform-cluster.tf | sort --version-sort
     subnetworks = {
+      "africa-south1" = {
+        ip_cidr_range = "10.40.0.0/16"
+        name          = "kubernetes"
+        region        = "africa-south1"
+      },
       "asia-east1" = {
         ip_cidr_range = "10.9.0.0/16"
         name          = "kubernetes"
