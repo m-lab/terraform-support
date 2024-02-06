@@ -23,7 +23,7 @@ module "platform-cluster" {
         region = "asia-south2-c"
       },
       mlab1-hnd07 = {
-        region = "asia-northeast1-b"
+        region = "asia-northeast1-c"
       },
       mlab1-iad08 = {
         region = "us-east4-c"
@@ -132,13 +132,6 @@ module "platform-cluster" {
       },
       mlab1-hkg04 = {
         zone = "asia-east2-c"
-      },
-      mlab1-hnd06 = {
-        zone = "asia-northeast1-c"
-      },
-      mlab2-iad07 = {
-        network_tier = "STANDARD"
-        zone         = "us-east4-b"
       },
       mlab1-icn01 = {
         zone = "asia-northeast3-c"
