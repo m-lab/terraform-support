@@ -20,27 +20,27 @@ module "platform-cluster" {
     }
     migs = {
       mlab1-del05 = {
-        region = "asia-south2-c"
+        region = "asia-south2"
       },
       mlab1-hnd07 = {
-        region = "asia-northeast1-c"
+        region = "asia-northeast1"
       },
       mlab1-iad08 = {
-        region = "us-east4-c"
+        region = "us-east4"
       },
       mlab1-jnb02 = {
         # This region is new and we don't currently have any N2 quota in it.
         machine_type = "e2-highcpu-4"
-        region       = "africa-south1-c"
+        region       = "africa-south1"
       },
       mlab1-lhr10 = {
-        region = "europe-west2-c"
+        region = "europe-west2"
       },
       mlab1-scl06 = {
-        region = "southamerica-west1-c"
+        region = "southamerica-west1"
       },
       mlab1-syd08 = {
-        region = "australia-southeast1-c"
+        region = "australia-southeast1"
       }
     }
     vms = {
