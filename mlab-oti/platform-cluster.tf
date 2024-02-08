@@ -25,7 +25,7 @@ module "platform-cluster" {
       mlab1-hnd07 = {
         region = "asia-northeast1"
       },
-      mlab1-iad08 = {
+      mlab1-iad09 = {
         region = "us-east4"
       },
       mlab1-jnb02 = {
