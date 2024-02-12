@@ -15,7 +15,7 @@ resource "google_project_iam_binding" "logging_logwriter" {
   role    = "roles/logging.logWriter"
 
   members = [
-    "serviceAccount:grafana-public@mlab-sandbox.iam.gserviceaccount.com"
+    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   ]
 }
 
@@ -24,7 +24,7 @@ resource "google_project_iam_binding" "cloudtrace_agent" {
   role    = "roles/cloudtrace.agent"
 
   members = [
-    "serviceAccount:grafana-public@mlab-sandbox.iam.gserviceaccount.com"
+    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   ]
 }
 
@@ -33,7 +33,7 @@ resource "google_project_iam_binding" "monitoring_metricwriter" {
   role    = "roles/monitoring.metricWriter"
 
   members = [
-    "serviceAccount:grafana-public@mlab-sandbox.iam.gserviceaccount.com"
+    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   ]
 }
 
@@ -42,7 +42,7 @@ resource "google_project_iam_binding" "monitoring_metricsscopesviewer" {
   role    = "roles/monitoring.metricsScopesViewer"
 
   members = [
-    "serviceAccount:grafana-public@mlab-sandbox.iam.gserviceaccount.com"
+    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   ]
 }
 
@@ -51,7 +51,7 @@ resource "google_project_iam_binding" "storage_objectviewer" {
   role    = "roles/storage.objectViewer"
 
   members = [
-    "serviceAccount:grafana-public@mlab-sandbox.iam.gserviceaccount.com"
+    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   ]
 }
 
@@ -60,6 +60,6 @@ resource "google_project_iam_binding" "artifactregistry_reader" {
   role    = "roles/artifactregistry.reader"
 
   members = [
-    "serviceAccount:grafana-public@mlab-sandbox.iam.gserviceaccount.com"
+    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
   ]
 }
