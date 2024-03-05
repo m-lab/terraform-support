@@ -1,32 +1,32 @@
 terraform {
   backend "gcs" {
     # Terraform does not allow variable interpolation in backend blocks.
-    bucket = "terraform-support-mlab-autojoin"
+    bucket = "terraform-support-measurement-lab"
     prefix = "state"
   }
 }
 
 provider "google" {
-  project = "mlab-autojoin"
+  project = "measurement-lab"
 }
 
 provider "google" {
-  alias   = "data-pipeline"
-  project = "mlab-autojoin"
+  alias   = "platform-cluster"
+  project = "measurement-lab"
   region  = "us-central1"
   zone    = "us-central1-a"
 }
 
 provider "google" {
-  alias   = "platform-cluster"
-  project = "mlab-autojoin"
+  alias   = "data-pipeline"
+  project = "measurement-lab"
   region  = "us-central1"
   zone    = "us-central1-a"
 }
 
 provider "google" {
   alias   = "visualizations"
-  project = "mlab-autojoin"
+  project = "measurement-lab"
   region  = "us-central1"
   zone    = "us-central1-a"
 }
