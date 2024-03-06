@@ -6,7 +6,7 @@
 timeout: 36000s
 
 steps:
-- name: $CONTAINER_IMAGE
+- name: $_CONTAINER_IMAGE
   entrypoint: /bin/bash
   args:
   - -c
