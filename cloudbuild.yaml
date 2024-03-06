@@ -6,7 +6,7 @@
 timeout: 36000s
 
 steps:
-- name: gcr.io/$PROJECT_ID/gcloud-jsonnet-cbif:1.1
+- name: $CONTAINER_IMAGE
   entrypoint: /bin/bash
   args:
   - -c
