@@ -10,8 +10,8 @@ steps:
     export TF_RELEASE="1.7.4"
     apt update
     apt install --yes unzip
-    curl --remote-name https://releases.hashicorp.com/terraform/${TF_RELEASE}/terraform_${TF_RELEASE}_linux_amd64.zip
-    unzip terraform_${TF_RELEASE}_linux_amd64.zip
+    curl --remote-name https://releases.hashicorp.com/terraform/$${TF_RELEASE}/terraform_$${TF_RELEASE}_linux_amd64.zip
+    unzip terraform_$${TF_RELEASE}_linux_amd64.zip
     mv terraform /usr/local/bin/
     export PROJECT=$PROJECT_ID
     bash scripts/tf_apply.sh $$PROJECT
