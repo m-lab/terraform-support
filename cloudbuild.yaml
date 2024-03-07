@@ -5,8 +5,19 @@
 # hours. Set the timeout to around double that just for room to grow.
 timeout: 36000s
 
+# $_CONTAINER_IMAGE is going to be some form of:
+#
+#     gcr.io/<project>/gcloud-jsonnet-cbif
+#
+# We have this in a Cloud Build user-defined substitution variable because
+# this build gets run in more projects that just the standard
+# sandbox->staging->prod, but those projects are the only ones where the
+# container image is built and pushed to Artifact Registry. The other projects
+# are "mlab-autojoin" and "measurement-lab", both of which are production
+# projects, so in those we want to use the "mlab-oti" (prod) image. The value of
+# this variable is defined in the build trigger of each project.
 steps:
-- name: $_CONTAINER_IMAGE
+- name: ${_CONTAINER_IMAGE}:1.1
   entrypoint: /bin/bash
   args:
   - -c
