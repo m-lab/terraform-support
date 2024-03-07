@@ -5,16 +5,28 @@
 # hours. Set the timeout to around double that just for room to grow.
 timeout: 36000s
 
+# $_CONTAINER_IMAGE is going to be some form of:
+#
+#     gcr.io/<project>/gcloud-jsonnet-cbif
+#
+# We have this in a Cloud Build user-defined substitution variable because
+# this build gets run in more projects that just the standard
+# sandbox->staging->prod, but those projects are the only ones where the
+# container image is built and pushed to Artifact Registry. The other projects
+# are "mlab-autojoin" and "measurement-lab", both of which are production
+# projects, so in those we want to use the "mlab-oti" (prod) image. The value of
+# this variable is defined in the build trigger of each project.
 steps:
-- name: gcr.io/$PROJECT_ID/gcloud-jsonnet-cbif:1.1
+- name: ${_CONTAINER_IMAGE}:1.1
   entrypoint: /bin/bash
   args:
   - -c
   - |-
+    export TF_RELEASE="1.7.4"
     apt update
     apt install --yes unzip
-    curl --remote-name https://releases.hashicorp.com/terraform/1.5.3/terraform_1.5.3_linux_amd64.zip
-    unzip terraform_1.5.3_linux_amd64.zip
+    curl --remote-name https://releases.hashicorp.com/terraform/$${TF_RELEASE}/terraform_$${TF_RELEASE}_linux_amd64.zip
+    unzip terraform_$${TF_RELEASE}_linux_amd64.zip
     mv terraform /usr/local/bin/
     export PROJECT=$PROJECT_ID
     bash scripts/tf_apply.sh $$PROJECT
