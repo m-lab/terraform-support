@@ -32,7 +32,7 @@ provider "google" {
 }
 
 provider "google" {
-  alias   = "common"
+  alias   = "foundations"
   project = "mlab-staging"
   region  = "us-central1"
   zone    = "us-central1-a"
