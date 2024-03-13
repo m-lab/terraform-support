@@ -117,9 +117,18 @@ function main() {
   # this to download the required providers.
   terraform init
 
-  for target in api platform; do
-    update_instances $target
-  done
+  # We only want interate over instances in the M-Lab Platform clusters, which
+  # only exist on our main three sandbox->staging->prod GCP projects.
+  case "$PROJECT" in
+    mlab-sandbox|mlab_staging|mlab-oti)
+      for target in api platform; do
+        update_instances $target
+      done
+      ;;
+    *)
+      # Do nothing
+      ;;
+  esac
 
   # Now apply everything else.
   #
@@ -135,4 +144,3 @@ function main() {
 }
 
 main
-
