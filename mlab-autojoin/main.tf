@@ -30,3 +30,11 @@ provider "google" {
   region  = "us-central1"
   zone    = "us-central1-a"
 }
+
+provider "google" {
+  alias   = "foundations"
+  project = "mlab-autojoin"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
+
