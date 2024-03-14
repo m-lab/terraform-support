@@ -14,7 +14,7 @@ timeout: 36000s
 # "mlab-oti" (production) image. The value of this variable is defined in the
 # build trigger of each project.
 steps:
-- name: us-central1-docker.pkg.dev/${_IMAGE_PROJECT}/build-images/gcloud-jsonnet-cbif
+- name: us-central1-docker.pkg.dev/${_IMAGE_PROJECT}/build-images/gcloud-jsonnet-cbif:1.1
   entrypoint: /bin/bash
   args:
   - -c
