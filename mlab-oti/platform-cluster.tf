@@ -19,8 +19,31 @@ module "platform-cluster" {
       scopes           = ["cloud-platform"]
     }
     migs = {
+      mlab1-bom06 = {
+        region = "asia-south1"
+      },
+      mlab1-cgk02 = {
+        region = "asia-southeast2"
+      },
+      mlab1-chs02 = {
+        region = "us-east1"
+      },
       mlab1-del05 = {
         region = "asia-south2"
+      },
+      mlab1-dfw12 = {
+        region = "us-south1"
+      },
+      mlab1-doh02 = {
+        # This region is new and we can't currently get any N2 quota.
+        machine_type = "e2-highcpu-4"
+        region       = "me-central1"
+      },
+      mlab1-gru06 = {
+        region = "southamerica-east1"
+      },
+      mlab1-hel02 = {
+        region = "europe-north1"
       },
       mlab1-hnd07 = {
         region = "asia-northeast1"
@@ -28,10 +51,16 @@ module "platform-cluster" {
       mlab1-iad09 = {
         region = "us-east4"
       },
+      mlab1-icn02 = {
+        region = "asia-northeast3"
+      },
       mlab1-jnb02 = {
-        # This region is new and we don't currently have any N2 quota in it.
+        # This region is new and we can't currently get any N2 quota.
         machine_type = "e2-highcpu-4"
         region       = "africa-south1"
+      },
+      mlab1-lax08 = {
+        region = "us-west2"
       },
       mlab1-lhr10 = {
         region = "europe-west2"
@@ -41,6 +70,15 @@ module "platform-cluster" {
       },
       mlab1-syd08 = {
         region = "australia-southeast1"
+      },
+      mlab1-waw02 = {
+        region = "europe-central2"
+      },
+      mlab1-yul08 = {
+        region = "northamerica-northeast1"
+      },
+      mlab1-zrh02 = {
+        region = "europe-west6"
       }
     }
     vms = {
