@@ -120,7 +120,7 @@ function main() {
   # We only want interate over instances in the M-Lab Platform clusters, which
   # only exist on our main three sandbox->staging->prod GCP projects.
   case "$PROJECT" in
-    mlab-sandbox|mlab_staging|mlab-oti)
+    mlab-sandbox|mlab-staging|mlab-oti)
       for target in api platform; do
         update_instances $target
       done
