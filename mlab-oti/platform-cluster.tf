@@ -59,7 +59,7 @@ module "platform-cluster" {
         machine_type = "e2-highcpu-4"
         region       = "africa-south1"
       },
-      mlab1-lax08 = {
+      mlab1-lax10 = {
         region = "us-west2"
       },
       mlab1-lhr10 = {
