@@ -90,15 +90,6 @@ module "platform-cluster" {
         machine_type = "e2-highcpu-4"
         zone         = "europe-west10-c"
       },
-      mlab1-bom03 = {
-        zone = "asia-south1-c"
-      },
-      mlab2-bom03 = {
-        zone = "asia-south1-b"
-      },
-      mlab3-bom03 = {
-        zone = "asia-south1-a"
-      },
       mlab1-bom05 = {
         zone = "asia-south1-c"
       },
@@ -111,38 +102,8 @@ module "platform-cluster" {
       mlab1-bru06 = {
         zone = "europe-west1-c"
       },
-      mlab1-cgk01 = {
-        zone = "asia-southeast2-c"
-      },
-      mlab2-cgk01 = {
-        zone = "asia-southeast2-b"
-      },
-      mlab3-cgk01 = {
-        zone = "asia-southeast2-a"
-      },
-      mlab1-chs01 = {
-        zone = "us-east1-c"
-      },
-      mlab2-chs01 = {
-        network_tier = "STANDARD"
-        zone         = "us-east1-b"
-      },
       mlab1-cmh01 = {
         zone = "us-east5-c"
-      },
-      mlab1-dfw09 = {
-        zone = "us-south1-c"
-      },
-      mlab2-dfw09 = {
-        zone = "us-south1-b"
-      },
-      mlab3-dfw09 = {
-        zone = "us-south1-a"
-      },
-      mlab1-doh01 = {
-        # We cannot currently get any N2 quota in this region.
-        machine_type = "e2-highcpu-4"
-        zone         = "me-central1-c"
       },
       mlab1-fra07 = {
         zone = "europe-west3-c"
@@ -150,44 +111,14 @@ module "platform-cluster" {
       mlab2-fra07 = {
         zone = "europe-west3-b"
       },
-      mlab1-gru05 = {
-        zone = "southamerica-east1-c"
-      },
-      mlab2-gru05 = {
-        zone = "southamerica-east1-b"
-      },
-      mlab3-gru05 = {
-        zone = "southamerica-east1-a"
-      },
-      mlab1-hel01 = {
-        zone = "europe-north1-c"
-      },
-      mlab2-hel01 = {
-        zone = "europe-north1-b"
-      },
-      mlab3-hel01 = {
-        zone = "europe-north1-a"
-      },
       mlab1-hkg04 = {
         zone = "asia-east2-c"
-      },
-      mlab1-icn01 = {
-        zone = "asia-northeast3-c"
-      },
-      mlab2-icn01 = {
-        zone = "asia-northeast3-b"
-      },
-      mlab3-icn01 = {
-        zone = "asia-northeast3-a"
       },
       mlab1-kix01 = {
         zone = "asia-northeast2-c"
       },
       mlab1-las01 = {
         zone = "us-west4-c"
-      },
-      mlab1-lax07 = {
-        zone = "us-west2-c"
       },
       mlab1-mad07 = {
         zone = "europe-southwest1-c"
@@ -225,33 +156,8 @@ module "platform-cluster" {
       mlab1-trn03 = {
         zone = "europe-west12-c"
       },
-      mlab1-waw01 = {
-        zone = "europe-central2-c"
-      },
-      mlab2-waw01 = {
-        zone = "europe-central2-b"
-      },
-      mlab3-waw01 = {
-        zone = "europe-central2-a"
-      },
-      mlab1-yul07 = {
-        zone = "northamerica-northeast1-c"
-      },
-      mlab2-yul07 = {
-        network_tier = "STANDARD"
-        zone         = "northamerica-northeast1-b"
-      },
       mlab1-yyz07 = {
         zone = "northamerica-northeast2-c"
-      },
-      mlab1-zrh01 = {
-        zone = "europe-west6-c"
-      },
-      mlab2-zrh01 = {
-        zone = "europe-west6-b"
-      },
-      mlab3-zrh01 = {
-        zone = "europe-west6-a"
       }
     }
   }
