@@ -19,14 +19,28 @@ module "platform-cluster" {
       scopes           = ["cloud-platform"]
     }
     migs = {
+      mlab1-ams11 = {
+        region = "europe-west4"
+      },
+      mlab1-ber02 = {
+        # We cannot currently get any N2 quota in this region.
+        machine_type = "e2-highcpu-4"
+        region       = "europe-west10"
+      },
       mlab1-bom06 = {
         region = "asia-south1"
+      },
+      mlab1-bru07 = {
+        region = "europe-west1"
       },
       mlab1-cgk02 = {
         region = "asia-southeast2"
       },
       mlab1-chs02 = {
         region = "us-east1"
+      },
+      mlab1-cmh02 = {
+        region = "us-east5"
       },
       mlab1-del05 = {
         region = "asia-south2"
@@ -39,11 +53,17 @@ module "platform-cluster" {
         machine_type = "e2-highcpu-4"
         region       = "me-central1"
       },
+      mlab1-fra08 = {
+        region = "europe-west3"
+      },
       mlab1-gru06 = {
         region = "southamerica-east1"
       },
       mlab1-hel02 = {
         region = "europe-north1"
+      },
+      mlab1-hkg05 = {
+        region = "asia-east2"
       },
       mlab1-hnd07 = {
         region = "asia-northeast1"
@@ -59,17 +79,56 @@ module "platform-cluster" {
         machine_type = "e2-highcpu-4"
         region       = "africa-south1"
       },
+      mlab1-kix02 = {
+        region = "asia-northeast2"
+      },
+      mlab1-las02 = {
+        region = "us-west4"
+      },
       mlab1-lax10 = {
         region = "us-west2"
       },
       mlab1-lhr10 = {
         region = "europe-west2"
       },
+      mlab1-mad08 = {
+        region = "europe-southwest1"
+      },
+      mlab1-mel02 = {
+        region = "australia-southeast2"
+      },
+      mlab1-mil09 = {
+        region = "europe-west8"
+      },
+      mlab1-oma02 = {
+        region = "us-central1"
+      },
+      mlab1-par09 = {
+        region = "europe-west9"
+      },
+      mlab1-pdx03 = {
+        region = "us-west1"
+      },
       mlab1-scl06 = {
         region = "southamerica-west1"
       },
+      mlab1-sin03 = {
+        region = "asia-southeast1"
+      },
+      mlab1-slc02 = {
+        region = "us-west3"
+      },
       mlab1-syd08 = {
         region = "australia-southeast1"
+      },
+      mlab1-tlv02 = {
+        region = "me-west1"
+      },
+      mlab1-tpe03 = {
+        region = "asia-east1"
+      },
+      mlab1-trn04 = {
+        region = "europe-west12"
       },
       mlab1-waw02 = {
         region = "europe-central2"
@@ -77,6 +136,9 @@ module "platform-cluster" {
       mlab1-yul08 = {
         region = "northamerica-northeast1"
       },
+      mlab1-yyz08 = {
+        region = "northamerica-northeast2"
+      }
       mlab1-zrh02 = {
         region = "europe-west6"
       }
