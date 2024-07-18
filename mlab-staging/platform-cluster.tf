@@ -13,13 +13,13 @@ module "platform-cluster" {
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
       mig_min_replicas = 1
-      mig_max_replicas = 10
+      mig_max_replicas = 3
       network_tier     = "PREMIUM"
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     },
     migs = {
-      mlab4-dfw09 = {
+      mlab4-dfw13 = {
         region = "us-south1"
       }
     },
