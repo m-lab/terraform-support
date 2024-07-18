@@ -13,7 +13,7 @@ module "platform-cluster" {
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
       mig_min_replicas = 1
-      mig_max_replicas = 5
+      mig_max_replicas = 2
       network_tier     = "PREMIUM"
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
