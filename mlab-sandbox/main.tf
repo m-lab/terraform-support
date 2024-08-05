@@ -37,3 +37,7 @@ provider "google" {
   region  = "us-central1"
   zone    = "us-central1-a"
 }
+
+module "iam-custom-roles" {
+  source = "../modules/iam-custom-roles"
+}
