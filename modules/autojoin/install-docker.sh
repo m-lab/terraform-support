@@ -12,8 +12,7 @@ sudo apt update
 sudo apt install -y docker-ce
 
 # Add docker group to the list of default groups for all new users.
-sudo echo "[Accounts]
-groups  = ubuntu,adm,dialout,cdrom,floppy,audio,dip,video,plugdev,netdev,lxd,docker" > /etc/default/instance_configs.cfg
+sudo sed -i -r '/docker/!s/^groups(.+)$/groups \1,docker/' /etc/default/instance_configs.cfg.distro
 sudo systemctl restart google-guest-agent.service
 
 # Add every existing interactive user to the docker group. This is needed
