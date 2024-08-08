@@ -1,31 +1,26 @@
-resource "google_service_account" "default" {
-  account_id   = "autonode"
-  display_name = "Custom SA for the autonode VM instance (managed by Terraform)"
-}
-
-resource "google_compute_instance" "default" {
+resource "google_compute_instance" "autojoin" {
   name         = "autonode"
-  machine_type = "n2-standard-2"
-  zone         = "us-central1-a"
 
   boot_disk {
+    auto_delete = false
     initialize_params {
       image = "ubuntu-minimal-2204-lts"
     }
-    auto_delete = false
   }
+
+  machine_type = "n2-standard-2"
+  metadata_startup_script = "${file("${path.root}/../scripts/install-docker.sh")}"
 
   network_interface {
-    network = "default"
     access_config {
-        network_tier     = "PREMIUM"
+      # This empty section makes sure an ephemeral IPv4 is configured for the
+      # VM.
     }
+    network = "default"
   }
 
-  metadata_startup_script = "${file("${path.module}/install-docker.sh")}"
-
   service_account {
-    email  = google_service_account.default.email
+    email  = google_service_account.autonode.email
     scopes = ["cloud-platform"]
   }
 }
