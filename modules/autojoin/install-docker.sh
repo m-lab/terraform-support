@@ -14,8 +14,3 @@ sudo apt install -y docker-ce
 # Add docker group to the list of default groups for all new users.
 sudo sed -i -r '/docker/!s/^groups(.+)$/groups \1,docker/' /etc/default/instance_configs.cfg.distro
 sudo systemctl restart google-guest-agent.service
-
-# Add every existing interactive user to the docker group. This is needed
-# because this script appears to run after the google-guest-agent is started,
-# and some users already exist at this point.
-for ID in $(cat /etc/passwd | grep /home | cut -d ':' -f1); do (sudo adduser $ID docker); done
