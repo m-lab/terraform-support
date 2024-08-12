@@ -1,6 +1,4 @@
-resource "google_compute_instance" "autojoin" {
-  name         = "autonode"
-
+resource "google_compute_instance" "autonode" {
   boot_disk {
     auto_delete = false
     initialize_params {
@@ -8,13 +6,14 @@ resource "google_compute_instance" "autojoin" {
     }
   }
 
+  description = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
   machine_type = "n2-standard-2"
   metadata_startup_script = "${file("${path.root}/../scripts/install-docker.sh")}"
+  name = "autonode"
 
   network_interface {
     access_config {
-      # This empty section makes sure an ephemeral IPv4 is configured for the
-      # VM.
+      nat_ip = google_compute_address.autonode_ipv4.address
     }
     network = "default"
   }
@@ -23,4 +22,6 @@ resource "google_compute_instance" "autojoin" {
     email  = google_service_account.autonode.email
     scopes = ["cloud-platform"]
   }
+
+  tags = ["http-server", "https-server", "public-prometheus-monitoring"]
 }
