@@ -4,7 +4,7 @@ resource "google_service_account" "autonode" {
 }
 
 resource "google_storage_bucket_iam_member" "autonode_access" {
-  bucket = "archive-mlab-sandbox"
+  bucket = "archive-${data.google_client_config.current.project}"
   role = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.autonode.email}"
 }
