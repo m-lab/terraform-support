@@ -32,9 +32,6 @@ module "platform-cluster" {
       },
       mlab4-lax08 = {
         zone = "us-west2-c"
-      },
-      mlab4-oma01 = {
-        zone = "us-central1-c"
       }
     }
   }
