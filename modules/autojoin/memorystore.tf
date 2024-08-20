@@ -1,5 +1,5 @@
 resource "google_redis_instance" "cache" {
-  authorized_network = google_compute_network.autojoin_vpc_network.id
+  authorized_network = google_compute_network.autojoin.id
   display_name       = "Redis instance for the Autojoin API (managed by Terraform)"
 
   lifecycle {

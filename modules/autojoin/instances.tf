@@ -15,7 +15,7 @@ resource "google_compute_instance" "autonode" {
     access_config {
       nat_ip = google_compute_address.autonode_ipv4.address
     }
-    network = google_compute_network.autojoin_vpc_network.name
+    network = google_compute_network.autojoin.name
   }
 
   service_account {

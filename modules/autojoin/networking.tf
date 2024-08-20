@@ -1,4 +1,4 @@
-resource "google_compute_network" "autojoin_vpc_network" {
+resource "google_compute_network" "autojoin" {
   description = "VPC network for the Autojoin API (managed by Terraform)"
   name = "autojoin"
 }

@@ -7,7 +7,7 @@ resource "google_compute_firewall" "iap_access" {
   
   description   = "Allow IAP to SSH into every VM in the autojoin network"
   name          = "iap-access"
-  network       = google_compute_network.autojoin_vpc_network.name
+  network       = google_compute_network.autojoin.name
   source_ranges = ["35.235.240.0/20"]
 }
 
@@ -20,7 +20,7 @@ resource "google_compute_firewall" "public_prometheus_monitoring" {
   
   description   = "Allow open access to prometheus metrics on select servers"
   name          = "public-prometheus-monitoring"
-  network       = google_compute_network.autojoin_vpc_network.name
+  network       = google_compute_network.autojoin.name
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["public-prometheus-monitoring"]
 }
