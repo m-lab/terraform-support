@@ -38,3 +38,9 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
+provider "google" {
+  alias   = "autojoin"
+  project = "mlab-autojoin"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
