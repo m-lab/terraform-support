@@ -23,3 +23,17 @@ resource "google_compute_firewall" "public_prometheus_monitoring" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["public-prometheus-monitoring"]
 }
+
+# Allow access to NDT servers on ports 80/443
+resource "google_compute_firewall" "ndt_access" {
+  allow {
+    ports    = ["80", "443"]
+    protocol = "tcp"
+  }
+  
+  description   = "Allow access to NDT servers"
+  name          = "ndt-access"
+  network       = google_compute_network.autojoin.name
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["ndt-server"]
+}
