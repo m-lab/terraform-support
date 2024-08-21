@@ -19,4 +19,8 @@ module "autojoin" {
       max_surge          = 1
     }
   }
+
+  # On sandbox, GAE was initially set up to be on us-east1, and this cannot
+  # be easily changed, se we override the appengine_region here.
+  appengine_region = "us-east1"
 }

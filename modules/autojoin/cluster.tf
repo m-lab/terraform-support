@@ -1,11 +1,10 @@
 resource "google_container_cluster" "autojoin" {
-  name                     = "autojoin"
+  name = "autojoin"
   # Note: A GKE cluster must have at least one node, but this is going to be
   # removed immediately since we only want externally-managed node pools.
   # See below for the node pools definitions.
-  initial_node_count       = 1
-  location                 = data.google_client_config.current.region
-  network                  = google_compute_network.autojoin.id
+  initial_node_count = 1
+  network            = google_compute_network.autojoin.id
   # This removes the default node pool.
   remove_default_node_pool = true
 

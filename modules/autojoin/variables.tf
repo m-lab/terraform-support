@@ -9,3 +9,9 @@ variable "node_pools" {
     })
   )
 }
+
+variable "appengine_region" {
+  description = "GAE subnet region"
+  type        = string
+  default     = "us-central1"
+}

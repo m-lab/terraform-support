@@ -10,5 +10,6 @@ resource "google_redis_instance" "cache" {
   memory_size_gb = 4
   name           = "autojoin-api"
   redis_version  = "REDIS_7_0"
+  region = google_compute_subnetwork.default.region
   tier           = "STANDARD_HA"
 }
