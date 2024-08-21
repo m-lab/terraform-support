@@ -24,5 +24,5 @@ resource "google_compute_instance" "autonode" {
     scopes = ["cloud-platform"]
   }
 
-  tags = ["http-server", "https-server", "public-prometheus-monitoring"]
+  tags = ["ndt-server", "public-prometheus-monitoring"]
 }
