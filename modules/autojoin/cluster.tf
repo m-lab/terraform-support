@@ -12,7 +12,7 @@ resource "google_container_cluster" "autojoin" {
     autojoin = "true"
   }
 
-  subnetwork = google_compute_subnetwork.default.id
+  subnetwork = google_compute_subnetwork.autojoin.id
 }
 
 resource "google_container_node_pool" "node_pools" {

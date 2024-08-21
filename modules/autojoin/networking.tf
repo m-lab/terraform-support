@@ -9,7 +9,7 @@ resource "google_compute_address" "autonode_ipv4" {
   name        = "autonode-ipv4-address"
 }
 
-resource "google_compute_subnetwork" "default" {
+resource "google_compute_subnetwork" "autojoin" {
   name             = "autojoin"
   ip_cidr_range    = "10.70.0.0/16"
   ipv6_access_type = "EXTERNAL"
