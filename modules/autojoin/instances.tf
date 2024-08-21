@@ -15,7 +15,11 @@ resource "google_compute_instance" "autonode" {
     access_config {
       nat_ip = google_compute_address.autonode_ipv4.address
     }
+    ipv6_access_config {
+      network_tier = "PREMIUM"
+    }
     network    = google_compute_network.autojoin.name
+    stack_type = "IPV4_IPV6"
     subnetwork = google_compute_subnetwork.autojoin.name
   }
 
