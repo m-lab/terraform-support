@@ -1,5 +1,4 @@
 variable "node_pools" {
-  description = "Cluster node pools"
   default = {
     "pipeline" = {
       initial_node_count = 1
@@ -14,6 +13,7 @@ variable "node_pools" {
       max_surge          = 1
     }
   }
+  description = "Cluster node pools"
   type = map(
     object({
       initial_node_count = number
@@ -25,7 +25,7 @@ variable "node_pools" {
 }
 
 variable "appengine_region" {
+  default     = "us-central1"
   description = "GAE subnet region"
   type        = string
-  default     = "us-central1"
 }
