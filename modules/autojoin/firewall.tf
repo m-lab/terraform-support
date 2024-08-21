@@ -4,7 +4,6 @@ resource "google_compute_firewall" "iap_access" {
     ports    = ["22"]
     protocol = "tcp"
   }
-  
   description   = "Allow IAP to SSH into every VM in the autojoin network"
   name          = "iap-access"
   network       = google_compute_network.autojoin.name
