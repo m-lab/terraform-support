@@ -37,3 +37,17 @@ resource "google_compute_firewall" "ndt_access" {
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["ndt-server"]
 }
+
+# Allow external access to any port for IPv6 traffic platform VMs.
+resource "google_compute_firewall" "ndt_access_ipv6" {
+  allow {
+    ports    = ["80", "443"]
+    protocol = "tcp"
+  }
+
+  description   = "Allow IPv6 access to NDT servers"
+  name          = "ndt-access-ipv6"
+  network       = google_compute_network.autojoin.name
+  source_ranges = ["::/0"]
+  target_tags   = ["ndt-server"]
+}
