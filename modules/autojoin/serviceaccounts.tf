@@ -3,6 +3,11 @@ resource "google_service_account" "autonode" {
   display_name = "Custom SA for the autonode VM instance (managed by Terraform)"
 }
 
+resource "google_service_account" "gke" {
+  account_id   = "autojoin-gke"
+  display_name = "Default SA for the autojoin GKE cluster node pools (managed by Terraform)"
+}
+
 resource "google_storage_bucket_iam_member" "autonode_access" {
   bucket = "archive-${data.google_client_config.current.project}"
   role = "roles/storage.objectAdmin"
