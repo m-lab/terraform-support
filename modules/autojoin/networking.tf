@@ -1,7 +1,12 @@
 resource "google_compute_network" "autojoin" {
+<<<<<<< HEAD
   auto_create_subnetworks = false
   description             = "VPC network for the Autojoin API (managed by Terraform)"
   name                    = "autojoin"
+=======
+  description = "VPC network for the Autojoin API (managed by Terraform)"
+  name = "autojoin"
+>>>>>>> main
 }
 
 resource "google_compute_address" "autonode_ipv4" {

@@ -16,7 +16,10 @@ resource "google_compute_instance" "autonode" {
       nat_ip = google_compute_address.autonode_ipv4.address
     }
     network = google_compute_network.autojoin.name
+<<<<<<< HEAD
     subnetwork = google_compute_subnetwork.default.name
+=======
+>>>>>>> main
   }
 
   service_account {
