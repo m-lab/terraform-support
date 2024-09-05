@@ -25,3 +25,9 @@ resource "google_compute_subnetwork" "gae" {
   region           = var.appengine_region
   stack_type       = "IPV4_IPV6"
 }
+
+resource "google_compute_address" "autojoin" {
+  name         = "autojoin-ingress-nginx"
+  address_type = "EXTERNAL"
+  description  = "External IP address for ingress-nginx"
+}
