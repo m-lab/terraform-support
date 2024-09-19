@@ -1,3 +1,19 @@
+resource "google_project_iam_custom_role" "autoloader_gcs_reader" {
+  description = "autolaoder-gcs-reader"
+  # NOTE: permissions mirror the set used by legacy reader, a role that cannot
+  # be assigned to service accounts.
+  permissions = [
+    "storage.buckets.get",
+    "storage.managedFolders.get",
+    "storage.managedFolders.list",
+    "storage.multipartUploads.list",
+    "storage.objects.list",
+  ]
+  role_id     = "autoloader_gcs_access"
+  stage       = "GA"
+  title       = "autoloader-gcs-reader"
+}
+
 resource "google_storage_bucket_iam_member" "autonode_access" {
   bucket = "archive-${data.google_client_config.current.project}"
   role = "roles/storage.objectAdmin"
@@ -29,10 +45,7 @@ resource "google_project_iam_member" "autonode_gke_default_node_permissions" {
 }
 
 resource "google_project_iam_member" "autonode_gke_gcs_reader" {
-  # TODO(soltesz): use a custom role with significantly lower permissions.
-  # At this time, legacy roles cannot be assigned to service accounts and there
-  # is no other suitable predefined role with storage.buckets.get
-  role = "roles/storage.admin"
+  role = "${google_project_iam_custom_role.autoloader_gcs_reader.id}"
   member = "serviceAccount:${google_service_account.gke.email}"
   project = data.google_client_config.current.project
 }
