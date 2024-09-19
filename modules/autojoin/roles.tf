@@ -29,7 +29,10 @@ resource "google_project_iam_member" "autonode_gke_default_node_permissions" {
 }
 
 resource "google_project_iam_member" "autonode_gke_gcs_reader" {
-  role = "roles/storage.legacyBucketReader"
+  # TODO(soltesz): use a custom role with significantly lower permissions.
+  # At this time, legacy roles cannot be assigned to service accounts and there
+  # is no other suitable predefined role with storage.buckets.get
+  role = "roles/storage.admin"
   member = "serviceAccount:${google_service_account.gke.email}"
   project = data.google_client_config.current.project
 }
