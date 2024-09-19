@@ -27,3 +27,15 @@ resource "google_project_iam_member" "autonode_gke_default_node_permissions" {
   member = "serviceAccount:${google_service_account.gke.email}"
   project = data.google_client_config.current.project
 }
+
+resource "google_project_iam_member" "autonode_gke_gcs_reader" {
+  role = "roles/storage.legacyBucketReader"
+  member = "serviceAccount:${google_service_account.gke.email}"
+  project = data.google_client_config.current.project
+}
+
+resource "google_project_iam_member" "autonode_gke_bigquery_updater" {
+  role = "roles/bigquery.user"
+  member = "serviceAccount:${google_service_account.gke.email}"
+  project = data.google_client_config.current.project
+}
