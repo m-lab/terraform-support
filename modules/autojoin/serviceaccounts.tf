@@ -9,15 +9,3 @@ resource "google_service_account" "gke" {
   description = "Default SA for the autojoin GKE cluster node pools (managed by Terraform)"
   display_name = "Autojoin GKE SA"
 }
-
-resource "google_storage_bucket_iam_member" "autonode_access" {
-  bucket = "archive-${data.google_client_config.current.project}"
-  role = "roles/storage.objectAdmin"
-  member = "serviceAccount:${google_service_account.autonode.email}"
-}
-
-resource "google_storage_bucket_iam_member" "autonode_access_downloader" {
-  bucket = "downloader-${data.google_client_config.current.project}"
-  role = "roles/storage.objectViewer"
-  member = "serviceAccount:${google_service_account.autonode.email}"
-}
