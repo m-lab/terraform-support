@@ -55,3 +55,9 @@ resource "google_project_iam_member" "autonode_gke_bigquery_updater" {
   member = "serviceAccount:${google_service_account.gke.email}"
   project = data.google_client_config.current.project
 }
+
+resource "google_project_iam_member" "autonode_gke_bigquery_user" {
+  role = "roles/bigquery.user"
+  member = "serviceAccount:${google_service_account.gke.email}"
+  project = data.google_client_config.current.project
+}
