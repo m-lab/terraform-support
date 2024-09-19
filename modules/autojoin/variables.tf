@@ -1,6 +1,6 @@
 variable "node_pools" {
   default = {
-    "pipeline" = {
+    "processor" = {
       initial_node_count = 1
       machine_type       = "n2-standard-4"
       max_node_count     = 3
