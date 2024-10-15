@@ -22,7 +22,7 @@ module "data-pipeline" {
         "https://www.googleapis.com/auth/taskqueue"
       ]
     },
-    "prometheus" = {
+    "monitoring" = {
       initial_node_count = 1
       machine_type       = "n2-standard-4"
       max_node_count     = 2
