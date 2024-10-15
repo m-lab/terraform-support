@@ -48,7 +48,7 @@ resource "google_compute_firewall" "ndt_access_ipv6" {
     protocol = "tcp"
   }
   allow {
-    protocol = "58"
+    protocol = "ipv6-icmp"
   }
 
   description   = "Allow IPv6 access to NDT servers"
