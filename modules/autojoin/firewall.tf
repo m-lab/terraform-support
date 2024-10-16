@@ -16,7 +16,7 @@ resource "google_compute_firewall" "public_prometheus_monitoring" {
     ports    = ["9990-9999"]
     protocol = "tcp"
   }
-  
+
   description   = "Allow open access to prometheus metrics on select servers"
   name          = "public-prometheus-monitoring"
   network       = google_compute_network.autojoin.name
@@ -30,7 +30,10 @@ resource "google_compute_firewall" "ndt_access" {
     ports    = ["80", "443"]
     protocol = "tcp"
   }
-  
+  allow {
+    protocol = "icmp"
+  }
+
   description   = "Allow access to NDT servers"
   name          = "ndt-access"
   network       = google_compute_network.autojoin.name
@@ -43,6 +46,9 @@ resource "google_compute_firewall" "ndt_access_ipv6" {
   allow {
     ports    = ["80", "443"]
     protocol = "tcp"
+  }
+  allow {
+    protocol = "58" # NOTE: there is no recognized protocol name for ipv6-icmp.
   }
 
   description   = "Allow IPv6 access to NDT servers"
