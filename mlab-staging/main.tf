@@ -42,5 +42,5 @@ provider "google" {
   alias   = "autojoin"
   project = "mlab-staging"
   region  = "us-central1"
-  zone    = "us-central1-a"
+  zone    = "us-central1-c"
 }
