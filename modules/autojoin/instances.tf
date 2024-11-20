@@ -1,6 +1,6 @@
 resource "google_compute_instance" "autonode" {
   boot_disk {
-    auto_delete = false
+    auto_delete = true
     initialize_params {
       image = "ubuntu-minimal-2404-lts-amd64"
     }
