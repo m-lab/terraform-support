@@ -8,7 +8,7 @@ module "platform-cluster" {
   instances = {
     attributes = {
       daemonset        = "ndt"
-      disk_image       = "platform-cluster-instance-2024-11-05t22-20-17"
+      disk_image       = "platform-cluster-instance-2024-11-21t01-13-45"
       disk_size_gb     = 100
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
@@ -20,14 +20,18 @@ module "platform-cluster" {
     },
     migs = {
       mlab1-chs0t = {
-        region = "us-east1"
+        daemonset    = "ndt-autojoin"
+        loadbalanced = false
+        region       = "us-east1"
       },
       mlab1-lax0t = {
-        daemonset = "ndt-canary"
-        region    = "us-west2"
+        daemonset    = "ndt-canary"
+        loadbalanced = true
+        region       = "us-west2"
       },
       mlab1-pdx0t = {
-        region = "us-west1"
+        loadbalanced = true
+        region       = "us-west1"
       }
     },
     vms = {

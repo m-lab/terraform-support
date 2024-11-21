@@ -29,7 +29,8 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
       "mlab/site=${split("-", each.key)[1]}",
       "mlab/type=virtual"
     ])
-    k8s_node = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
+    k8s_node     = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
+    loadbalanced = each.value.loadbalanced
   }
 
   name_prefix = "platform-cluster-mig-template-"
