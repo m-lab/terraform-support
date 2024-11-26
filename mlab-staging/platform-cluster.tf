@@ -20,7 +20,8 @@ module "platform-cluster" {
     },
     migs = {
       mlab4-dfw13 = {
-        region = "us-south1"
+        region       = "us-south1"
+        loadbalanced = true
       }
     },
     vms = {

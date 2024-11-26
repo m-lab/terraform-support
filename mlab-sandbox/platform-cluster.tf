@@ -20,18 +20,18 @@ module "platform-cluster" {
     },
     migs = {
       mlab1-chs0t = {
-        daemonset    = "ndt-autojoin"
-        loadbalanced = false
         region       = "us-east1"
+        loadbalanced = false
+        daemonset    = "ndt-autojoin"
       },
       mlab1-lax0t = {
-        daemonset    = "ndt-canary"
-        loadbalanced = true
         region       = "us-west2"
+        loadbalanced = true
+        daemonset    = "ndt-canary"
       },
       mlab1-pdx0t = {
-        loadbalanced = true
         region       = "us-west1"
+        loadbalanced = true
       }
     },
     vms = {
