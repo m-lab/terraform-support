@@ -31,6 +31,7 @@ resource "google_compute_instance_template" "platform_cluster_mig_templates" {
     ])
     k8s_node     = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
     loadbalanced = each.value.loadbalanced
+    probability  = lookup(each.value, "probability", var.instances.attributes.probability)
   }
 
   name_prefix = "platform-cluster-mig-template-"

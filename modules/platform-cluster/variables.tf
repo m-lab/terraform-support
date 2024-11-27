@@ -10,6 +10,7 @@ variable "instances" {
       mig_min_replicas = number
       mig_max_replicas = number
       network_tier     = string
+      probability      = number
       tags             = list(string)
       scopes           = list(string)
     })
