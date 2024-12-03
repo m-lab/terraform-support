@@ -2,7 +2,7 @@
 # Managed instance group load balancers for regular platfrom VMs
 #
 resource "google_compute_address" "platform_cluster_mig_addresses" {
-  for_each = var.instances.migs
+  for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   address_type = "EXTERNAL"
   name         = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
@@ -10,7 +10,7 @@ resource "google_compute_address" "platform_cluster_mig_addresses" {
 }
 
 resource "google_compute_address" "platform_cluster_mig_addresses_v6" {
-  for_each = var.instances.migs
+  for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   address_type       = "EXTERNAL"
   ipv6_endpoint_type = "NETLB"
@@ -21,7 +21,7 @@ resource "google_compute_address" "platform_cluster_mig_addresses_v6" {
 }
 
 resource "google_compute_region_health_check" "platform_cluster_mig_health_checks" {
-  for_each = var.instances.migs
+  for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   https_health_check {
     port = 443
@@ -32,7 +32,7 @@ resource "google_compute_region_health_check" "platform_cluster_mig_health_check
 }
 
 resource "google_compute_region_backend_service" "platform_cluster_mig_backends" {
-  for_each = var.instances.migs
+  for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   backend {
     group = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].instance_group
@@ -47,7 +47,7 @@ resource "google_compute_region_backend_service" "platform_cluster_mig_backends"
 }
 
 resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules" {
-  for_each = var.instances.migs
+  for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   all_ports             = true
   backend_service       = google_compute_region_backend_service.platform_cluster_mig_backends[each.key].id
@@ -59,7 +59,7 @@ resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules
 }
 
 resource "google_compute_forwarding_rule" "platform_cluster_mig_forwarding_rules_v6" {
-  for_each = var.instances.migs
+  for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   all_ports             = true
   backend_service       = google_compute_region_backend_service.platform_cluster_mig_backends[each.key].id

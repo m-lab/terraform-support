@@ -121,7 +121,8 @@ resource "google_compute_instance" "platform_instances" {
       "mlab/site=${split("-", each.key)[1]}",
       "mlab/type=virtual"
     ])
-    k8s_node = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
+    k8s_node    = "${each.key}.${data.google_client_config.current.project}.measurement-lab.org"
+    probability = lookup(each.value, "probability", var.instances.attributes.probability)
   }
 
   name = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
@@ -134,7 +135,7 @@ resource "google_compute_instance" "platform_instances" {
     }
 
     ipv6_access_config {
-      external_ipv6 = google_compute_address.platform_addresses_v6["${each.key}"].address
+      external_ipv6               = google_compute_address.platform_addresses_v6["${each.key}"].address
       external_ipv6_prefix_length = 96
       # From what I gather STANDARD network tier is not available for IPv6.
       # https://cloud.google.com/network-tiers/docs/overview#resources

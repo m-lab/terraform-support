@@ -15,12 +15,14 @@ module "platform-cluster" {
       mig_min_replicas = 1
       mig_max_replicas = 3
       network_tier     = "PREMIUM"
+      probability      = 1.0
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     },
     migs = {
       mlab4-dfw13 = {
-        region = "us-south1"
+        region       = "us-south1"
+        loadbalanced = true
       }
     },
     vms = {
