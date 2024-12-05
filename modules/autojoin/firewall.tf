@@ -35,6 +35,7 @@ resource "google_compute_firewall" "appengine_prometheus_monitoring" {
   name          = "appengine-prometheus-monitoring"
   network       = google_compute_network.autojoin.name
   source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["autojoin"]
 }
 
 # Allow access to NDT servers on ports 80/443
