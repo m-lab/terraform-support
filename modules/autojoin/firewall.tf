@@ -24,6 +24,19 @@ resource "google_compute_firewall" "public_prometheus_monitoring" {
   target_tags   = ["public-prometheus-monitoring"]
 }
 
+# Allow Prometheus to scrape metrics from Autojoin AppEngine instances
+resource "google_compute_firewall" "appengine_prometheus_monitoring" {
+  allow {
+    ports    = ["9090"]
+    protocol = "tcp"
+  }
+
+  description   = "Allow Prometheus to scrape metrics from Autjoin AppEngine instances"
+  name          = "appengine-prometheus-monitoring"
+  network       = google_compute_network.autojoin.name
+  source_ranges = ["0.0.0.0/0"]
+}
+
 # Allow access to NDT servers on ports 80/443
 resource "google_compute_firewall" "ndt_access" {
   allow {
