@@ -27,12 +27,13 @@ module "platform-cluster" {
       },
       mlab1-lax0t = {
         region       = "us-west2"
-        loadbalanced = true
-        daemonset    = "ndt-canary"
+        loadbalanced = false
+        daemonset    = "ndt-autojoin"
       },
       mlab1-pdx0t = {
         region       = "us-west1"
-        loadbalanced = true
+        loadbalanced = false
+        daemonset    = "ndt-autojoin"
       }
     },
     vms = {
