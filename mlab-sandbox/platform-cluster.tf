@@ -8,7 +8,7 @@ module "platform-cluster" {
   instances = {
     attributes = {
       daemonset        = "ndt"
-      disk_image       = "platform-cluster-instance-2024-11-27t00-16-26"
+      disk_image       = "platform-cluster-instance-2024-12-05t19-09-37"
       disk_size_gb     = 100
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
@@ -27,12 +27,13 @@ module "platform-cluster" {
       },
       mlab1-lax0t = {
         region       = "us-west2"
-        loadbalanced = true
-        daemonset    = "ndt-canary"
+        loadbalanced = false
+        daemonset    = "ndt-autojoin"
       },
       mlab1-pdx0t = {
         region       = "us-west1"
-        loadbalanced = true
+        loadbalanced = false
+        daemonset    = "ndt-autojoin"
       }
     },
     vms = {
@@ -44,7 +45,7 @@ module "platform-cluster" {
 
   api_instances = {
     machine_attributes = {
-      disk_image        = "platform-cluster-api-instance-2024-11-27t00-16-26"
+      disk_image        = "platform-cluster-api-instance-2024-12-05t19-09-37"
       disk_size_gb_boot = 100
       disk_size_gb_data = 10
       # This will show up as /dev/disk/by-id/google-<name>
@@ -78,7 +79,7 @@ module "platform-cluster" {
   }
 
   prometheus_instance = {
-    disk_image        = "platform-cluster-internal-instance-2024-11-27t00-16-26"
+    disk_image        = "platform-cluster-internal-instance-2024-12-05t19-09-37"
     disk_size_gb_boot = 100
     disk_size_gb_data = 200
     disk_type         = "pd-ssd"
