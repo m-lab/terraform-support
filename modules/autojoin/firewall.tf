@@ -13,7 +13,7 @@ resource "google_compute_firewall" "iap_access" {
 # Allow open access to prometheus metrics on select servers
 resource "google_compute_firewall" "public_prometheus_monitoring" {
   allow {
-    ports    = ["9100", "9990-9999"]
+    ports    = ["9990-9999"]
     protocol = "tcp"
   }
 
