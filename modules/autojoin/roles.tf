@@ -61,3 +61,10 @@ resource "google_project_iam_member" "autonode_gke_bigquery_user" {
   member = "serviceAccount:${google_service_account.gke.email}"
   project = data.google_client_config.current.project
 }
+
+resource "google_project_iam_member" "autonode_gke_bigquery_viewer" {
+  role = "roles/bigquery.dataViewer"
+  member = "serviceAccount:${google_service_account.gke.email}"
+  project = data.google_client_config.current.project
+}
+
