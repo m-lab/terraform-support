@@ -62,3 +62,9 @@ resource "google_project_iam_member" "autonode_gke_bigquery_user" {
   project = data.google_client_config.current.project
 }
 
+resource "google_project_iam_member" "autonode_gke_appengine_viewer" {
+  role = "roles/appengine.appViewer"
+  member = "serviceAccount:${google_service_account.gke.email}"
+  project = data.google_client_config.current.project
+}
+
