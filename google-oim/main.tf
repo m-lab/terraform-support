@@ -7,12 +7,12 @@ terraform {
 }
 
 provider "google" {
-  project = "mlab-sandbox"
+  project = "mlab-backup"
 }
 
 provider "google" {
   alias   = "google-oim"
-  project = "mlab-sandbox"
+  project = "mlab-backup"
   region  = "us-east1"
   zone    = "us-east1-b"
 }

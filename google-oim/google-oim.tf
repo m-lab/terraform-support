@@ -10,14 +10,134 @@ module "google_oim" {
       disk_image   = "google-oim-instance-2025-08-27t17-33-25"
       disk_size_gb = 100
       disk_type    = "pd-ssd"
-      machine_type = "e2-highcpu-4"
+      machine_type = "n2-highcpu-4"
       probability  = 1.0
       tags         = []
     }
     vms = {
+      #mlab1-ams12 = {
+      #  zone = "europe-west4-b"
+      #},
+      #mlab1-arn07 = {
+      #  zone = "europe-north2-b"
+      #},
+      #mlab1-ber03 = {
+      #  zone = "europe-west10-b"
+      #},
+      #mlab1-bom07 = {
+      #  zone = "asia-south1-b"
+      #},
+      #mlab1-bru08 = {
+      #  zone = "europe-west1-b"
+      #},
+      #mlab1-cgk03 = {
+      #  zone = "asia-southeast2-b"
+      #},
       mlab1-chs03 = {
-        zone = "us-east1-d"
+        zone = "us-east1-b"
       },
+      #mlab1-cmh03 = {
+      #  zone = "us-east5-b"
+      #},
+      #mlab1-del06 = {
+      #  zone = "asia-south2-b"
+      #},
+      #mlab1-dfw13 = {
+      #  zone = "us-south1-b"
+      #},
+      #mlab1-doh03 = {
+      #  zone = "me-central1-b"
+      #},
+      #mlab1-fra09 = {
+      #  zone = "europe-west3-b"
+      #},
+      #mlab1-gru07 = {
+      #  zone = "southamerica-east1-b"
+      #},
+      #mlab1-hel03 = {
+      #  zone = "europe-north1-b"
+      #},
+      #mlab1-hkg06 = {
+      #  zone = "asia-east2-b"
+      #},
+      #mlab1-hnd08 = {
+      #  zone = "asia-northeast1-b"
+      #},
+      #mlab1-iad10 = {
+      #  zone = "us-east4-b"
+      #},
+      #mlab1-icn03 = {
+      #  zone = "asia-northeast3-b"
+      #},
+      #mlab1-jnb03 = {
+      #  zone = "africa-south1-b"
+      #},
+      #mlab1-kix03 = {
+      #  zone = "asia-northeast2-b"
+      #},
+      #mlab1-las03 = {
+      #  zone = "us-west4-b"
+      #},
+      #mlab1-lax11 = {
+      #  zone = "us-west2-b"
+      #},
+      #mlab1-lhr11 = {
+      #  zone = "europe-west2-b"
+      #},
+      #mlab1-mad09 = {
+      #  zone = "europe-southwest1-b"
+      #},
+      #mlab1-mel03 = {
+      #  zone = "australia-southeast2-b"
+      #},
+      #mlab1-mil10 = {
+      #  zone = "europe-west8-b"
+      #},
+      #mlab1-oma03 = {
+      #  zone = "us-central1-b"
+      #},
+      #mlab1-par10 = {
+      #  zone = "europe-west9-b"
+      #},
+      #mlab1-pdx04 = {
+      #  zone = "us-west1-b"
+      #},
+      #mlab1-qro01 = {
+      #  zone = "northamerica-south1-b"
+      #},
+      #mlab1-scl07 = {
+      #  zone = "southamerica-west1-b"
+      #},
+      #mlab1-sin04 = {
+      #  zone = "asia-southeast1-b"
+      #},
+      #mlab1-slc03 = {
+      #  zone = "us-west3-b"
+      #},
+      #mlab1-syd09 = {
+      #  zone = "australia-southeast1-b"
+      #},
+      #mlab1-tlv03 = {
+      #  zone = "me-west1-b"
+      #},
+      #mlab1-tpe04 = {
+      #  zone = "asia-east1-b"
+      #},
+      #mlab1-trn05 = {
+      #  zone = "europe-west12-b"
+      #},
+      #mlab1-waw03 = {
+      #  zone = "europe-central2-b"
+      #},
+      #mlab1-yul09 = {
+      #  zone = "northamerica-northeast1-b"
+      #},
+      #mlab1-yyz09 = {
+      #  zone = "northamerica-northeast2-b"
+      #}
+      #mlab1-zrh03 = {
+      #  zone = "europe-west6-b"
+      #}
     }
   }
 
@@ -103,6 +223,11 @@ module "google_oim" {
         name          = "mlab"
         region        = "europe-north1"
       },
+      "europe-north2" = {
+        ip_cidr_range = "10.41.0.0/16"
+        name          = "mlab"
+        region        = "europe-north2"
+      },
       "europe-southwest1" = {
         ip_cidr_range = "10.19.0.0/16"
         name          = "mlab"
@@ -167,6 +292,11 @@ module "google_oim" {
         ip_cidr_range = "10.23.0.0/16"
         name          = "mlab"
         region        = "northamerica-northeast1"
+      }
+      "northamerica-south1" = {
+        ip_cidr_range = "10.42.0.0/16"
+        name          = "mlab"
+        region        = "northamerica-south1"
       }
       "northamerica-northeast2" = {
         ip_cidr_range = "10.32.0.0/16"
