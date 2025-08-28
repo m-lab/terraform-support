@@ -38,3 +38,10 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
+provider "google" {
+  alias   = "google-oim"
+  project = "mlab-oti"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
+
