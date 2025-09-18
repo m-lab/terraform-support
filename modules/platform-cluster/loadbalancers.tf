@@ -147,7 +147,8 @@ resource "google_compute_region_backend_service" "epoxy_extension_server" {
   dynamic "backend" {
     for_each = google_compute_instance_group.platform_cluster
     content {
-      group = backend.value.id
+      balancing_mode = "CONNECTION"
+      group          = backend.value.id
     }
   }
   health_checks         = [google_compute_health_check.epoxy_extension_server.id]
