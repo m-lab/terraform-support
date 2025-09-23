@@ -35,7 +35,8 @@ resource "google_compute_region_backend_service" "platform_cluster_mig_backends"
   for_each = { for k, v in var.instances.migs : k => v if v.loadbalanced }
 
   backend {
-    group = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].instance_group
+    balancing_mode = "CONNECTION"
+    group          = google_compute_region_instance_group_manager.platform_cluster_mig_managers[each.key].instance_group
   }
 
   name                  = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
