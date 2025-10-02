@@ -1,7 +1,7 @@
 resource "google_compute_instance" "autonode" {
   boot_disk {
     auto_delete = true
-    source      = google_compute_disk.autonode_boot_disk
+    source      = google_compute_disk.autonode_boot_disk.id
   }
 
   description             = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
