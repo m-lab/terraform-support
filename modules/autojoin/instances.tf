@@ -1,9 +1,7 @@
 resource "google_compute_instance" "autonode" {
   boot_disk {
     auto_delete = true
-    initialize_params {
-      image = "ubuntu-minimal-2404-lts-amd64"
-    }
+    source      = google_compute_disk.autonode_boot_disk.id
   }
 
   description             = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
@@ -29,4 +27,11 @@ resource "google_compute_instance" "autonode" {
   }
 
   tags = ["ndt-server", "public-prometheus-monitoring"]
+}
+
+resource "google_compute_disk" "autonode_boot_disk" {
+  image = "ubuntu-minimal-2404-lts-amd64"
+  name  = "autonode-boot-disk"
+  size  = "100"
+  type  = "pd-ssd"
 }
