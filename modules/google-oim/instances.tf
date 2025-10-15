@@ -7,7 +7,6 @@ resource "google_compute_instance" "google_oim_instances" {
   allow_stopping_for_update = true
 
   boot_disk {
-    auto_delete = false
     source      = google_compute_disk.mlab_boot_disks["${each.key}"].id
   }
 
