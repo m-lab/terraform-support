@@ -7,8 +7,10 @@ terraform {
         google.data-pipeline,
         google.foundations,
         google.platform-cluster,
-        google.visualizations
+        google.visualizations,
+        google.google-oim
       ]
     }
   }
 }
+

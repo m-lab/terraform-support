@@ -44,3 +44,11 @@ provider "google" {
   region  = "us-central1"
   zone    = "us-central1-c"
 }
+
+provider "google" {
+  alias   = "google-oim"
+  project = "mlab-autojoin"
+  region  = "us-central1"
+  zone    = "us-central1-c"
+}
+
