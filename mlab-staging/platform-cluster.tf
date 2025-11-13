@@ -74,7 +74,7 @@ module "platform-cluster" {
   }
 
   prometheus_instance = {
-    disk_image        = "platform-cluster-internal-instance-2025-11-10t17-18-08"
+    disk_image        = "platform-cluster-internal-instance-2025-11-13t16-47-47"
     disk_size_gb_boot = 100
     disk_size_gb_data = 1500
     disk_type         = "pd-ssd"
