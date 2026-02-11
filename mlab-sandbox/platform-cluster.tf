@@ -51,7 +51,7 @@ module "platform-cluster" {
       # This will show up as /dev/disk/by-id/google-<name>
       disk_dev_name_data = "cluster-data"
       disk_type          = "pd-ssd"
-      machine_type       = "n2-standard-2"
+      machine_type       = "e2-standard-2"
       tags               = ["platform-cluster"]
       region             = "us-west2"
       scopes             = ["cloud-platform"]
