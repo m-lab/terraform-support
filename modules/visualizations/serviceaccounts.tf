@@ -10,56 +10,38 @@ resource "google_service_account" "grafana_public" {
 #
 # Role Bindings
 #
-resource "google_project_iam_binding" "logging_logwriter" {
+resource "google_project_iam_member" "logging_logwriter" {
   project = data.google_project.current.id
   role    = "roles/logging.logWriter"
-
-  members = [
-    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
-  ]
+  member  = "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "cloudtrace_agent" {
+resource "google_project_iam_member" "cloudtrace_agent" {
   project = data.google_project.current.id
   role    = "roles/cloudtrace.agent"
-
-  members = [
-    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
-  ]
+  member  = "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "monitoring_metricwriter" {
+resource "google_project_iam_member" "monitoring_metricwriter" {
   project = data.google_project.current.id
   role    = "roles/monitoring.metricWriter"
-
-  members = [
-    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
-  ]
+  member  = "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "monitoring_metricsscopesviewer" {
+resource "google_project_iam_member" "monitoring_metricsscopesviewer" {
   project = data.google_project.current.id
   role    = "roles/monitoring.metricsScopesViewer"
-
-  members = [
-    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
-  ]
+  member  = "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "storage_objectviewer" {
+resource "google_project_iam_member" "storage_objectviewer" {
   project = data.google_project.current.id
   role    = "roles/storage.objectViewer"
-
-  members = [
-    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
-  ]
+  member  = "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
 }
 
-resource "google_project_iam_binding" "artifactregistry_reader" {
+resource "google_project_iam_member" "artifactregistry_reader" {
   project = data.google_project.current.id
   role    = "roles/artifactregistry.reader"
-
-  members = [
-    "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
-  ]
+  member  = "serviceAccount:grafana-public@${data.google_project.current.project_id}.iam.gserviceaccount.com"
 }
