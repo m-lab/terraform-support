@@ -23,9 +23,23 @@ resource "google_project_iam_custom_role" "orgadm_operator" {
 resource "google_project_iam_custom_role" "orgadm_credentials" {
   description = "Permissions to manage orgadm platform credentials in Datastore"
   permissions = [
+    "appengine.applications.get",
+    "databasesconsole.locations.get",
+    "databasesconsole.locations.list",
+    "datastore.databases.get",
+    "datastore.databases.getMetadata",
+    "datastore.databases.list",
+    "datastore.entities.allocateIds",
     "datastore.entities.create",
     "datastore.entities.get",
     "datastore.entities.list",
+    "datastore.entities.update",
+    "datastore.namespaces.get",
+    "datastore.namespaces.list",
+    "datastore.schemas.list",
+    "datastore.statistics.get",
+    "datastore.statistics.list",
+    "resourcemanager.projects.get",
   ]
   role_id = "orgadm_credentials"
   stage   = "GA"
