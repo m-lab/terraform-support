@@ -51,3 +51,10 @@ provider "google" {
   region  = "us-central1"
   zone    = "us-central1-c"
 }
+
+provider "google" {
+  alias   = "monitoring"
+  project = "mlab-sandbox"
+  region  = "us-central1"
+  zone    = "us-central1-c"
+}

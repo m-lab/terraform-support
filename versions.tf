@@ -8,7 +8,8 @@ terraform {
         google.foundations,
         google.platform-cluster,
         google.visualizations,
-        google.google-oim
+        google.google-oim,
+        google.monitoring
       ]
     }
   }
