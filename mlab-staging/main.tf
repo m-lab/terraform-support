@@ -52,3 +52,10 @@ provider "google" {
   zone    = "us-central1-c"
 }
 
+provider "google" {
+  alias   = "monitoring"
+  project = "mlab-staging"
+  region  = "us-central1"
+  zone    = "us-central1-b"
+}
+

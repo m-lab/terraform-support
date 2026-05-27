@@ -45,3 +45,10 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
+provider "google" {
+  alias   = "monitoring"
+  project = "mlab-oti"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
+
