@@ -14,7 +14,7 @@ resource "google_compute_firewall" "monitoring_iap_ssh" {
 # Allow Prometheus to scrape the monitoring VM via its external IPv4 address.
 resource "google_compute_firewall" "monitoring_scrape" {
   allow {
-    ports    = ["9115"]
+    ports    = ["9100", "9115"]
     protocol = "tcp"
   }
   description   = "Allow Prometheus to scrape the monitoring VM (managed by Terraform)"
