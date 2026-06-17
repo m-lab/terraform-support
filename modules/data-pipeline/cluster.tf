@@ -10,6 +10,23 @@ resource "google_container_cluster" "data_pipeline" {
   }
 
   subnetwork = google_compute_subnetwork.data_pipeline.id
+
+  # Confine GKE node auto-upgrades to a daily window outside of the daily
+  # parsing window (~10:30-18:30 UTC). Node-pool upgrades drain nodes and evict
+  # the etl-parser pods; if that happens mid-job, in-flight parse tasks are lost
+  # and never re-reported to gardener, which stalls the job until its stale-job
+  # tracker reaps it (with no retry), leaving a gap in the day's data. The
+  # cluster is on the REGULAR release channel, so node auto-upgrade is mandatory
+  # and cannot be disabled; restricting *when* it runs is the available lever.
+  # The dates below are arbitrary anchors for the recurrence series; only the
+  # time-of-day (00:00-06:00 UTC), the duration, and the daily recurrence matter.
+  maintenance_policy {
+    recurring_window {
+      start_time = "2024-01-01T00:00:00Z"
+      end_time   = "2024-01-01T06:00:00Z"
+      recurrence = "FREQ=DAILY"
+    }
+  }
 }
 
 resource "google_container_node_pool" "node_pools" {
