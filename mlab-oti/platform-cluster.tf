@@ -207,13 +207,233 @@ module "platform-cluster" {
       }
     }
     vms = {
+      # Pre-existing standalone VMs (not converted from MIGs).
       mlab1-par08 = {
         zone        = "europe-west9-c"
         probability = 0.5
       },
       mlab1-pdx01 = {
         zone = "us-west1-c"
-      }
+      },
+
+      # Standalone VM replacements for loadbalanced MIGs. Each new site name
+      # increments the trailing number of the corresponding MIG site by one.
+      # Sites that scaled to a max of 3 VMs over the past 120 days get 3 VMs;
+      # sites that scaled to 2 get 2; sites that never scaled past 1 get 1.
+      # Note: europe-west1 and us-east1 have no -a zone; those use -b.
+
+      # 3-VM sites.
+      mlab1-ber03 = {
+        zone         = "europe-west10-a"
+        machine_type = "e2-highcpu-4"
+      },
+      mlab2-ber03 = {
+        zone         = "europe-west10-b"
+        machine_type = "e2-highcpu-4"
+      },
+      mlab3-ber03 = {
+        zone         = "europe-west10-c"
+        machine_type = "e2-highcpu-4"
+      },
+      mlab1-cgk03 = {
+        zone = "asia-southeast2-a"
+      },
+      mlab2-cgk03 = {
+        zone = "asia-southeast2-b"
+      },
+      mlab3-cgk03 = {
+        zone = "asia-southeast2-c"
+      },
+      mlab1-tlv03 = {
+        zone = "me-west1-a"
+      },
+      mlab2-tlv03 = {
+        zone = "me-west1-b"
+      },
+      mlab3-tlv03 = {
+        zone = "me-west1-c"
+      },
+
+      # 2-VM sites.
+      mlab1-del06 = {
+        zone        = "asia-south2-a"
+        probability = 0.5
+      },
+      mlab2-del06 = {
+        zone        = "asia-south2-b"
+        probability = 0.5
+      },
+      mlab1-dfw13 = {
+        zone        = "us-south1-a"
+        probability = 0.5
+      },
+      mlab2-dfw13 = {
+        zone        = "us-south1-b"
+        probability = 0.5
+      },
+      mlab1-doh03 = {
+        zone         = "me-central1-a"
+        machine_type = "e2-highcpu-4"
+      },
+      mlab2-doh03 = {
+        zone         = "me-central1-b"
+        machine_type = "e2-highcpu-4"
+      },
+      mlab1-hel03 = {
+        zone = "europe-north1-a"
+      },
+      mlab2-hel03 = {
+        zone = "europe-north1-b"
+      },
+      mlab1-hkg06 = {
+        zone        = "asia-east2-a"
+        probability = 0.5
+      },
+      mlab2-hkg06 = {
+        zone        = "asia-east2-b"
+        probability = 0.5
+      },
+      mlab1-icn03 = {
+        zone = "asia-northeast3-a"
+      },
+      mlab2-icn03 = {
+        zone = "asia-northeast3-b"
+      },
+      mlab1-mel03 = {
+        zone = "australia-southeast2-a"
+      },
+      mlab2-mel03 = {
+        zone = "australia-southeast2-b"
+      },
+      mlab1-mil10 = {
+        zone        = "europe-west8-a"
+        probability = 0.5
+      },
+      mlab2-mil10 = {
+        zone        = "europe-west8-b"
+        probability = 0.5
+      },
+      mlab1-tpe04 = {
+        zone        = "asia-east1-a"
+        probability = 0.5
+      },
+      mlab2-tpe04 = {
+        zone        = "asia-east1-b"
+        probability = 0.5
+      },
+      mlab1-trn05 = {
+        zone        = "europe-west12-a"
+        probability = 0.5
+      },
+      mlab2-trn05 = {
+        zone        = "europe-west12-b"
+        probability = 0.5
+      },
+      mlab1-waw03 = {
+        zone = "europe-central2-a"
+      },
+      mlab2-waw03 = {
+        zone = "europe-central2-b"
+      },
+      mlab1-yul09 = {
+        zone        = "northamerica-northeast1-a"
+        probability = 0.5
+      },
+      mlab2-yul09 = {
+        zone        = "northamerica-northeast1-b"
+        probability = 0.5
+      },
+      mlab1-yyz09 = {
+        zone        = "northamerica-northeast2-a"
+        probability = 0.5
+      },
+      mlab2-yyz09 = {
+        zone        = "northamerica-northeast2-b"
+        probability = 0.5
+      },
+      mlab1-zrh03 = {
+        zone = "europe-west6-a"
+      },
+      mlab2-zrh03 = {
+        zone = "europe-west6-b"
+      },
+
+      # 1-VM sites.
+      mlab1-ams12 = {
+        zone        = "europe-west4-a"
+        probability = 0.5
+      },
+      mlab1-bom07 = {
+        zone        = "asia-south1-a"
+        probability = 0.5
+      },
+      mlab1-bru08 = {
+        zone        = "europe-west1-b"
+        probability = 0.5
+      },
+      mlab1-chs03 = {
+        zone = "us-east1-b"
+      },
+      mlab1-cmh03 = {
+        zone = "us-east5-a"
+      },
+      mlab1-fra09 = {
+        zone        = "europe-west3-a"
+        probability = 0.5
+      },
+      mlab1-gru07 = {
+        zone        = "southamerica-east1-a"
+        probability = 0.5
+      },
+      mlab1-hnd08 = {
+        zone        = "asia-northeast1-a"
+        probability = 0.5
+      },
+      mlab1-iad10 = {
+        zone        = "us-east4-a"
+        probability = 0.5
+      },
+      mlab1-jnb03 = {
+        zone         = "africa-south1-a"
+        machine_type = "e2-highcpu-4"
+        probability  = 0.5
+      },
+      mlab1-kix03 = {
+        zone = "asia-northeast2-a"
+      },
+      mlab1-las03 = {
+        zone = "us-west4-a"
+      },
+      mlab1-lax11 = {
+        zone        = "us-west2-a"
+        probability = 0.5
+      },
+      mlab1-lhr11 = {
+        zone        = "europe-west2-a"
+        probability = 0.5
+      },
+      mlab1-mad09 = {
+        zone        = "europe-southwest1-a"
+        probability = 0.5
+      },
+      mlab1-oma03 = {
+        zone = "us-central1-a"
+      },
+      mlab1-scl07 = {
+        zone        = "southamerica-west1-a"
+        probability = 0.5
+      },
+      mlab1-sin04 = {
+        zone        = "asia-southeast1-a"
+        probability = 0.5
+      },
+      mlab1-slc03 = {
+        zone = "us-west3-a"
+      },
+      mlab1-syd09 = {
+        zone        = "australia-southeast1-a"
+        probability = 0.5
+      },
     }
   }
 
