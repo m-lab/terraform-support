@@ -237,21 +237,27 @@ module "platform-cluster" {
       },
       mlab1-cgk03 = {
         zone = "asia-southeast2-a"
+        machine_type = "n4-highcpu-4"
       },
       mlab2-cgk03 = {
         zone = "asia-southeast2-b"
+        machine_type = "n4-highcpu-4"
       },
       mlab3-cgk03 = {
         zone = "asia-southeast2-c"
+        machine_type = "n4-highcpu-4"
       },
       mlab1-tlv03 = {
         zone = "me-west1-a"
+        machine_type = "n4-highcpu-4"
       },
       mlab2-tlv03 = {
         zone = "me-west1-b"
+        machine_type = "n4-highcpu-4"
       },
       mlab3-tlv03 = {
         zone = "me-west1-c"
+        machine_type = "n4-highcpu-4"
       },
 
       # 2-VM sites.
@@ -281,9 +287,11 @@ module "platform-cluster" {
       },
       mlab1-hel03 = {
         zone = "europe-north1-a"
+        machine_type = "n4-highcpu-4"
       },
       mlab2-hel03 = {
         zone = "europe-north1-b"
+        machine_type = "n4-highcpu-4"
       },
       mlab1-hkg06 = {
         zone        = "asia-east2-a"
@@ -344,12 +352,14 @@ module "platform-cluster" {
         probability = 0.5
       },
       mlab1-yyz09 = {
-        zone        = "northamerica-northeast2-a"
-        probability = 0.5
-      },
-      mlab2-yyz09 = {
         zone        = "northamerica-northeast2-b"
         probability = 0.5
+        machine_type = "n4-highcpu-4"
+      },
+      mlab2-yyz09 = {
+        zone        = "northamerica-northeast2-c"
+        probability = 0.5
+        machine_type = "n4-highcpu-4"
       },
       mlab1-zrh03 = {
         zone = "europe-west6-a"
@@ -370,6 +380,7 @@ module "platform-cluster" {
       mlab1-bru08 = {
         zone        = "europe-west1-b"
         probability = 0.5
+        machine_type = "n4-highcpu-4"
       },
       mlab1-chs03 = {
         zone = "us-east1-b"
@@ -418,6 +429,7 @@ module "platform-cluster" {
       },
       mlab1-oma03 = {
         zone = "us-central1-a"
+        machine_type = "n4-highcpu-4"
       },
       mlab1-scl07 = {
         zone        = "southamerica-west1-a"
