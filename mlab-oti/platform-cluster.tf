@@ -386,7 +386,8 @@ module "platform-cluster" {
         zone = "us-east1-b"
       },
       mlab1-cmh03 = {
-        zone = "us-east5-a"
+        zone = "us-east5-c"
+        machine_type = "e2-highcpu-4"
       },
       mlab1-fra09 = {
         zone        = "europe-west3-a"
