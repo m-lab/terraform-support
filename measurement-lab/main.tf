@@ -45,3 +45,19 @@ provider "google" {
   zone    = "us-central1-a"
 }
 
+provider "google" {
+  alias   = "knowledgebase"
+  project = "measurement-lab"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
+
+# Unused in this environment, but the shared versions.tf declares the alias,
+# which newer Terraform versions require every root module to define.
+provider "google" {
+  alias   = "monitoring"
+  project = "measurement-lab"
+  region  = "us-central1"
+  zone    = "us-central1-a"
+}
+
