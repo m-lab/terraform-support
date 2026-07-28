@@ -2,6 +2,17 @@
 # cloud-run-job instantiation per automation: runtime service account,
 # IAM, secret shells, deploy trigger, and schedule.
 
+data "google_project" "current" {}
+
+# The default Cloud Build SA runs this repository's applies and needs to
+# manage the secrets created by the cloud-run-job module. Its other roles
+# are currently granted out of band; this one is recorded here.
+resource "google_project_iam_member" "cloudbuild_secretmanager_admin" {
+  project = data.google_project.current.project_id
+  role    = "roles/secretmanager.admin"
+  member  = "serviceAccount:${data.google_project.current.number}@cloudbuild.gserviceaccount.com"
+}
+
 module "ndt-upgrade-sync" {
   source = "../modules/cloud-run-job"
 
