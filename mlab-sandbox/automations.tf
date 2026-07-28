@@ -29,11 +29,11 @@ module "ndt-upgrade-sync" {
   trigger_branch = "^sandbox-.*$"
 
   # ClickUp list and custom field ids, consumed by the deploy step in
-  # ndt-upgrade-sync/cloudbuild.yaml. TODO(roberto): fill with the sandbox
-  # test list before the first deploy.
+  # ndt-upgrade-sync/cloudbuild.yaml. These point at the "NDT Upgrade Sync
+  # [sandbox test]" list; the production wiring will use the real list.
   build_substitutions = {
-    _CLICKUP_LIST_ID   = ""
-    _CF_ORG_NAME       = ""
-    _CF_UPGRADE_STATUS = ""
+    _CLICKUP_LIST_ID   = "901418580143"
+    _CF_ORG_NAME       = "b0d1de2c-cfac-4402-8481-5f8396e472e9"
+    _CF_UPGRADE_STATUS = "af917b24-305e-4f31-a722-00f0ded4f96a"
   }
 }
