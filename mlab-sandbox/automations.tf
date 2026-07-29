@@ -13,6 +13,33 @@ resource "google_project_iam_member" "cloudbuild_secretmanager_admin" {
   member  = "serviceAccount:${data.google_project.current.number}@cloudbuild.gserviceaccount.com"
 }
 
+# Shared log-based metrics for all automations in this project. They reach
+# the federation Prometheus through the stackdriver exporter, which already
+# pulls the logging.googleapis.com/user metric prefix; generic alert rules
+# in m-lab/prometheus-support consume them, grouped by job name.
+resource "google_logging_metric" "automations_job_errors" {
+  name = "automations_job_errors"
+  # Counts logError() lines from the automations plus anything a crashing
+  # container writes to stderr. Not covered: infra-level kills that log only
+  # at WARNING severity (e.g. OOM), which would need execution-level checks.
+  filter = "resource.type=\"cloud_run_job\" AND severity>=ERROR"
+
+  metric_descriptor {
+    metric_kind = "DELTA"
+    value_type  = "INT64"
+  }
+}
+
+resource "google_logging_metric" "automations_scheduler_errors" {
+  name   = "automations_scheduler_errors"
+  filter = "resource.type=\"cloud_scheduler_job\" AND severity>=ERROR"
+
+  metric_descriptor {
+    metric_kind = "DELTA"
+    value_type  = "INT64"
+  }
+}
+
 module "ndt-upgrade-sync" {
   source = "../modules/cloud-run-job"
 
