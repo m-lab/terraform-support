@@ -83,7 +83,7 @@ module "platform-cluster" {
     disk_size_gb_boot = 100
     disk_size_gb_data = 200
     disk_type         = "pd-ssd"
-    machine_type      = "n2-standard-2"
+    machine_type      = "e2-standard-2"
     tags              = ["prometheus-platform-cluster"]
     region            = "us-west2"
     scopes            = ["cloud-platform"]
