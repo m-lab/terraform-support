@@ -27,13 +27,16 @@ module "platform-cluster" {
     },
     vms = {
       mlab3-iad08 = {
-        zone = "us-east4-c"
+        zone         = "us-east4-c"
+        machine_type = "e2-highcpu-4"
       },
       mlab4-iad08 = {
-        zone = "us-east4-c"
+        zone         = "us-east4-c"
+        machine_type = "e2-highcpu-4"
       },
       mlab4-lax08 = {
-        zone = "us-west2-c"
+        zone         = "us-west2-c"
+        machine_type = "e2-highcpu-4"
       }
     }
   }
