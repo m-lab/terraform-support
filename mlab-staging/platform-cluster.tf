@@ -27,13 +27,16 @@ module "platform-cluster" {
     },
     vms = {
       mlab3-iad08 = {
-        zone = "us-east4-c"
+        zone         = "us-east4-c"
+        machine_type = "e2-highcpu-4"
       },
       mlab4-iad08 = {
-        zone = "us-east4-c"
+        zone         = "us-east4-c"
+        machine_type = "e2-highcpu-4"
       },
       mlab4-lax08 = {
-        zone = "us-west2-c"
+        zone         = "us-west2-c"
+        machine_type = "e2-highcpu-4"
       }
     }
   }
@@ -46,7 +49,7 @@ module "platform-cluster" {
       # This will show up as /dev/disk/by-id/google-<name>
       disk_dev_name_data = "cluster-data"
       disk_type          = "pd-ssd"
-      machine_type       = "n2-standard-4"
+      machine_type       = "e2-standard-4"
       tags               = ["platform-cluster"]
       region             = "us-central1"
       scopes             = ["cloud-platform"]
@@ -78,7 +81,7 @@ module "platform-cluster" {
     disk_size_gb_boot = 100
     disk_size_gb_data = 1500
     disk_type         = "pd-ssd"
-    machine_type      = "n2-highmem-16"
+    machine_type      = "e2-highmem-16"
     tags              = ["prometheus-platform-cluster"]
     region            = "us-central1"
     scopes            = ["cloud-platform"]
