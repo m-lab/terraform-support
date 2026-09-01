@@ -35,3 +35,48 @@ resource "google_compute_disk" "autonode_boot_disk" {
   size  = "100"
   type  = "pd-ssd"
 }
+
+# Same shape as the autonode VM above, but for the mlab-node Debian package,
+# which replaces the Docker Compose deployment. No startup script: the package
+# has no runtime dependency on Docker, and installation/configuration is done
+# by the byos-debian deploy pipeline.
+resource "google_compute_instance" "autonode_deb" {
+  count = var.deploy_autonode_deb ? 1 : 0
+
+  boot_disk {
+    auto_delete = true
+    source      = google_compute_disk.autonode_deb_boot_disk[0].id
+  }
+
+  description  = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
+  machine_type = "n2-standard-2"
+  name         = "autonode-deb"
+
+  network_interface {
+    access_config {
+      nat_ip = google_compute_address.autonode_deb_ipv4[0].address
+    }
+    ipv6_access_config {
+      network_tier = "PREMIUM"
+    }
+    network    = google_compute_network.autojoin.name
+    stack_type = "IPV4_IPV6"
+    subnetwork = google_compute_subnetwork.autojoin.name
+  }
+
+  service_account {
+    email  = google_service_account.autonode.email
+    scopes = ["cloud-platform"]
+  }
+
+  tags = ["ndt-server", "public-prometheus-monitoring"]
+}
+
+resource "google_compute_disk" "autonode_deb_boot_disk" {
+  count = var.deploy_autonode_deb ? 1 : 0
+
+  image = "ubuntu-minimal-2404-lts-amd64"
+  name  = "autonode-deb-boot-disk"
+  size  = "100"
+  type  = "pd-ssd"
+}

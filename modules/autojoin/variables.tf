@@ -29,3 +29,9 @@ variable "appengine_region" {
   description = "GAE subnet region"
   type        = string
 }
+
+variable "deploy_autonode_deb" {
+  default     = false
+  description = "Whether to deploy the autonode-deb VM, used to test the mlab-node Debian package"
+  type        = bool
+}
