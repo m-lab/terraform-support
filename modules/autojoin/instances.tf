@@ -37,9 +37,10 @@ resource "google_compute_disk" "autonode_boot_disk" {
 }
 
 # Same shape as the autonode VM above, but for the mlab-node Debian package,
-# which replaces the Docker Compose deployment. No startup script: the package
-# has no runtime dependency on Docker, and installation/configuration is done
-# by the byos-debian deploy pipeline.
+# which replaces the Docker Compose deployment. The startup script points apt
+# at this project's mlab-node Artifact Registry repository and enables
+# periodic upgrades; initial installation/configuration is done by the
+# byos-debian deploy pipeline.
 resource "google_compute_instance" "autonode_deb" {
   count = var.deploy_autonode_deb ? 1 : 0
 
@@ -48,10 +49,11 @@ resource "google_compute_instance" "autonode_deb" {
     source      = google_compute_disk.autonode_deb_boot_disk[0].id
   }
 
-  description  = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
-  machine_type = "n2-standard-2"
-  name         = "autonode-deb"
-  zone         = var.autonode_deb_zone
+  description             = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
+  machine_type            = "n2-standard-2"
+  metadata_startup_script = file("${path.root}/../scripts/setup-autonode-deb.sh")
+  name                    = "autonode-deb"
+  zone                    = var.autonode_deb_zone
 
   network_interface {
     access_config {
