@@ -35,3 +35,9 @@ variable "deploy_autonode_deb" {
   description = "Whether to deploy the autonode-deb VM, used to test the mlab-node Debian package"
   type        = bool
 }
+
+variable "autonode_deb_zone" {
+  default     = null
+  description = "Zone for the autonode-deb VM, overriding the provider default. Must stay in us-central1 (the deploy pipeline assumes the OMA IATA)."
+  type        = string
+}

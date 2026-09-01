@@ -51,6 +51,7 @@ resource "google_compute_instance" "autonode_deb" {
   description  = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
   machine_type = "n2-standard-2"
   name         = "autonode-deb"
+  zone         = var.autonode_deb_zone
 
   network_interface {
     access_config {
@@ -79,4 +80,5 @@ resource "google_compute_disk" "autonode_deb_boot_disk" {
   name  = "autonode-deb-boot-disk"
   size  = "100"
   type  = "pd-ssd"
+  zone  = var.autonode_deb_zone
 }
