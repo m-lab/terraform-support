@@ -49,11 +49,15 @@ resource "google_compute_instance" "autonode_deb" {
     source      = google_compute_disk.autonode_deb_boot_disk[0].id
   }
 
-  description             = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
-  machine_type            = var.autonode_deb_machine_type
-  metadata_startup_script = file("${path.root}/../scripts/setup-autonode-deb.sh")
-  name                    = "autonode-deb"
-  zone                    = var.autonode_deb_zone
+  description  = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
+  machine_type = var.autonode_deb_machine_type
+  # As a metadata entry rather than metadata_startup_script, which forces a
+  # new instance on every change to the script.
+  metadata = {
+    startup-script = file("${path.root}/../scripts/setup-autonode-deb.sh")
+  }
+  name = "autonode-deb"
+  zone = var.autonode_deb_zone
 
   network_interface {
     access_config {
