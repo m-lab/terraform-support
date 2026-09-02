@@ -14,4 +14,5 @@ module "autojoin" {
   # creation time. Drop the override to go back to n2-standard-2.
   deploy_autonode_deb       = true
   autonode_deb_machine_type = "e2-standard-2"
+  autonode_deb_zone         = "us-central1-c"
 }
