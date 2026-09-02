@@ -41,3 +41,9 @@ variable "autonode_deb_zone" {
   description = "Zone for the autonode-deb VM, overriding the provider default. Must stay in us-central1 (the deploy pipeline assumes the OMA IATA)."
   type        = string
 }
+
+variable "autonode_deb_machine_type" {
+  default     = "n2-standard-2"
+  description = "Machine type for the autonode-deb VM. Defaults to the autonode VM's type; override when a zone is out of capacity."
+  type        = string
+}

@@ -9,9 +9,9 @@ module "autojoin" {
   # be easily changed, se we override the appengine_region here.
   appengine_region = "us-east1"
 
-  # Test VM for the mlab-node Debian package (byos-debian). Not in
-  # us-central1-c (the provider default) or us-central1-a: both were out of
-  # n2-standard-2 capacity at creation time.
-  deploy_autonode_deb = true
-  autonode_deb_zone   = "us-central1-b"
+  # Test VM for the mlab-node Debian package (byos-debian). e2 rather than the
+  # autonode VM's n2: every us-central1 zone was out of n2/n2d capacity at
+  # creation time. Drop the override to go back to n2-standard-2.
+  deploy_autonode_deb       = true
+  autonode_deb_machine_type = "e2-standard-2"
 }

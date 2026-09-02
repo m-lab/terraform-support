@@ -50,7 +50,7 @@ resource "google_compute_instance" "autonode_deb" {
   }
 
   description             = "Automated deployment and testing of the mlab-node Debian package (managed by Terraform)"
-  machine_type            = "n2-standard-2"
+  machine_type            = var.autonode_deb_machine_type
   metadata_startup_script = file("${path.root}/../scripts/setup-autonode-deb.sh")
   name                    = "autonode-deb"
   zone                    = var.autonode_deb_zone
