@@ -57,7 +57,10 @@ resource "google_compute_instance" "autonode_deb" {
     startup-script = file("${path.root}/../scripts/setup-autonode-deb.sh")
   }
   name = "autonode-deb"
-  zone = var.autonode_deb_zone
+  # Follow the boot disk's zone rather than reading the variable again: zone is
+  # computed when unset, so an existing disk and a new instance could otherwise
+  # resolve it differently.
+  zone = google_compute_disk.autonode_deb_boot_disk[0].zone
 
   network_interface {
     access_config {
