@@ -13,34 +13,37 @@ PROJECT=$(curl -sf -H 'Metadata-Flavor: Google' \
   http://metadata.google.internal/computeMetadata/v1/project/project-id)
 AR_URL="https://us-central1-apt.pkg.dev"
 
-# Downloads a signing key into /etc/apt/keyrings, dearmoring it if needed.
+# Downloads a signing key into /etc/apt/keyrings and prints its path. apt
+# accepts ASCII-armored keys in signed-by= as long as the file ends in .asc,
+# so no gpg (absent from ubuntu-minimal) is needed to dearmor.
 fetch_key() {
-  local url=$1 dest=$2
-  curl -fsSL "${url}" -o "${dest}.tmp"
-  if grep -q 'BEGIN PGP PUBLIC KEY BLOCK' "${dest}.tmp"; then
-    gpg --dearmor --batch --yes -o "${dest}" "${dest}.tmp"
-    rm -f "${dest}.tmp"
+  local url=$1 name=$2 tmp dest
+  tmp=$(mktemp)
+  curl -fsSL "${url}" -o "${tmp}"
+  if grep -q 'BEGIN PGP PUBLIC KEY BLOCK' "${tmp}"; then
+    dest="/etc/apt/keyrings/${name}.asc"
   else
-    mv "${dest}.tmp" "${dest}"
+    dest="/etc/apt/keyrings/${name}.gpg"
   fi
-  chmod 0644 "${dest}"
+  install -m 0644 "${tmp}" "${dest}"
+  rm -f "${tmp}"
+  echo "${dest}"
 }
 
 install -d -m 0755 /etc/apt/keyrings
 
 # apt-transport-artifact-registry lets apt authenticate to Artifact Registry
 # as the VM's service account (the repository is private).
-fetch_key https://packages.cloud.google.com/apt/doc/apt-key.gpg \
-  /etc/apt/keyrings/cloud.google.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main" \
+KEY=$(fetch_key https://packages.cloud.google.com/apt/doc/apt-key.gpg cloud.google)
+echo "deb [signed-by=${KEY}] https://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main" \
   > /etc/apt/sources.list.d/artifact-registry.list
 apt-get update
 apt-get install -y apt-transport-artifact-registry
 
 # The mlab-node repository. Artifact Registry signs the repository metadata
 # with its own key; the transport only handles authentication.
-fetch_key "${AR_URL}/doc/repo-signing-key.gpg" /etc/apt/keyrings/artifact-registry.gpg
-echo "deb [signed-by=/etc/apt/keyrings/artifact-registry.gpg] ar+${AR_URL}/projects/${PROJECT} mlab-node main" \
+KEY=$(fetch_key "${AR_URL}/doc/repo-signing-key.gpg" artifact-registry)
+echo "deb [signed-by=${KEY}] ar+${AR_URL}/projects/${PROJECT} mlab-node main" \
   > /etc/apt/sources.list.d/mlab-node.list
 
 # Periodic upgrade. The package's postinst restarts mlab-node.target on
