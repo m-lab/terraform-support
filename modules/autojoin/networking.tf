@@ -9,6 +9,13 @@ resource "google_compute_address" "autonode_ipv4" {
   name        = "autonode-ipv4-address"
 }
 
+resource "google_compute_address" "autonode_deb_ipv4" {
+  count = var.deploy_autonode_deb ? 1 : 0
+
+  description = "Static IPv4 for the autonode-deb VM (managed by Terraform)"
+  name        = "autonode-deb-ipv4-address"
+}
+
 resource "google_compute_subnetwork" "autojoin" {
   name             = "autojoin"
   ip_cidr_range    = "10.70.0.0/16"
