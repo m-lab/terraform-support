@@ -38,7 +38,7 @@ module "platform-cluster" {
     },
     vms = {
       mlab2-chs0t = {
-        zone = "us-east1-c"
+        zone = "us-east1-d"
       }
     }
   }
