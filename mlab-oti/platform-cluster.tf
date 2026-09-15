@@ -11,7 +11,7 @@ module "platform-cluster" {
       disk_image       = "platform-cluster-instance-v2-5-0"
       disk_size_gb     = 100
       disk_type        = "pd-ssd"
-      machine_type     = "n2-highcpu-4"
+      machine_type     = "e2-highcpu-4"
       mig_min_replicas = 1
       mig_max_replicas = 5
       network_tier     = "PREMIUM"
