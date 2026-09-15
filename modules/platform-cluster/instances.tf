@@ -78,6 +78,13 @@ resource "google_compute_disk" "api_boot_disks" {
   size     = var.api_instances.machine_attributes.disk_size_gb_boot
   type     = var.api_instances.machine_attributes.disk_type
   zone     = each.key
+
+  # Image bumps are rolled one VM at a time by scripts/tf_apply.sh via
+  # -replace, so an image change must NOT make a plain apply mass-recreate
+  # boot disks (and their instances). See that script and issue #61.
+  lifecycle {
+    ignore_changes = [image]
+  }
 }
 
 resource "google_compute_disk" "api_data_disks" {
@@ -102,6 +109,13 @@ resource "google_compute_instance" "platform_instances" {
   for_each = var.instances.vms
 
   allow_stopping_for_update = true
+
+  # machine_type changes are rolled one VM at a time (via -replace in
+  # scripts/tf_apply.sh) alongside image bumps, so a machine_type change must
+  # not trigger an in-place stop/start across the whole fleet at once.
+  lifecycle {
+    ignore_changes = [machine_type]
+  }
 
   boot_disk {
     auto_delete = false
@@ -195,6 +209,13 @@ resource "google_compute_disk" "platform_boot_disks" {
   size     = var.instances.attributes.disk_size_gb
   type     = var.instances.attributes.disk_type
   zone     = each.value["zone"]
+
+  # Image bumps are rolled one VM at a time by scripts/tf_apply.sh via
+  # -replace, so an image change must NOT make a plain apply mass-recreate
+  # boot disks (and their instances). See that script and issue #61.
+  lifecycle {
+    ignore_changes = [image]
+  }
 }
 
 #
