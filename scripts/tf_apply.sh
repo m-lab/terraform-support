@@ -76,13 +76,13 @@ function update_instances() {
   local desired_image state_json idx ip status
 
   if [[ ${target} == "api" ]]; then
-    desired_expr='var.api_instances.machine_attributes.disk_image'
+    desired_expr='module.platform-cluster.api_disk_image'
     disk_res='module.platform-cluster.google_compute_disk.api_boot_disks'
     inst_res='module.platform-cluster.google_compute_instance.api_instances'
     addr_res='module.platform-cluster.google_compute_address.api_external_addresses'
     health_path="6443/readyz"
   else
-    desired_expr='var.instances.attributes.disk_image'
+    desired_expr='module.platform-cluster.platform_disk_image'
     disk_res='module.platform-cluster.google_compute_disk.platform_boot_disks'
     inst_res='module.platform-cluster.google_compute_instance.platform_instances'
     addr_res='module.platform-cluster.google_compute_address.platform_addresses'
