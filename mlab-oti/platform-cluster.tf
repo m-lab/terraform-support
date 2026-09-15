@@ -39,39 +39,30 @@ module "platform-cluster" {
       # 3-VM sites.
       mlab1-ber03 = {
         zone         = "europe-west10-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab2-ber03 = {
         zone         = "europe-west10-b"
-        machine_type = "e2-highcpu-4"
       },
       mlab3-ber03 = {
         zone         = "europe-west10-c"
-        machine_type = "e2-highcpu-4"
       },
       mlab1-cgk03 = {
         zone = "asia-southeast2-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab2-cgk03 = {
         zone = "asia-southeast2-b"
-        machine_type = "e2-highcpu-4"
       },
       mlab3-cgk03 = {
         zone = "asia-southeast2-c"
-        machine_type = "e2-highcpu-4"
       },
       mlab1-tlv03 = {
         zone = "me-west1-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab2-tlv03 = {
         zone = "me-west1-b"
-        machine_type = "e2-highcpu-4"
       },
       mlab3-tlv03 = {
         zone = "me-west1-c"
-        machine_type = "e2-highcpu-4"
       },
 
       # 2-VM sites.
@@ -93,19 +84,15 @@ module "platform-cluster" {
       },
       mlab1-doh03 = {
         zone         = "me-central1-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab2-doh03 = {
         zone         = "me-central1-b"
-        machine_type = "e2-highcpu-4"
       },
       mlab1-hel03 = {
         zone = "europe-north1-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab2-hel03 = {
         zone = "europe-north1-b"
-        machine_type = "e2-highcpu-4"
       },
       mlab1-hkg06 = {
         zone        = "asia-east2-a"
@@ -168,12 +155,10 @@ module "platform-cluster" {
       mlab1-yyz09 = {
         zone        = "northamerica-northeast2-b"
         probability = 0.5
-        machine_type = "e2-highcpu-4"
       },
       mlab2-yyz09 = {
         zone        = "northamerica-northeast2-c"
         probability = 0.5
-        machine_type = "e2-highcpu-4"
       },
       mlab1-zrh03 = {
         zone = "europe-west6-a"
@@ -194,14 +179,12 @@ module "platform-cluster" {
       mlab1-bru08 = {
         zone        = "europe-west1-b"
         probability = 0.5
-        machine_type = "e2-highcpu-4"
       },
       mlab1-chs03 = {
         zone = "us-east1-b"
       },
       mlab1-cmh03 = {
         zone = "us-east5-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab1-fra09 = {
         zone        = "europe-west3-a"
@@ -221,7 +204,6 @@ module "platform-cluster" {
       },
       mlab1-jnb03 = {
         zone         = "africa-south1-a"
-        machine_type = "e2-highcpu-4"
         probability  = 0.5
       },
       mlab1-kix03 = {
@@ -244,7 +226,6 @@ module "platform-cluster" {
       },
       mlab1-oma03 = {
         zone = "us-central1-a"
-        machine_type = "e2-highcpu-4"
       },
       mlab1-scl07 = {
         zone        = "southamerica-west1-a"
