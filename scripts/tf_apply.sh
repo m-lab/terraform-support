@@ -1,146 +1,186 @@
 #!/bin/bash
 #
-# This script updates google_compute_instances one at a time, but only if they
-# are being deleted then recreated, then applies all other changes. This is to
-# avoid Terraform (TF) from more or less deleting and recreating all instances
-# at once when a change is applied which affects all virtual machines e.g., a
-# boot disk changes. This script should be run from the repository root.
+# tf_apply.sh rolls out google_compute_instance changes ONE VM AT A TIME, to
+# avoid Terraform destroying and recreating a large swath of the virtual fleet
+# simultaneously (which would disrupt the platform). It should be run from the
+# repository root.
 #
-# This script achieves a serial deployment of VM changes by utilizing the
-# -target flag of TF, which causes TF to only consider the resources pointed at
-# by -target flag(s). This usage of -target is highly discouraged by TF, and
-# when running with this flag TF will emit warnings to this effect. However, we
-# have not found another way to achieve a rolling update of resources,
-# particularly of VMs.
+# How it works (see m-lab/terraform-support#61 for the history):
+#
+# The boot-disk resources declare `lifecycle { ignore_changes = [image] }` (and
+# platform_instances ignore machine_type), so a plain `terraform apply` is
+# structurally incapable of mass-recreating VMs when the image or machine type
+# changes. That makes a normal apply safe, but it also means Terraform's own
+# plan can no longer tell us which VMs still need the new image. So this script
+# discovers stale VMs itself, entirely from Terraform's own data:
+#
+#   desired image = the disk_image variable (via `terraform console`)
+#   actual image  = each boot disk's recorded image (via `terraform show -json`)
+#
+# For every boot disk whose recorded image does not match the desired image, we
+# force just that one instance to be recreated with `terraform apply -replace`
+# (a FULL, untargeted plan that additionally replaces the named resources — not
+# `-target`, which Terraform warns against because it applies a partial plan).
+# After each VM we wait for it to become healthy before moving to the next.
+#
+# Because the trigger is a state-vs-config comparison, a partial run is
+# resumable for free: re-running only re-replaces disks that are still stale.
+#
+# Capacity note: a single transient "zone does not have enough resources"
+# failure is retried for that one VM (see apply_with_capacity_retry). ANY other
+# failure aborts the whole run, on purpose: we cannot know why an unexpected
+# failure happened, and must not risk churning the rest of the fleet.
 
 set -euxo pipefail
 
 PROJECT=${1:? Please provide a project name}
 
-# update_instances() unconditionally iterates through instances and attempts to
-# update them one at a time if the action is to recreate the instance.
-function update_instances() {
-  local c
-  local changes
-  local health_path
-  local idx
-  local ipv4
-  local is_recreate
-  local resource
-  local status=""
-  local target=$1
-  local targets
+# Number of times to retry a single VM whose create fails purely because its
+# zone is temporarily out of capacity.
+CAPACITY_RETRY_MAX=5
 
-  # Create and write out the plan.
-  terraform plan -out instances.tfplan \
-    -target "module.platform-cluster.google_compute_instance.${target}_instances" \
-    > /dev/null
-
-  # Perform the command substitution for `terraform show` in a variable
-  # assignment in which case the exit code of the entire operation is subject
-  # to the shopts set at the top of the file, meaning that if any command in
-  # the pipe chain fails the script will exit.
-  changes=$(terraform show -json instances.tfplan | jq -r '.resource_changes[] | @base64')
-  for change in $changes; do
-    c=$(echo $change | base64 -d)
-    resource=$(echo $c | jq -r '.type')
-
-    # We only care about google_compute_instance resources.
-    if [[ $resource != "google_compute_instance" ]]; then
+# apply_with_capacity_retry runs `terraform apply <args>` and, ONLY when it
+# fails with a zone-capacity-exhaustion error, retries the same apply a few
+# times with escalating backoff. Every other failure returns non-zero and, with
+# `set -e`, aborts the script — preserving the fail-fast safety property.
+function apply_with_capacity_retry() {
+  local attempt=1
+  local out
+  local delay
+  while true; do
+    # `if out=$(...)` keeps `set -e` from aborting on a captured failure so we
+    # can inspect the error text ourselves.
+    if out=$(terraform apply -auto-approve -compact-warnings -no-color "$@" 2>&1); then
+      echo "${out}"
+      return 0
+    fi
+    echo "${out}"
+    if grep -qE 'ZONE_RESOURCE_POOL_EXHAUSTED|does not have enough resources' <<<"${out}" \
+        && (( attempt < CAPACITY_RETRY_MAX )); then
+      delay=$(( attempt * 60 ))
+      echo "### Zone capacity exhausted; retry ${attempt}/${CAPACITY_RETRY_MAX} in ${delay}s ..."
+      sleep "${delay}"
+      attempt=$(( attempt + 1 ))
       continue
     fi
+    # Non-capacity error, or capacity retries exhausted: abort.
+    return 1
+  done
+}
 
-    # For API instances, unconditionally create or update them first, since
-    # everything else depends on them. For regular platform VMs if the action
-    # does not involve recreating an existing resource, but just creating a
-    # non-existent resource, then move on, since our only concern is avoiding
-    # mass deletion and recreation of existing google_compute_instance
-    # resources, and related things like boot disks.
-    if [[ $target != "api" ]]; then
-      is_recreate=$(echo $c | jq -r 'any(.action_reason == "replace_because_cannot_update"; . == true )')
-      if [[ $is_recreate != "true" ]]; then
-        continue
-      fi
-    fi
+# update_instances rolls every stale VM of a given target ("api" or "platform")
+# to the desired image, one at a time, waiting for health between each.
+function update_instances() {
+  local target=$1
+  local desired_expr disk_res inst_res addr_res health_path
+  local desired_image state_json idx ip status
 
-    idx=$(echo $c | jq -r '.index')
-    ipv4=$(echo $c | jq -r '.change.after.network_interface[0].access_config[0].nat_ip')
+  if [[ ${target} == "api" ]]; then
+    desired_expr='var.api_instances.machine_attributes.disk_image'
+    disk_res='module.platform-cluster.google_compute_disk.api_boot_disks'
+    inst_res='module.platform-cluster.google_compute_instance.api_instances'
+    addr_res='module.platform-cluster.google_compute_address.api_external_addresses'
+    health_path="6443/readyz"
+  else
+    desired_expr='var.instances.attributes.disk_image'
+    disk_res='module.platform-cluster.google_compute_disk.platform_boot_disks'
+    inst_res='module.platform-cluster.google_compute_instance.platform_instances'
+    addr_res='module.platform-cluster.google_compute_address.platform_addresses'
+    health_path="443"
+  fi
 
-    # Target all of the resources associated with the instance so that Terraform
-    # can order all operations properly.
-    if [[ $target == "api" ]]; then
-      health_path="6443/readyz"
-      targets=" \
-        -target module.platform-cluster.google_compute_instance.api_instances[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.api_boot_disks[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.api_data_disks[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.api_internal_addresses[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.api_external_addresses[\"${idx}\"] \
-      "
-    else
-      health_path="443"
-      targets=" \
-        -target module.platform-cluster.google_compute_instance.platform_instances[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.platform_boot_disks[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.platform_addresses[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.platform_addresses_internal[\"${idx}\"] \
-        -target module.platform-cluster.google_compute_disk.platform_addresses_v6[\"${idx}\"] \
-      "
-    fi
+  # Desired image (short name), straight from Terraform's variables.
+  desired_image=$(echo "${desired_expr}" | terraform console | tr -d '"')
 
-    terraform apply -auto-approve -compact-warnings -no-color $targets
+  # Snapshot current state once.
+  state_json=$(terraform show -json)
 
-    # Wait until the machine is up and required services are running. For an API
-    # server, this means that the /readyz endpoint returns 200. For platform
-    # VMs, this means that ndt-server is up and running on port 443.
-    until [[ $status == "200" ]]; do
+  # Indexes of boot disks whose recorded image does not end with the desired
+  # short name (state stores a full projects/.../images/<name> URL). These are
+  # the VMs still needing the new image. Collect into an array so the health
+  # loop below does not run in a pipe subshell.
+  local stale=()
+  while IFS= read -r idx; do
+    [[ -n ${idx} ]] && stale+=("${idx}")
+  done < <(
+    jq -r --arg res "${disk_res}" --arg want "${desired_image}" '
+      [ .. | objects
+        | select(.type? == "google_compute_disk")
+        | select(.address? // "" | startswith($res)) ]
+      | .[]
+      | select((.values.image // "") | endswith($want) | not)
+      | .index
+    ' <<<"${state_json}"
+  )
+
+  if (( ${#stale[@]} == 0 )); then
+    echo "### ${target}: all boot disks already on ${desired_image}; nothing to roll."
+    return 0
+  fi
+  echo "### ${target}: ${#stale[@]} VM(s) to roll to ${desired_image}: ${stale[*]}"
+
+  for idx in "${stale[@]}"; do
+    # Stable reserved external IP for the health check (survives VM replacement).
+    ip=$(jq -r --arg res "${addr_res}" --arg i "${idx}" '
+      [ .. | objects
+        | select(.type? == "google_compute_address")
+        | select(.address? // "" | startswith($res))
+        | select(.index? == $i) ]
+      | .[0].values.address // ""
+    ' <<<"${state_json}")
+
+    echo "### Rolling ${target} VM ${idx} (${ip}) to ${desired_image}"
+    # Replace both the boot disk and the instance. Replacing the disk alone
+    # would cascade to the instance anyway (boot_disk.source is force-new), but
+    # naming both is self-documenting and robust.
+    apply_with_capacity_retry \
+      -replace="${disk_res}[\"${idx}\"]" \
+      -replace="${inst_res}[\"${idx}\"]"
+
+    # Wait until the VM is serving before moving on. API: /readyz on 6443;
+    # platform: ndt-server on 443.
+    status=""
+    until [[ ${status} == "200" ]]; do
       sleep 5
       status=$(
         curl --insecure --output /dev/null --silent --write-out "%{http_code}" \
-          "https://${ipv4}:${health_path}" \
+          "https://${ip}:${health_path}" \
           || true
       )
     done
-
-    # Reset status for next iteration.
-    status=""
-
   done
-
-  rm instances.tfplan
 }
 
 function main() {
-  cd $PROJECT
+  cd "${PROJECT}"
 
   # The environment is clean on every build in Cloud Build, so we need to run
   # this to download the required providers.
   terraform init
 
-  # We only want interate over instances in the M-Lab Platform clusters, which
-  # only exist on our main three sandbox->staging->prod GCP projects.
-  case "$PROJECT" in
-    mlab-sandbox|mlab-staging|mlab-oti)
+  # We only want to iterate over instances in the M-Lab Platform clusters, which
+  # only exist on our main three sandbox->staging->prod GCP projects. API
+  # instances go first, since everything else depends on the control plane.
+  case "${PROJECT}" in
+    mlab-sandbox | mlab-staging | mlab-oti)
       for target in api platform; do
-        update_instances $target
+        update_instances "${target}"
       done
       ;;
     *)
-      # Do nothing
+      # Do nothing.
       ;;
   esac
 
-  # Now apply everything else.
-  #
-  # TODO(kinkade): there is room for improvement here. If the calls to
-  # update_instances() above fail for some reason and changes to VMs do not get
-  # applied one at a time, then the possibility exists that the following
-  # command could unconditionally apply all changes at once. The virtual
-  # machines should all recover, but it may cause unwanted downtime. Find a way
-  # to not need this script, or to improve it to be a bit safer.
-  #
-  # https://github.com/m-lab/terraform-support/issues/61
-  terraform apply -auto-approve -compact-warnings -no-color
+  # Apply everything else. With ignore_changes on the boot-disk image (and
+  # platform machine_type), this can no longer mass-recreate the VM fleet, so it
+  # is safe to run untargeted. It does still replace the prometheus VM by itself
+  # on an image bump (prometheus_boot_disk is intentionally not ignored), and it
+  # recreates any instance that is missing from the cloud (e.g. a VM left down
+  # by a prior aborted roll) — both single-VM changes. Wrap it in the same
+  # capacity retry so a transient zone shortage during those creates does not
+  # fail the whole run; every other error still aborts.
+  apply_with_capacity_retry
 }
 
 main
