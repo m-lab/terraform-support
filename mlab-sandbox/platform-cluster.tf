@@ -21,23 +21,20 @@ module "platform-cluster" {
     },
     migs = {},
     vms = {
-      # Former autojoin MIGs, converted to standalone VMs to match the
-      # production migration. us-east1-c is avoided due to chronic resource
-      # exhaustion in that zone.
+      # Former MIGs, converted to standalone VMs to match the production
+      # migration. us-east1-c is avoided due to chronic resource exhaustion
+      # in that zone.
       mlab1-chs0t = {
         zone         = "us-east1-d"
         machine_type = "e2-highcpu-4"
-        daemonset    = "ndt-autojoin"
       },
       mlab1-lax0t = {
         zone         = "us-west2-c"
         machine_type = "e2-highcpu-4"
-        daemonset    = "ndt-autojoin"
       },
       mlab1-pdx0t = {
         zone         = "us-west1-a"
         machine_type = "e2-highcpu-4"
-        daemonset    = "ndt-autojoin"
       },
       mlab2-chs0t = {
         zone = "us-east1-d"
