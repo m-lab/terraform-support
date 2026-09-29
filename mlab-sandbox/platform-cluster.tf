@@ -35,7 +35,7 @@ module "platform-cluster" {
         daemonset    = "ndt-autojoin"
       },
       mlab1-pdx0t = {
-        zone         = "us-west1-c"
+        zone         = "us-west1-a"
         machine_type = "e2-highcpu-4"
         daemonset    = "ndt-autojoin"
       },
