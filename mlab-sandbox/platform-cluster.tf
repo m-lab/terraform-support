@@ -19,24 +19,26 @@ module "platform-cluster" {
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     },
-    migs = {
+    migs = {},
+    vms = {
+      # Former autojoin MIGs, converted to standalone VMs to match the
+      # production migration. us-east1-c is avoided due to chronic resource
+      # exhaustion in that zone.
       mlab1-chs0t = {
-        region       = "us-east1"
-        loadbalanced = false
+        zone         = "us-east1-d"
+        machine_type = "e2-highcpu-4"
         daemonset    = "ndt-autojoin"
       },
       mlab1-lax0t = {
-        region       = "us-west2"
-        loadbalanced = false
+        zone         = "us-west2-c"
+        machine_type = "e2-highcpu-4"
         daemonset    = "ndt-autojoin"
       },
       mlab1-pdx0t = {
-        region       = "us-west1"
-        loadbalanced = false
+        zone         = "us-west1-c"
+        machine_type = "e2-highcpu-4"
         daemonset    = "ndt-autojoin"
-      }
-    },
-    vms = {
+      },
       mlab2-chs0t = {
         zone = "us-east1-d"
       }
