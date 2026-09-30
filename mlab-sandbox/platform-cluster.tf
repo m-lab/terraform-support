@@ -8,8 +8,8 @@ module "platform-cluster" {
   instances = {
     attributes = {
       daemonset        = "ndt"
-      disk_image       = "platform-cluster-instance-2026-08-11t18-24-47"
-      disk_size_gb     = 100
+      disk_image       = "platform-cluster-instance-2026-09-01t19-58-59"
+      disk_size_gb     = 50
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
       mig_min_replicas = 1
@@ -19,24 +19,23 @@ module "platform-cluster" {
       tags             = ["ndt-cloud"]
       scopes           = ["cloud-platform"]
     },
-    migs = {
+    migs = {},
+    vms = {
+      # Former MIGs, converted to standalone VMs to match the production
+      # migration. us-east1-c is avoided due to chronic resource exhaustion
+      # in that zone.
       mlab1-chs0t = {
-        region       = "us-east1"
-        loadbalanced = false
-        daemonset    = "ndt-autojoin"
+        zone         = "us-east1-d"
+        machine_type = "e2-highcpu-4"
       },
       mlab1-lax0t = {
-        region       = "us-west2"
-        loadbalanced = false
-        daemonset    = "ndt-autojoin"
+        zone         = "us-west2-c"
+        machine_type = "e2-highcpu-4"
       },
       mlab1-pdx0t = {
-        region       = "us-west1"
-        loadbalanced = false
-        daemonset    = "ndt-autojoin"
-      }
-    },
-    vms = {
+        zone         = "us-west1-a"
+        machine_type = "e2-highcpu-4"
+      },
       mlab2-chs0t = {
         zone = "us-east1-d"
       }
@@ -45,7 +44,7 @@ module "platform-cluster" {
 
   api_instances = {
     machine_attributes = {
-      disk_image        = "platform-cluster-api-instance-2026-08-11t18-24-47"
+      disk_image        = "platform-cluster-api-instance-2026-09-01t19-58-59"
       disk_size_gb_boot = 100
       disk_size_gb_data = 10
       # This will show up as /dev/disk/by-id/google-<name>
@@ -79,7 +78,7 @@ module "platform-cluster" {
   }
 
   prometheus_instance = {
-    disk_image        = "platform-cluster-internal-instance-2026-08-11t18-24-47"
+    disk_image        = "platform-cluster-internal-instance-2026-09-01t19-58-59"
     disk_size_gb_boot = 100
     disk_size_gb_data = 200
     disk_type         = "pd-ssd"
