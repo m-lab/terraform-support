@@ -23,7 +23,7 @@ module "platform-cluster" {
     vms = {
       # Pre-existing standalone VMs (not converted from MIGs).
       mlab1-par08 = {
-        zone        = "europe-west9-a"
+        zone        = "europe-west9-b"
         probability = 0.5
       },
       mlab1-pdx01 = {
@@ -145,7 +145,7 @@ module "platform-cluster" {
         zone = "europe-central2-b"
       },
       mlab1-yul09 = {
-        zone        = "northamerica-northeast1-a"
+        zone        = "northamerica-northeast1-c"
         probability = 0.5
       },
       mlab2-yul09 = {
