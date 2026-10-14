@@ -1,13 +1,17 @@
 resource "google_compute_instance" "autonode" {
   boot_disk {
-    auto_delete = true
+    # The disk is a separate resource, so keep it when the instance is replaced.
+    auto_delete = false
     source      = google_compute_disk.autonode_boot_disk.id
   }
 
-  description             = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
-  machine_type            = "n2-standard-2"
-  metadata_startup_script = file("${path.root}/../scripts/install-docker.sh")
-  name                    = "autonode"
+  description  = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
+  machine_type = var.autonode_machine_type
+  metadata = {
+    startup-script = file("${path.root}/../scripts/install-docker.sh")
+  }
+  name = "autonode"
+  zone = google_compute_disk.autonode_boot_disk.zone
 
   network_interface {
     access_config {
@@ -33,7 +37,8 @@ resource "google_compute_disk" "autonode_boot_disk" {
   image = "ubuntu-minimal-2404-lts-amd64"
   name  = "autonode-boot-disk"
   size  = "100"
-  type  = "pd-ssd"
+  type  = "pd-standard"
+  zone  = var.autonode_zone
 }
 
 # Same shape as the autonode VM above, but for the mlab-node Debian package,
