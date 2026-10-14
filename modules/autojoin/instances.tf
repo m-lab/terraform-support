@@ -36,7 +36,7 @@ resource "google_compute_disk" "autonode_boot_disk" {
   image = "ubuntu-minimal-2404-lts-amd64"
   name  = "autonode-boot-disk"
   size  = "100"
-  type  = "pd-ssd"
+  type  = "pd-standard"
 }
 
 # Same shape as the autonode VM above, but for the mlab-node Debian package,
