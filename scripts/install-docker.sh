@@ -20,3 +20,11 @@ sudo apt install -y docker-ce
 # defaults set by the Linux distribution, and appears to work as intended.
 sudo sed -i -r '/docker/!s/^groups(.+)$/groups \1,docker/' /etc/default/instance_configs.cfg.distro
 sudo systemctl restart google-guest-agent.service
+
+# The default groups above only apply to users created from now on, but on
+# first boot the guest agent creates the users in the SSH keys metadata before
+# this script runs. Add the users it already manages (all members of the
+# google-sudoers group) to the docker group explicitly.
+for user in $(getent group google-sudoers | cut -d: -f4 | tr ',' ' '); do
+  sudo usermod -aG docker "$user"
+done
