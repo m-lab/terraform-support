@@ -36,6 +36,12 @@ variable "deploy_autonode_deb" {
   type        = bool
 }
 
+variable "autonode_zone" {
+  default     = null
+  description = "Zone for the autonode VM, overriding the provider default. Must stay in us-central1 (the deploy pipeline assumes the OMA IATA)."
+  type        = string
+}
+
 variable "autonode_deb_zone" {
   default     = null
   description = "Zone for the autonode-deb VM, overriding the provider default. Must stay in us-central1 (the deploy pipeline assumes the OMA IATA)."

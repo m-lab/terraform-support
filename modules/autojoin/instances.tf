@@ -11,6 +11,7 @@ resource "google_compute_instance" "autonode" {
     startup-script = file("${path.root}/../scripts/install-docker.sh")
   }
   name = "autonode"
+  zone = google_compute_disk.autonode_boot_disk.zone
 
   network_interface {
     access_config {
@@ -37,6 +38,7 @@ resource "google_compute_disk" "autonode_boot_disk" {
   name  = "autonode-boot-disk"
   size  = "100"
   type  = "pd-standard"
+  zone  = var.autonode_zone
 }
 
 # Same shape as the autonode VM above, but for the mlab-node Debian package,
