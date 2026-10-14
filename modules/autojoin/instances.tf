@@ -6,7 +6,7 @@ resource "google_compute_instance" "autonode" {
   }
 
   description  = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
-  machine_type = "n2-standard-2"
+  machine_type = var.autonode_machine_type
   metadata = {
     startup-script = file("${path.root}/../scripts/install-docker.sh")
   }
