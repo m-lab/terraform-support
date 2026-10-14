@@ -52,3 +52,12 @@ provider "google" {
   zone    = "us-central1-c"
 }
 
+# Unused here, but the shared versions.tf declares google.monitoring in
+# configuration_aliases, and Terraform fails to plan without this block.
+provider "google" {
+  alias   = "monitoring"
+  project = "mlab-autojoin"
+  region  = "us-central1"
+  zone    = "us-central1-c"
+}
+
