@@ -5,6 +5,8 @@ module "autojoin" {
     google = google.autojoin
   }
 
+  autonode_machine_type = "e2-standard-2"
+
   # Test VM for the mlab-node Debian package (byos-debian). Not in
   # us-central1-c (the provider default) because that zone was out of
   # n2-standard-2 capacity at creation time.
