@@ -1,13 +1,16 @@
 resource "google_compute_instance" "autonode" {
   boot_disk {
-    auto_delete = true
+    # The disk is a separate resource, so keep it when the instance is replaced.
+    auto_delete = false
     source      = google_compute_disk.autonode_boot_disk.id
   }
 
-  description             = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
-  machine_type            = "n2-standard-2"
-  metadata_startup_script = file("${path.root}/../scripts/install-docker.sh")
-  name                    = "autonode"
+  description  = "Automated deployment and testing of the autonode Docker compose (managed by Terraform)"
+  machine_type = "n2-standard-2"
+  metadata = {
+    startup-script = file("${path.root}/../scripts/install-docker.sh")
+  }
+  name = "autonode"
 
   network_interface {
     access_config {
