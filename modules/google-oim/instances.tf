@@ -17,7 +17,7 @@ resource "google_compute_instance" "google_oim_instances" {
   metadata = {
     probability      = lookup(each.value, "probability", var.instances.attributes.probability),
     iata             = substr(each.key, 6, 3),
-    autonode-version = "v0.0.10"
+    autonode-version = lookup(each.value, "autonode_version", var.instances.attributes.autonode_version)
   }
 
   name = "${each.key}-${data.google_client_config.current.project}-measurement-lab-org"
