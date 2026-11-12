@@ -2,6 +2,7 @@ variable "instances" {
   description = "Google OIM instances"
   type = object({
     attributes = object({
+      autonode_version = optional(string, "v0.0.16")
       disk_image       = string
       disk_size_gb     = number
       disk_type        = string
