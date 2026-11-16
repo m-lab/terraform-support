@@ -7,8 +7,6 @@ module "google_oim" {
 
   instances = {
     attributes = {
-      # The tag of https://github.com/m-lab/autonode whose Docker Compose file
-      # the VMs run. A VM can override it with its own autonode_version.
       autonode_version = "v0.0.16"
       disk_image   = "google-oim-instance-2026-11-12t18-35-13"
       disk_size_gb = 100
