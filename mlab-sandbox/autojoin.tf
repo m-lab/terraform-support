@@ -15,4 +15,8 @@ module "autojoin" {
   deploy_autonode_deb       = true
   autonode_deb_machine_type = "e2-standard-2"
   autonode_deb_zone         = "us-central1-c"
+
+  # Workload identity federation: the token-exchange instance whose storage
+  # tokens the pool trusts.
+  wif_issuer = "https://auth.mlab-sandbox.measurementlab.net"
 }
