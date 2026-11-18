@@ -7,10 +7,11 @@ module "google_oim" {
 
   instances = {
     attributes = {
-      disk_image   = "google-oim-instance-2025-08-27t17-33-25"
+      autonode_version = "v0.0.16"
+      disk_image   = "google-oim-instance-2026-11-12t18-35-13"
       disk_size_gb = 100
       disk_type    = "pd-ssd"
-      machine_type = "n2-highcpu-4"
+      machine_type = "e2-highcpu-4"
       probability  = 1.0
       tags         = []
     }
