@@ -59,3 +59,8 @@ variable "autonode_deb_machine_type" {
   description = "Machine type for the autonode-deb VM. Defaults to the autonode VM's type; override when a zone is out of capacity."
   type        = string
 }
+
+variable "wif_issuer" {
+  description = "Issuer URL of the token-exchange instance trusted by the workload identity pool. It must serve /.well-known/openid-configuration and equal the iss claim of its storage tokens"
+  type        = string
+}
