@@ -8,7 +8,7 @@ module "platform-cluster" {
   instances = {
     attributes = {
       daemonset        = "ndt"
-      disk_image       = "platform-cluster-instance-2026-09-01t19-58-59"
+      disk_image       = "platform-cluster-instance-2026-11-18t21-48-59"
       disk_size_gb     = 50
       disk_type        = "pd-ssd"
       machine_type     = "n2-highcpu-4"
